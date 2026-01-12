@@ -47,23 +47,23 @@ export default async function Home({
 
   return (
     <main className="min-h-screen bg-background text-foreground max-w-6xl mx-auto px-4 sm:px-8 transition-colors duration-500">
-      <header className="py-12 sm:py-20 flex flex-col items-center justify-center text-center space-y-6">
-        <div className="space-y-2">
+      <header className="py-12 sm:py-20 flex flex-col items-center justify-center text-center space-y-4 sm:space-y-6">
+        <div className="space-y-1 sm:space-y-2">
           <div className="flex items-center justify-center gap-2">
-            <TrendingUp className="w-4 h-4 text-accent" />
-            <span className="text-[10px] font-black tracking-[0.3em] uppercase text-accent/80 dark:text-accent">
+            <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent" />
+            <span className="text-[9px] sm:text-[10px] font-black tracking-[0.3em] uppercase text-accent/80 dark:text-accent">
               Daily Insights
             </span>
           </div>
-          <h1 className="text-6xl font-black tracking-tighter italic mb-1">
+          <h1 className="text-4xl sm:text-6xl font-black tracking-tighter italic mb-0.5 sm:mb-1">
             Hang on<span className="text-accent dark:text-accent">!</span>
           </h1>
-          <p className="text-text-muted text-sm font-medium tracking-wide">
+          <p className="text-text-muted text-[11px] sm:text-sm font-medium tracking-wide">
             Global Economic Summary
           </p>
         </div>
 
-        <div className="flex items-center gap-4 pt-2">
+        <div className="flex items-center gap-3 sm:gap-4 pt-1 sm:pt-2">
           <DateNavigation currentDate={targetDate} />
           <ThemeToggle />
         </div>

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { ExternalLink, Info, Newspaper } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ExternalLink, Info, Newspaper, ChevronLeft } from "lucide-react";
 
 interface NewsItem {
   id: string;
@@ -16,18 +16,39 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
   const [selectedId, setSelectedId] = useState<string | null>(
     news.length > 0 ? news[0].id : null
   );
+  const [isMobileDetailOpen, setIsMobileDetailOpen] = useState(false);
+
+  // 모바일에서 상세 페이지를 열 때 body 스크롤 방지
+  useEffect(() => {
+    if (isMobileDetailOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [isMobileDetailOpen]);
+
+  const handleSelect = (id: string) => {
+    setSelectedId(id);
+    if (window.innerWidth < 1024) {
+      setIsMobileDetailOpen(true);
+    }
+  };
 
   const selectedItem = news.find((item) => item.id === selectedId);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 pb-24 items-start">
+    <div className="flex flex-col lg:flex-row gap-8 pb-24 items-start relative">
       {/* Left: Search/List Area (Master) */}
-      <div className="w-full lg:flex-1 space-y-3">
+      <div
+        className={`w-full lg:flex-1 space-y-3 ${
+          isMobileDetailOpen ? "hidden lg:block" : "block"
+        }`}
+      >
         <div className="grid grid-cols-1 gap-2.5">
           {news.map((item) => (
             <button
               key={item.id}
-              onClick={() => setSelectedId(item.id)}
+              onClick={() => handleSelect(item.id)}
               className={`group flex flex-col p-5 rounded-2xl text-left transition-all duration-300 border ${
                 selectedId === item.id
                   ? "bg-white dark:bg-card border-accent shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] translate-x-1"
@@ -65,9 +86,24 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
       </div>
 
       {/* Right: Detail Area */}
-      <div className="w-full lg:w-[450px] sticky top-10">
+      <div
+        className={`w-full lg:w-[450px] sticky top-10 ${
+          isMobileDetailOpen
+            ? "fixed inset-0 z-50 bg-background lg:relative lg:inset-auto lg:z-auto lg:bg-transparent overflow-y-auto p-4 lg:p-0"
+            : "hidden lg:block"
+        }`}
+      >
+        {isMobileDetailOpen && (
+          <button
+            onClick={() => setIsMobileDetailOpen(false)}
+            className="lg:hidden mb-4 flex items-center gap-2 text-accent font-bold"
+          >
+            <ChevronLeft className="w-5 h-5" />
+            목록으로 돌아가기
+          </button>
+        )}
         {selectedItem ? (
-          <div className="flex flex-col p-8 rounded-[2.5rem] bg-white dark:bg-card border border-border-subtle shadow-[0_20px_50px_rgba(0,0,0,0.05)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)] animate-in fade-in slide-in-from-right-4 duration-500">
+          <div className="flex flex-col p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] bg-white dark:bg-card border border-border-subtle shadow-[0_20px_50px_rgba(0,0,0,0.05)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)] animate-in fade-in slide-in-from-right-4 duration-500">
             <div className="flex flex-col space-y-6">
               <div className="flex items-center gap-2">
                 <Info className="w-4 h-4 text-accent" />
