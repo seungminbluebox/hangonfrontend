@@ -105,23 +105,13 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
         {selectedItem ? (
           <div className="flex flex-col p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] bg-white dark:bg-card border border-border-subtle shadow-[0_20px_50px_rgba(0,0,0,0.05)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)] animate-in fade-in slide-in-from-right-4 duration-500">
             <div className="flex flex-col space-y-6">
-              <div className="flex items-center gap-2">
-                <Info className="w-4 h-4 text-accent" />
-                <span className="text-[10px] font-black tracking-widest uppercase text-accent">
-                  Deep Dive
-                </span>
-              </div>
-
               <div className="space-y-4">
-                <h3 className="text-3xl sm:text-4xl font-serif italic leading-tight tracking-tight text-foreground selection:bg-accent/20">
+                <h3 className="text-3xl sm:text-3xl font-sans font-bold italic leading-tight tracking-tight text-foreground selection:bg-accent/20">
                   {selectedItem.keyword}
                 </h3>
 
                 <div className="flex items-center gap-3">
-                  <div className="h-px w-10 bg-accent/30" />
-                  <span className="text-[11px] font-black tracking-[0.2em] text-accent uppercase">
-                    요약
-                  </span>
+                  <div className="h-px w-10 bg-accent/40" />
                 </div>
 
                 <p className="text-[15px] sm:text-[16.5px] leading-[1.7] font-normal text-foreground/70 tracking-tight whitespace-pre-line selection:bg-accent/5">
@@ -129,7 +119,7 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
                 </p>
               </div>
 
-              <div className="pt-6 border-t border-border-subtle/50 space-y-4">
+              <div className="pt-6 border-t-2 border-border-subtle space-y-4">
                 <span className="text-[10px] font-black text-accent uppercase tracking-widest">
                   관련 기사
                 </span>
