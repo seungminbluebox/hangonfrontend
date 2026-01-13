@@ -36,54 +36,57 @@ export function DateNavigation({ currentDate }: { currentDate: string }) {
   });
 
   return (
-    <div className="flex items-center gap-3">
-      {/* Date Display & Picker Trigger */}
-      <div className="relative">
-        <button
-          onClick={() => dateInputRef.current?.showPicker()}
-          className="px-4 py-2 rounded-full border border-border-subtle bg-card/50 backdrop-blur-sm text-[10px] font-bold flex items-center gap-2 shadow-sm hover:border-accent/40 hover:bg-card transition-all"
-        >
-          <Calendar className="w-3.5 h-3.5 text-accent" />
-          {displayDate}
-        </button>
-        <input
-          ref={dateInputRef}
-          type="date"
-          className="absolute opacity-0 pointer-events-none"
-          onChange={(e) => setDate(e.target.value)}
-          value={currentDate}
-          max={new Date().toISOString().split("T")[0]}
-        />
-      </div>
-
-      <div className="flex items-center gap-1.5 p-1 rounded-full border border-border-subtle bg-card/30">
+    <div className="flex items-center gap-2">
+      <div className="flex items-center p-1 rounded-full border border-border-subtle bg-card/30 backdrop-blur-sm shadow-sm">
+        {/* Previous Day Button */}
         <button
           onClick={() => changeDate(-1)}
-          className="p-1.5 rounded-full hover:bg-card hover:text-accent transition-colors"
+          className="p-2 rounded-full hover:bg-card hover:text-accent transition-all active:scale-95"
           aria-label="Previous Day"
         >
           <ChevronLeft className="w-4 h-4" />
         </button>
 
-        {!isToday && (
+        {/* Date Display & Picker Trigger */}
+        <div className="relative mx-1">
           <button
-            onClick={resetDate}
-            className="p-1.5 rounded-full hover:bg-card text-accent transition-colors"
-            aria-label="Reset to Today"
+            onClick={() => dateInputRef.current?.showPicker()}
+            className="px-4 py-1.5 rounded-full border border-transparent hover:border-border-subtle/50 hover:bg-card/50 text-[11px] font-black flex items-center gap-2 transition-all group"
           >
-            <RotateCcw className="w-3.5 h-3.5" />
+            <Calendar className="w-3.5 h-3.5 text-accent group-hover:scale-110 transition-transform" />
+            {displayDate}
           </button>
-        )}
+          <input
+            ref={dateInputRef}
+            type="date"
+            className="absolute opacity-0 pointer-events-none"
+            onChange={(e) => setDate(e.target.value)}
+            value={currentDate}
+            max={new Date().toISOString().split("T")[0]}
+          />
+        </div>
 
+        {/* Next Day Button */}
         <button
           onClick={() => changeDate(1)}
           disabled={isToday}
-          className="p-1.5 rounded-full hover:bg-card hover:text-accent transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
+          className="p-2 rounded-full hover:bg-card hover:text-accent transition-all active:scale-95 disabled:opacity-20 disabled:cursor-not-allowed"
           aria-label="Next Day"
         >
           <ChevronRight className="w-4 h-4" />
         </button>
       </div>
+
+      {/* Reset Button (Outside to keep the < Date > layout clean) */}
+      {!isToday && (
+        <button
+          onClick={resetDate}
+          className="p-2.5 rounded-full border border-border-subtle bg-card/30 hover:bg-card text-accent transition-all shadow-sm active:rotate-[-45deg]"
+          aria-label="Reset to Today"
+        >
+          <RotateCcw className="w-4 h-4" />
+        </button>
+      )}
     </div>
   );
 }

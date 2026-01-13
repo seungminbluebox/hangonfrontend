@@ -58,8 +58,8 @@ export default async function Home({
           <h1 className="text-4xl sm:text-6xl font-black tracking-tighter italic mb-0.5 sm:mb-1">
             Hang on<span className="text-accent dark:text-accent">!</span>
           </h1>
-          <p className="text-text-muted text-[11px] sm:text-sm font-medium tracking-wide">
-            Global Economic Summary
+          <p className="text-text-muted text-[13px] sm:text-xl font-medium tracking-wide mt-2 sm:mt-3">
+            잠깐의 시간, 글로벌 경제 흐름을 한눈에
           </p>
         </div>
 
@@ -77,7 +77,10 @@ export default async function Home({
             <Calendar className="w-6 h-6 text-text-muted opacity-20" />
           </div>
           <p className="text-text-muted font-medium text-sm">
-            이 날짜에는 등록된 뉴스가 없습니다.
+            이 날짜에는 등록된 뉴스가 없네요😅
+          </p>
+          <p className="text-text-muted font-medium text-sm">
+            다른 날짜를 확인해보세요!
           </p>
         </div>
       )}

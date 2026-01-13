@@ -14,7 +14,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Hang on! | Global Economic Summary",
+  title: "Hang on!, 데일리 경제 뉴스",
   description: "Stay informed with daily global economic summaries.",
 };
 
