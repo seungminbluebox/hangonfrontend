@@ -1,4 +1,5 @@
 import { Providers } from "./providers";
+import { InstallPWA } from "./components/InstallPWA";
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
@@ -61,6 +62,16 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.ico",
   },
+
+  // PWA 관련 설정 (iOS 대응)
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Hang on!",
+  },
+  formatDetection: {
+    telephone: false,
+  },
 };
 
 export default function RootLayout({
@@ -76,7 +87,10 @@ export default function RootLayout({
     >
       {/* {GTM_ID && <GoogleTagManager gtmId={GTM_ID} />} */}
       <body className="font-sans antialiased text-[15px] tracking-tight">
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <InstallPWA />
+        </Providers>
       </body>
       <GoogleAnalytics gaId="G-2RYMSF25ET" />
     </html>
