@@ -18,15 +18,6 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
   );
   const [isMobileDetailOpen, setIsMobileDetailOpen] = useState(false);
 
-  // 모바일에서 상세 페이지를 열 때 body 스크롤 방지
-  useEffect(() => {
-    if (isMobileDetailOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-  }, [isMobileDetailOpen]);
-
   const handleSelect = (id: string) => {
     setSelectedId(id);
     if (window.innerWidth < 1024) {
