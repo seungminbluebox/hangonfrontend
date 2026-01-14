@@ -2,6 +2,8 @@ import { Providers } from "./providers";
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import { GoogleTagManager } from "@next/third-parties/google";
+const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
 
 const inter = Inter({
   variable: "--font-inter",
@@ -73,6 +75,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${inter.variable} ${playfair.variable}`}
     >
+      {GTM_ID && <GoogleTagManager gtmId={GTM_ID} />}
       <body className="font-sans antialiased text-[15px] tracking-tight">
         <Providers>{children}</Providers>
       </body>
