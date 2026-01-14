@@ -46,7 +46,7 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
               className={`group flex flex-col p-5 rounded-2xl text-left transition-all duration-300 border ${
                 selectedId === item.id
                   ? "bg-white dark:bg-card border-accent shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] translate-x-1"
-                  : "bg-white dark:bg-card/40 border-border-subtle hover:border-accent/30 shadow-[0_2px_4px_rgb(0,0,0,0.02)]"
+                  : "bg-white dark:bg-card/60 border-border-subtle hover:border-accent/30 shadow-[0_2px_4px_rgb(0,0,0,0.02)]"
               }`}
             >
               <div className="flex items-center gap-3 mb-2">
@@ -69,7 +69,7 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
                 className={`font-bold transition-colors tracking-tight ${
                   selectedId === item.id
                     ? "text-accent text-xl font-black"
-                    : "text-foreground/90 text-lg group-hover:text-accent/80"
+                    : "text-foreground/90 dark:text-foreground text-lg group-hover:text-accent/80"
                 }`}
               >
                 {item.keyword}
@@ -110,7 +110,7 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
                     <div className="h-px w-10 bg-accent/40" />
                   </div>
 
-                  <p className="text-[15px] sm:text-[16.5px] leading-[1.7] font-normal text-foreground/70 tracking-tight whitespace-pre-line selection:bg-accent/5">
+                  <p className="text-[15px] sm:text-[16.5px] leading-[1.7] font-normal text-foreground/70 dark:text-foreground/85 tracking-tight whitespace-pre-line selection:bg-accent/5">
                     {selectedItem.summary}
                   </p>
                 </div>
@@ -154,7 +154,7 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
                     <button
                       key={item.id}
                       onClick={() => handleSelect(item.id)}
-                      className="flex flex-col p-4 rounded-2xl text-left transition-all duration-300 border bg-white dark:bg-card/30 border-border-subtle hover:border-accent/40 hover:translate-x-1"
+                      className="flex flex-col p-4 rounded-2xl text-left transition-all duration-300 border bg-white dark:bg-card/50 border-border-subtle hover:border-accent/40 hover:translate-x-1"
                     >
                       <span
                         className={`text-[9px] font-black px-2 py-0.5 rounded-full border mb-2 w-fit ${

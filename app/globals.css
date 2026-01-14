@@ -13,12 +13,12 @@
 
 /* 2. 다크 모드 클래스 (.dark)가 활성화될 때만 적용 */
 .dark {
-  --background: #080808;
-  --foreground: #f5f5f5;
-  --card-bg: #111111;
-  --border-subtle: #1f1f1f;
-  --text-muted: #a1a1aa;
-  --accent: #60a5fa;
+  --background: #0a0a0a;
+  --foreground: #ffffff;
+  --card-bg: #141414;
+  --border-subtle: #262626;
+  --text-muted: #94a3b8;
+  --accent: #3b82f6;
 }
 
 @theme inline {
