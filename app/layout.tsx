@@ -75,7 +75,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${inter.variable} ${playfair.variable}`}
     >
-      {GTM_ID && <GoogleTagManager gtmId={GTM_ID} />}
+      {/* {GTM_ID && <GoogleTagManager gtmId={GTM_ID} />} */}
       <body className="font-sans antialiased text-[15px] tracking-tight">
         <Providers>{children}</Providers>
       </body>
