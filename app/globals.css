@@ -3,7 +3,7 @@
 
 /* 1. 기본 라이트 모드 변수 정의 */
 :root {
-  --background: #fcfcfc;
+  --background: #f4f6f9;
   --foreground: #1a1a1a;
   --card-bg: #ffffff;
   --border-subtle: #e2e8f0;
@@ -13,10 +13,10 @@
 
 /* 2. 다크 모드 클래스 (.dark)가 활성화될 때만 적용 */
 .dark {
-  --background: #0a0a0a;
+  --background: #0a0a0b;
   --foreground: #ffffff;
-  --card-bg: #141414;
-  --border-subtle: #262626;
+  --card-bg: #1a1a1c;
+  --border-subtle: #2d2d30;
   --text-muted: #94a3b8;
   --accent: #3b82f6;
 }

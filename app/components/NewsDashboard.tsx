@@ -45,8 +45,8 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
               onClick={() => handleSelect(item.id)}
               className={`group flex flex-col p-5 rounded-2xl text-left transition-all duration-300 border ${
                 selectedId === item.id
-                  ? "bg-white dark:bg-card border-accent shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] translate-x-1"
-                  : "bg-white dark:bg-card/60 border-border-subtle hover:border-accent/30 shadow-[0_2px_4px_rgb(0,0,0,0.02)]"
+                  ? "bg-card border-accent shadow-[0_8px_30px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.4)] translate-x-1"
+                  : "bg-card border-border-subtle/80 hover:border-accent/30 shadow-sm"
               }`}
             >
               <div className="flex items-center gap-3 mb-2">
@@ -99,7 +99,7 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
         )}
         {selectedItem ? (
           <>
-            <div className="flex flex-col p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] bg-white dark:bg-card border border-border-subtle shadow-[0_20px_50px_rgba(0,0,0,0.05)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)] animate-in fade-in slide-in-from-right-4 duration-500">
+            <div className="flex flex-col p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] bg-card border-2 border-border-subtle dark:border-border-subtle/50 shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in fade-in slide-in-from-right-4 duration-500">
               <div className="flex flex-col space-y-6">
                 <div className="space-y-4">
                   <h3 className="text-3xl sm:text-3xl font-sans font-bold italic leading-tight tracking-tight text-foreground selection:bg-accent/20">
@@ -154,7 +154,7 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
                     <button
                       key={item.id}
                       onClick={() => handleSelect(item.id)}
-                      className="flex flex-col p-4 rounded-2xl text-left transition-all duration-300 border bg-white dark:bg-card/50 border-border-subtle hover:border-accent/40 hover:translate-x-1"
+                      className="flex flex-col p-4 rounded-2xl text-left transition-all duration-300 border bg-card border-border-subtle/80 hover:border-accent/40 hover:translate-x-1"
                     >
                       <span
                         className={`text-[9px] font-black px-2 py-0.5 rounded-full border mb-2 w-fit ${
