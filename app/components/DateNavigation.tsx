@@ -51,7 +51,7 @@ export function DateNavigation({ currentDate }: { currentDate: string }) {
         <div className="relative mx-1">
           <button
             onClick={() => dateInputRef.current?.showPicker()}
-            className="px-4 py-1.5 rounded-full border border-transparent hover:border-border-subtle/50 hover:bg-card/50 text-[11px] font-black flex items-center gap-2 transition-all group"
+            className="px-4 py-1.5 rounded-full border border-transparent hover:border-border-subtle/50 hover:bg-card/50 text-[15px] font-black flex items-center gap-2 transition-all group"
           >
             <Calendar className="w-3.5 h-3.5 text-accent group-hover:scale-110 transition-transform" />
             {displayDate}

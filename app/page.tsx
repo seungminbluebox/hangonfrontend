@@ -69,7 +69,7 @@ export default async function Home({
 
   return (
     <main className="min-h-screen bg-background text-foreground max-w-6xl mx-auto px-4 sm:px-8 transition-colors duration-500">
-      <header className="py-12 sm:py-20 flex flex-col items-center justify-center text-center space-y-4 sm:space-y-6">
+      <header className="pt-12 pb-6 sm:pt-20 sm:pb-10 flex flex-col items-center justify-center text-center space-y-4 sm:space-y-6">
         <div className="space-y-1 sm:space-y-2">
           <div className="flex items-center justify-center gap-2">
             <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent" />
@@ -81,7 +81,7 @@ export default async function Home({
             Hang on<span className="text-accent dark:text-accent">!</span>
           </h1>
           <p className="text-text-muted text-[13px] sm:text-xl font-medium tracking-wide mt-2 sm:mt-3">
-            잠깐의 시간, 글로벌 경제 흐름을 한눈에
+            잠깐의 시간, 글로벌 경제 흐름을 꽉 잡다
           </p>
         </div>
 

@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     // Vercel 배포 후 'public' 폴더에 og-image.png를 넣어두면 자동으로 잡힘
     images: [
       {
-        url: "./og-image.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "Hang on! Daily News",

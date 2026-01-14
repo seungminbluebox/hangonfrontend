@@ -74,8 +74,8 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
               <h2
                 className={`font-bold transition-colors tracking-tight ${
                   selectedId === item.id
-                    ? "text-accent text-lg font-black"
-                    : "text-foreground/90 text-base group-hover:text-accent/80"
+                    ? "text-accent text-xl font-black"
+                    : "text-foreground/90 text-lg group-hover:text-accent/80"
                 }`}
               >
                 {item.keyword}
