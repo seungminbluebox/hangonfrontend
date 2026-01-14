@@ -1,18 +1,27 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { ChevronLeft, ChevronRight, RotateCcw, Calendar } from "lucide-react";
-import { useRef } from "react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  RotateCcw,
+  Calendar,
+  Loader2,
+} from "lucide-react";
+import { useRef, useTransition } from "react";
 
 export function DateNavigation({ currentDate }: { currentDate: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dateInputRef = useRef<HTMLInputElement>(null);
+  const [isPending, startTransition] = useTransition();
 
   const setDate = (newDate: string) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("date", newDate);
-    router.push(`?${params.toString()}`);
+    startTransition(() => {
+      router.push(`?${params.toString()}`);
+    });
   };
 
   const changeDate = (days: number) => {
@@ -23,7 +32,9 @@ export function DateNavigation({ currentDate }: { currentDate: string }) {
   };
 
   const resetDate = () => {
-    router.push("/");
+    startTransition(() => {
+      router.push("/");
+    });
   };
 
   const isToday =
@@ -36,7 +47,11 @@ export function DateNavigation({ currentDate }: { currentDate: string }) {
   });
 
   return (
-    <div className="flex items-center gap-2">
+    <div
+      className={`flex items-center gap-2 transition-opacity duration-300 ${
+        isPending ? "opacity-70 pointer-events-none" : "opacity-100"
+      }`}
+    >
       <div className="flex items-center p-1 rounded-full border border-border-subtle bg-card/30 backdrop-blur-sm shadow-sm">
         {/* Previous Day Button */}
         <button
@@ -53,7 +68,11 @@ export function DateNavigation({ currentDate }: { currentDate: string }) {
             onClick={() => dateInputRef.current?.showPicker()}
             className="px-4 py-1.5 rounded-full border border-transparent hover:border-border-subtle/50 hover:bg-card/50 text-[15px] font-black flex items-center gap-2 transition-all group"
           >
-            <Calendar className="w-3.5 h-3.5 text-accent group-hover:scale-110 transition-transform" />
+            {isPending ? (
+              <Loader2 className="w-3.5 h-3.5 text-accent animate-spin" />
+            ) : (
+              <Calendar className="w-3.5 h-3.5 text-accent group-hover:scale-110 transition-transform" />
+            )}
             {displayDate}
           </button>
           <input
