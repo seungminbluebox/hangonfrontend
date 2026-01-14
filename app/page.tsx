@@ -3,11 +3,33 @@ import { ThemeToggle } from "./components/ThemeToggle";
 import { DateNavigation } from "./components/DateNavigation";
 import { NewsDashboard } from "./components/NewsDashboard";
 import { TrendingUp, Globe, Calendar } from "lucide-react";
+import { Metadata } from "next"; // 상단 import 추가
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
+
+type Props = {
+  searchParams: Promise<{ date?: string }>;
+};
+
+// 동적 메타데이터 생성 함수 (SEO 핵심)
+export async function generateMetadata({
+  searchParams,
+}: Props): Promise<Metadata> {
+  const { date } = await searchParams;
+  const targetDate = date || new Date().toISOString().split("T")[0];
+
+  return {
+    title: `${targetDate} 경제 요약`,
+    description: `${targetDate} 기준 한국, 미국, 글로벌 주요 경제 뉴스 핵심 요약 모음입니다.`,
+    openGraph: {
+      title: `${targetDate} 경제 요약 | Hang on!`,
+      description: "오늘의 핵심 경제 이슈를 확인하세요.",
+    },
+  };
+}
 
 export default async function Home({
   searchParams,
