@@ -179,7 +179,7 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
           <div className="flex flex-col items-center justify-center p-12 h-[400px] rounded-[2.5rem] border border-dashed border-border-subtle opacity-40">
             <Newspaper className="w-12 h-12 mb-4" />
             <p className="text-sm font-medium">
-              Select an issue to read the summary
+              뉴스를 선택하시면 제가 자세히 알려드릴게요!
             </p>
           </div>
         )}
