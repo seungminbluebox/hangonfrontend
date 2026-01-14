@@ -19,6 +19,17 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
   const [isMobileDetailOpen, setIsMobileDetailOpen] = useState(false);
   const detailRef = useRef<HTMLDivElement>(null);
 
+  // 뉴스 데이터(날짜)가 변경되면 선택된 아이디를 첫 번째 뉴스로 리셋
+  useEffect(() => {
+    if (news.length > 0) {
+      setSelectedId(news[0].id);
+    } else {
+      setSelectedId(null);
+    }
+    // 상세 페이지가 열려있다면 닫아줌 (모바일 대응)
+    setIsMobileDetailOpen(false);
+  }, [news]);
+
   const handleSelect = (id: string) => {
     setSelectedId(id);
     if (window.innerWidth < 1024) {
