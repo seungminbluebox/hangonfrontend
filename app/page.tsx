@@ -25,7 +25,7 @@ export async function generateMetadata({
     title: `${targetDate} 경제 요약`,
     description: `${targetDate} 기준 한국, 미국, 글로벌 주요 경제 뉴스 핵심 요약 모음입니다.`,
     openGraph: {
-      title: `${targetDate} 경제 요약 | Hang on!`,
+      title: `${targetDate} 경제를 붙잡다, Hang on!`,
       description: "오늘의 핵심 경제 이슈를 확인하세요.",
     },
   };
