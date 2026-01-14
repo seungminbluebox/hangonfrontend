@@ -2,8 +2,7 @@ import { Providers } from "./providers";
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
-// import { GoogleTagManager } from "@next/third-parties/google";
-// const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -79,6 +78,7 @@ export default function RootLayout({
       <body className="font-sans antialiased text-[15px] tracking-tight">
         <Providers>{children}</Providers>
       </body>
+      <GoogleAnalytics gaId="G-2RYMSF25ET" />
     </html>
   );
 }
