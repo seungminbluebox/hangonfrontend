@@ -16,9 +16,6 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  // 실제 배포된 도메인 주소 입력 (매우 중요)
-  metadataBase: new URL("https://hang-on.vercel.app"),
-
   title: {
     default: "Hang on! | 글로벌 경제 1분 요약",
     template: "%s | Hang on!", // 하위 페이지에서 제목을 동적으로 바꿀 때 사용
@@ -85,6 +82,21 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${inter.variable} ${playfair.variable}`}
     >
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.deferredPrompt = null;
+              window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                window.deferredPrompt = e;
+                window.dispatchEvent(new CustomEvent('pwa-prompt-ready'));
+              });
+            `,
+          }}
+        />
+      </head>
       {/* {GTM_ID && <GoogleTagManager gtmId={GTM_ID} />} */}
       <body className="font-sans antialiased text-[15px] tracking-tight">
         <Providers>

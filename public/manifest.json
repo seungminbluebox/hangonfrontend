@@ -1,0 +1,26 @@
+{
+  "id": "hang-on-pwa",
+  "name": "Hang on! | 경제 1분 요약",
+  "short_name": "Hang on!",
+  "description": "매일 아침, 글로벌 경제 흐름을 꽉 잡다",
+  "start_url": ".",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fcfcfc",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

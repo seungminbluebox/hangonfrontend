@@ -9,6 +9,11 @@ export function InstallPWA() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    // 0. 서비스 워커 등록 (PWA 설치 가능 조건)
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js").catch((err) => {});
+    }
+
     // 1. iOS 감지
     const isApple =
       /iPhone|iPad|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
@@ -24,20 +29,48 @@ export function InstallPWA() {
     const handler = (e: any) => {
       e.preventDefault();
       setDeferredPrompt(e);
-    };
-
-    window.addEventListener("beforeinstallprompt", handler);
-
-    // 마운트 후 약간의 지연을 주어 확실히 표시 (하이드레이션 이슈 방지)
-    const timer = setTimeout(() => {
-      // 이미 앱으로 접속 중(standalone)이 아닐 때만 팝업을 띄움
       if (!isStandalone) {
         setIsVisible(true);
       }
-    }, 1000);
+    };
+
+    const readyHandler = () => {
+      if ((window as any).deferredPrompt) {
+        setDeferredPrompt((window as any).deferredPrompt);
+        if (!isStandalone) {
+          setIsVisible(true);
+        }
+      }
+    };
+
+    // 이미 layout.tsx 스크립트에서 잡았는지 확인
+    if ((window as any).deferredPrompt) {
+      setDeferredPrompt((window as any).deferredPrompt);
+      if (!isStandalone) {
+        setIsVisible(true);
+      }
+    }
+
+    window.addEventListener("beforeinstallprompt", handler);
+    window.addEventListener("pwa-prompt-ready", readyHandler);
+
+    const timer = setTimeout(() => {
+      if (!isStandalone) {
+        setIsVisible(true);
+      }
+    }, 2000);
+
+    // 폴링 추가
+    const checkInterval = setInterval(() => {
+      if ((window as any).deferredPrompt && !deferredPrompt) {
+        setDeferredPrompt((window as any).deferredPrompt);
+      }
+    }, 500);
 
     return () => {
       window.removeEventListener("beforeinstallprompt", handler);
+      window.removeEventListener("pwa-prompt-ready", readyHandler);
+      clearInterval(checkInterval);
       clearTimeout(timer);
     };
   }, []);
