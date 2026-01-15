@@ -93,9 +93,9 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
       {/* Right: Detail Area */}
       <div
         ref={detailRef}
-        className={`w-full lg:w-[450px] sticky top-10 ${
+        className={`w-full lg:w-[500px] sticky top-10 ${
           isMobileDetailOpen
-            ? "fixed inset-0 z-50 bg-background lg:relative lg:inset-auto lg:z-auto lg:bg-transparent overflow-y-auto p-4 lg:p-0"
+            ? "fixed inset-0 z-50 bg-background lg:relative lg:inset-auto lg:z-auto lg:bg-transparent overflow-y-auto p-4 lg:p-8"
             : "hidden lg:block"
         }`}
       >
@@ -110,7 +110,7 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
         )}
         {selectedItem ? (
           <>
-            <div className="flex flex-col p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] bg-card border-2 border-border-subtle dark:border-border-subtle/50 shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in fade-in slide-in-from-right-4 duration-500">
+            <div className="flex flex-col p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] bg-card border-2 border-border-subtle dark:border-border-subtle/50 shadow-[0_12px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_12px_24px_rgba(0,0,0,0.3)] animate-in fade-in slide-in-from-right-4 duration-500">
               <div className="flex flex-col space-y-6">
                 <div className="space-y-4">
                   <h3 className="text-3xl sm:text-3xl font-sans font-bold italic leading-tight tracking-tight text-foreground selection:bg-accent/20">
