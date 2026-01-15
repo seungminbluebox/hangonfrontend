@@ -30,9 +30,11 @@ export function InstallPWA() {
 
     // 마운트 후 약간의 지연을 주어 확실히 표시 (하이드레이션 이슈 방지)
     const timer = setTimeout(() => {
-      // 강제로 보이게 설정 (애플 기기거나 standalone이 아닐 때만 보이는 로직을 일단 해제하고 무조건 표시)
-      setIsVisible(true);
-    }, 500);
+      // 이미 앱으로 접속 중(standalone)이 아닐 때만 팝업을 띄움
+      if (!isStandalone) {
+        setIsVisible(true);
+      }
+    }, 1000);
 
     return () => {
       window.removeEventListener("beforeinstallprompt", handler);
