@@ -131,20 +131,57 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
                     관련 기사
                   </span>
                   <div className="flex flex-col gap-2">
-                    {selectedItem.links?.map((link, idx) => (
-                      <a
-                        key={idx}
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group/link flex items-center justify-between p-4 rounded-2xl border border-border-subtle bg-background hover:bg-accent hover:border-accent transition-all duration-300"
-                      >
-                        <span className="text-[13px] font-medium group-hover/link:text-white transition-colors line-clamp-1">
-                          {link.title}
-                        </span>
-                        <ExternalLink className="w-4 h-4 text-text-muted group-hover/link:text-white transition-colors shrink-0" />
-                      </a>
-                    ))}
+                    {selectedItem.links?.map((link, idx) => {
+                      let finalUrl = link.url;
+
+                      // 네이버 뉴스 모바일 최적화 대응
+                      if (
+                        typeof window !== "undefined" &&
+                        finalUrl.includes("naver.com")
+                      ) {
+                        const isMobile = /iPhone|iPad|iPod|Android/i.test(
+                          navigator.userAgent
+                        );
+                        if (isMobile) {
+                          try {
+                            const urlObj = new URL(finalUrl);
+                            const articleId =
+                              urlObj.searchParams.get("article_id") ||
+                              urlObj.searchParams.get("aid");
+                            const officeId =
+                              urlObj.searchParams.get("office_id") ||
+                              urlObj.searchParams.get("oid");
+
+                            if (articleId && officeId) {
+                              finalUrl = `https://n.news.naver.com/mnews/article/${officeId}/${articleId}`;
+                            } else if (finalUrl.includes("finance.naver.com")) {
+                              // 파이낸스 메인 뉴스 등 쿼리스트링이 다른 경우 대비
+                              finalUrl = finalUrl.replace(
+                                "finance.naver.com",
+                                "m.finance.naver.com"
+                              );
+                            }
+                          } catch (e) {
+                            // URL 파싱 실패 시 원본 사용
+                          }
+                        }
+                      }
+
+                      return (
+                        <a
+                          key={idx}
+                          href={finalUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group/link flex items-center justify-between p-4 rounded-2xl border border-border-subtle bg-background hover:bg-accent hover:border-accent transition-all duration-300"
+                        >
+                          <span className="text-[13px] font-medium group-hover/link:text-white transition-colors line-clamp-1">
+                            {link.title}
+                          </span>
+                          <ExternalLink className="w-4 h-4 text-text-muted group-hover/link:text-white transition-colors shrink-0" />
+                        </a>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
