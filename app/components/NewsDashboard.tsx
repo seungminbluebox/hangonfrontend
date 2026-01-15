@@ -42,7 +42,7 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
   const selectedItem = news.find((item) => item.id === selectedId);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 items-start relative">
+    <div className="flex flex-col lg:flex-row gap-8 items-start relative pb-12">
       {/* Left: Search/List Area (Master) */}
       <div
         className={`w-full lg:flex-1 space-y-3 ${
