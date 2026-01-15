@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { ThemeToggle } from "./components/ThemeToggle";
+import { InstallButton } from "./components/InstallButton";
 import { DateNavigation } from "./components/DateNavigation";
 import { NewsDashboard } from "./components/NewsDashboard";
 import { TrendingUp, Globe, Calendar } from "lucide-react";
@@ -85,9 +86,12 @@ export default async function Home({
           </p>
         </div>
 
-        <div className="flex items-center gap-3 sm:gap-4 pt-1 sm:pt-2">
-          <DateNavigation currentDate={targetDate} />
-          <ThemeToggle />
+        <div className="flex flex-col items-center gap-4 pt-1 sm:pt-2">
+          <InstallButton />
+          <div className="flex items-center gap-3 sm:gap-4">
+            <DateNavigation currentDate={targetDate} />
+            <ThemeToggle />
+          </div>
         </div>
       </header>
 
