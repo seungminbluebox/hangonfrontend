@@ -22,7 +22,9 @@ export const metadata: Metadata = {
   },
   description:
     "매일 아침, 한국, 미국, 글로벌 핵심 경제 뉴스를 AI가 5줄로 요약해 드립니다. 바쁜 당신을 위한 데일리 경제 브리핑.",
-
+  verification: {
+    google: "s3EesPcMbnNyG3AyQ8QeuWZqx31h42Ze9188VtUYSNQ",
+  },
   // 검색 엔진 로봇 설정
   robots: {
     index: true,
