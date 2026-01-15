@@ -32,12 +32,36 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
 
   const handleSelect = (id: string) => {
     setSelectedId(id);
-    if (window.innerWidth < 1024) {
+    if (typeof window !== "undefined" && window.innerWidth < 1024) {
       setIsMobileDetailOpen(true);
-      // 상세 영역 스크롤을 상단으로 이동
-      detailRef.current?.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
+
+  // 모바일에서 다른 소식을 선택할 때마다 상세 영역을 상단으로 스크롤
+  useEffect(() => {
+    if (!selectedId) return;
+
+    if (typeof window === "undefined") return;
+
+    if (window.innerWidth < 1024) {
+      const el = detailRef.current;
+      if (el) {
+        // 일부 모바일 브라우저에서 smooth 동작이 불안정한 경우 대비해서 scrollTop 직접 설정
+        el.scrollTop = 0;
+        try {
+          el.scrollTo({ top: 0, behavior: "smooth" });
+        } catch {
+          // 지원하지 않는 브라우저는 silent fail
+        }
+      }
+
+      try {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } catch {
+        // window 스크롤도 실패 시 무시
+      }
+    }
+  }, [selectedId]);
 
   const selectedItem = news.find((item) => item.id === selectedId);
 
