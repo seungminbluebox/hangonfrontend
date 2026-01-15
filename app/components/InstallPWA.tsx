@@ -120,16 +120,16 @@ export function InstallPWA() {
         </div>
 
         {isIOS ? (
-          <div className="bg-accent/10 p-2.5 rounded-2xl shrink-0">
-            <Share2 className="w-5 h-5 text-accent animate-bounce" />
+          <div className="bg-accent text-white p-3 rounded-2xl shrink-0 shadow-[0_8px_20px_rgba(37,99,235,0.3)]">
+            <Share2 className="w-5 h-5 animate-bounce-subtle" />
           </div>
         ) : (
           <button
             onClick={handleInstallClick}
-            className="bg-accent text-white px-5 py-2.5 rounded-2xl text-[12px] font-black flex items-center gap-2 active:scale-95 transition-all shadow-[0_4px_12px_rgba(37,99,235,0.2)] hover:shadow-[0_6px_16px_rgba(37,99,235,0.3)] shrink-0"
+            className="group bg-accent text-white px-6 py-3 rounded-[1.25rem] text-[13px] font-black flex items-center gap-2 active:scale-95 transition-all shadow-[0_8px_25px_rgba(37,99,235,0.3)] hover:shadow-[0_12px_30px_rgba(37,99,235,0.4)] hover:-translate-y-0.5 shrink-0"
           >
-            <Download className="w-4 h-4 outline-3" />
-            설치
+            <Download className="w-4 h-4 group-hover:scale-110 transition-transform" />
+            앱 설치
           </button>
         )}
       </div>
