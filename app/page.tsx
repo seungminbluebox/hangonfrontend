@@ -3,6 +3,8 @@ import { ThemeToggle } from "./components/ThemeToggle";
 import { InstallButton } from "./components/InstallButton";
 import { DateNavigation } from "./components/DateNavigation";
 import { NewsDashboard } from "./components/NewsDashboard";
+import { MarketTicker } from "./components/MarketTicker";
+import { getMarketData } from "./lib/market";
 import { TrendingUp, Globe, Calendar } from "lucide-react";
 import { Metadata } from "next"; // 상단 import 추가
 
@@ -51,6 +53,8 @@ export default async function Home({
     .filter("created_at", "lte", endOfDay)
     .order("created_at", { ascending: false });
 
+  const marketData = await getMarketData();
+
   if (error)
     return (
       <div className="flex flex-col items-center justify-center min-h-screen p-10 text-center">
@@ -70,7 +74,7 @@ export default async function Home({
 
   return (
     <main className="min-h-screen bg-background text-foreground max-w-6xl mx-auto px-4 sm:px-8 transition-colors duration-500">
-      <header className="pt-12 pb-6 sm:pt-20 sm:pb-10 flex flex-col items-center justify-center text-center space-y-4 sm:space-y-6">
+      <header className="pt-6 pb-6 sm:pt-20 sm:pb-10 flex flex-col items-center justify-center text-center space-y-4 sm:space-y-6">
         <div className="space-y-1 sm:space-y-2">
           <div className="flex items-center justify-center gap-2">
             <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent" />
@@ -84,6 +88,10 @@ export default async function Home({
           <p className="text-text-muted text-[13px] sm:text-xl font-medium tracking-wide mt-2 sm:mt-3">
             잠깐의 시간, 글로벌 경제 흐름을 꽉 잡다
           </p>
+        </div>
+
+        <div className="w-full max-w-4xl mx-auto pt-2">
+          <MarketTicker data={marketData} />
         </div>
 
         <div className="flex flex-col items-center gap-4 pt-1 sm:pt-2">
