@@ -7,8 +7,10 @@ import {
   Newspaper,
   ChevronLeft,
   Share2,
+  LayoutGrid,
 } from "lucide-react";
 import { ShareCard } from "./ShareCard";
+import { DailyShareCard } from "./DailyShareCard";
 
 interface NewsItem {
   id: string;
@@ -25,6 +27,7 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
   );
   const [isMobileDetailOpen, setIsMobileDetailOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isDailyShareModalOpen, setIsDailyShareModalOpen] = useState(false);
   const detailRef = useRef<HTMLDivElement>(null);
 
   // 뉴스 데이터(날짜)가 변경되면 선택된 아이디를 첫 번째 뉴스로 리셋
@@ -81,6 +84,29 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
           isMobileDetailOpen ? "hidden lg:block" : "block"
         }`}
       >
+        {/* Daily Summary Button */}
+        {news.length > 0 && (
+          <button
+            onClick={() => setIsDailyShareModalOpen(true)}
+            className="w-full flex items-center justify-between p-5 rounded-2xl bg-accent/5 border border-accent/20 hover:bg-accent/10 transition-all group mb-4"
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-accent/10 rounded-xl group-hover:scale-110 transition-transform">
+                <LayoutGrid className="w-5 h-5 text-accent" />
+              </div>
+              <div className="text-left">
+                <h3 className="font-black text-accent text-sm tracking-tight">
+                  오늘의 소식 한눈에 공유
+                </h3>
+                <p className="text-[11px] text-accent/60 font-medium">
+                  5가지 주요 소식을 한 장의 카드에 담아보세요
+                </p>
+              </div>
+            </div>
+            <Share2 className="w-4 h-4 text-accent/40 group-hover:text-accent transition-colors" />
+          </button>
+        )}
+
         <div className="grid grid-cols-1 gap-2.5">
           {news.map((item) => (
             <button
@@ -157,7 +183,7 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
                     >
                       <Share2 className="w-4 h-4" />
                       <span className="text-xs font-bold text-accent group-hover:text-white">
-                        짤방공유
+                        소식 공유
                       </span>
                     </button>
                     <div className="h-px flex-1 bg-accent/40" />
@@ -280,7 +306,15 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
           title={selectedItem.keyword}
           category={selectedItem.category}
           summary={selectedItem.summary}
+          date={selectedItem.created_at}
           onClose={() => setIsShareModalOpen(false)}
+        />
+      )}
+
+      {isDailyShareModalOpen && (
+        <DailyShareCard
+          news={news}
+          onClose={() => setIsDailyShareModalOpen(false)}
         />
       )}
     </div>
