@@ -77,7 +77,7 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
     try {
       await navigator.share({
         files: [file],
-        title: `[한곳] ${dateStr} 글로벌 소식 요약`,
+        title: `[데일리] ${dateStr} 글로벌 소식 요약`,
         text: news.map((n, i) => `${i + 1}. ${n.keyword}`).join("\n"),
       });
     } catch (err) {

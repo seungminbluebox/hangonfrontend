@@ -80,13 +80,13 @@ export function ShareCard({
       ) {
         await navigator.share({
           files: [file],
-          title: `[한곳] ${title}`,
+          title: `[Hang on!] ${title}`,
           text: summary,
         });
       } else if (typeof navigator.share === "function") {
         // 파일 공유 비지원 시 텍스트만이라도 공유
         await navigator.share({
-          title: `[한곳] ${title}`,
+          title: `[Hang on!] ${title}`,
           text: `${title}\n\n${summary}`,
           url: window.location.href,
         });
@@ -147,7 +147,7 @@ export function ShareCard({
   };
 
   const handleCopyText = () => {
-    const text = `[한곳] 오늘의 뉴스 요약\n\n제목: ${title}\n\n${summary}\n\n#한곳 #뉴스요약 #경제뉴스`;
+    const text = `[Hang on!] 오늘의 뉴스 요약\n\n제목: ${title}\n\n${summary}\n\n#HangOn #뉴스요약 #경제뉴스`;
     navigator.clipboard.writeText(text);
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
@@ -242,10 +242,10 @@ export function ShareCard({
               <div className="mt-6 pt-8 border-t border-slate-100 flex items-center justify-between relative z-10">
                 <div className="flex flex-col gap-0.5">
                   <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest">
-                    Global Insight
+                    Economic Insight
                   </span>
                   <span className="text-lg font-black text-accent tracking-tighter italic">
-                    HANGON
+                    HANG ON!
                   </span>
                 </div>
               </div>
@@ -261,7 +261,7 @@ export function ShareCard({
                 className="col-span-2 flex items-center justify-center gap-2 py-4 bg-accent text-white hover:bg-accent/90 rounded-2xl font-black text-sm transition-all active:scale-[0.98] shadow-lg shadow-accent/20"
               >
                 <Share2 className="w-4 h-4" />
-                카톡 / 인스타 / 네이버 공유하기
+                공유하기
               </button>
             ) : (
               <button
