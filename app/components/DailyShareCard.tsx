@@ -206,14 +206,19 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
                 ))}
               </div>
 
-              <div className="mt-0 pt-6 border-t border-slate-100 flex items-center justify-between relative z-10 w-full">
-                <div className="flex flex-col gap-1">
-                  <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest">
-                    Powered by HANGON
+              <div className="mt-4 pt-5 border-t border-slate-100 relative z-10 w-full">
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest leading-none">
+                    Powered by HANG ON!
                   </span>
-                  <span className="text-sm font-black text-accent tracking-tighter italic">
-                    핵심만 골라 읽는 경제 습관
-                  </span>
+                  <div className="flex flex-col gap-1 mt-0.5">
+                    <span className="text-[14px] font-black text-accent tracking-tighter italic leading-none">
+                      핵심만 골라 읽는 경제 습관
+                    </span>
+                    <span className="text-[10px] font-bold text-slate-400 font-mono tracking-tighter whitespace-nowrap opacity-80">
+                      https://hangon-bay.vercel.app
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>

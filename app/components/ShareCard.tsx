@@ -239,13 +239,21 @@ export function ShareCard({
                 </div>
               </div>
 
-              <div className="mt-6 pt-8 border-t border-slate-100 flex items-center justify-between relative z-10">
+              <div className="mt-6 pt-8 border-t border-slate-100 flex items-end justify-between relative z-10">
                 <div className="flex flex-col gap-0.5">
                   <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest">
                     Economic Insight
                   </span>
                   <span className="text-lg font-black text-accent tracking-tighter italic">
                     HANG ON!
+                  </span>
+                </div>
+                <div className="flex flex-col items-end gap-1">
+                  <span className="text-[8px] font-bold text-slate-300 uppercase tracking-tight">
+                    Check out more
+                  </span>
+                  <span className="text-[10px] font-bold text-slate-400 font-mono tracking-tighter">
+                    https://hangon-bay.vercel.app
                   </span>
                 </div>
               </div>

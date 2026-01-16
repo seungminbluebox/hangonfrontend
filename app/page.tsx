@@ -5,7 +5,7 @@ import { DateNavigation } from "./components/DateNavigation";
 import { NewsDashboard } from "./components/NewsDashboard";
 import { MarketTicker } from "./components/MarketTicker";
 import { getMarketData } from "./lib/market";
-import { TrendingUp, Globe, Calendar } from "lucide-react";
+import { TrendingUp, Globe, Calendar, Mail } from "lucide-react";
 import { Metadata } from "next"; // 상단 import 추가
 
 const supabase = createClient(
@@ -120,11 +120,22 @@ export default async function Home({
       )}
 
       <footer className="py-20 text-center space-y-4 border-t border-border-subtle">
-        <div className="flex items-center justify-center gap-2 opacity-50">
-          <Globe className="w-4 h-4" />
-          <span className="text-[10px] font-bold tracking-widest uppercase">
-            Hang on! News Network
-          </span>
+        <div className="flex flex-col items-center justify-center gap-3">
+          <div className="flex items-center gap-2 opacity-50">
+            <Globe className="w-4 h-4" />
+            <span className="text-[10px] font-bold tracking-widest uppercase">
+              Hang on! News Network
+            </span>
+          </div>
+          <a
+            href="mailto:boxmann@naver.com"
+            className="flex items-center gap-2 text-text-muted hover:text-accent transition-colors"
+          >
+            <Mail className="w-3.5 h-3.5" />
+            <span className="text-[10px] font-medium tracking-tight">
+              boxmagic25@gmail.com
+            </span>
+          </a>
         </div>
         <p className="text-text-muted text-[10px] font-medium">
           © {new Date().getFullYear()} Hang on! All rights reserved.
