@@ -1,7 +1,14 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { ExternalLink, Info, Newspaper, ChevronLeft } from "lucide-react";
+import {
+  ExternalLink,
+  Info,
+  Newspaper,
+  ChevronLeft,
+  Share2,
+} from "lucide-react";
+import { ShareCard } from "./ShareCard";
 
 interface NewsItem {
   id: string;
@@ -17,6 +24,7 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
     news.length > 0 ? news[0].id : null
   );
   const [isMobileDetailOpen, setIsMobileDetailOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const detailRef = useRef<HTMLDivElement>(null);
 
   // 뉴스 데이터(날짜)가 변경되면 선택된 아이디를 첫 번째 뉴스로 리셋
@@ -141,8 +149,18 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
                     {selectedItem.keyword}
                   </h3>
 
-                  <div className="flex items-center gap-3">
-                    <div className="h-px w-10 bg-accent/40" />
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="h-px flex-1 bg-accent/40" />
+                    <button
+                      onClick={() => setIsShareModalOpen(true)}
+                      className="group flex items-center gap-2 px-4 py-2 bg-accent/5 hover:bg-accent text-accent hover:text-white rounded-full transition-all duration-300 transform active:scale-95"
+                    >
+                      <Share2 className="w-4 h-4" />
+                      <span className="text-xs font-bold text-accent group-hover:text-white">
+                        짤방공유
+                      </span>
+                    </button>
+                    <div className="h-px flex-1 bg-accent/40" />
                   </div>
 
                   <p className="text-[15px] sm:text-[16.5px] leading-[1.7] font-normal text-foreground/70 dark:text-foreground/85 tracking-tight whitespace-pre-line selection:bg-accent/5">
@@ -256,6 +274,15 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
           </div>
         )}
       </div>
+
+      {isShareModalOpen && selectedItem && (
+        <ShareCard
+          title={selectedItem.keyword}
+          category={selectedItem.category}
+          summary={selectedItem.summary}
+          onClose={() => setIsShareModalOpen(false)}
+        />
+      )}
     </div>
   );
 }
