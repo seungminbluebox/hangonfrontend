@@ -84,29 +84,6 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
           isMobileDetailOpen ? "hidden lg:block" : "block"
         }`}
       >
-        {/* Daily Summary Button */}
-        {news.length > 0 && (
-          <button
-            onClick={() => setIsDailyShareModalOpen(true)}
-            className="w-full flex items-center justify-between p-5 rounded-2xl bg-accent/5 border border-accent/20 hover:bg-accent/10 transition-all group mb-4"
-          >
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-accent/10 rounded-xl group-hover:scale-110 transition-transform">
-                <LayoutGrid className="w-5 h-5 text-accent" />
-              </div>
-              <div className="text-left">
-                <h3 className="font-black text-accent text-sm tracking-tight">
-                  오늘의 소식 한눈에 공유
-                </h3>
-                <p className="text-[11px] text-accent/60 font-medium">
-                  5가지 주요 소식을 한 장의 카드에 담아보세요
-                </p>
-              </div>
-            </div>
-            <Share2 className="w-4 h-4 text-accent/40 group-hover:text-accent transition-colors" />
-          </button>
-        )}
-
         <div className="grid grid-cols-1 gap-2.5">
           {news.map((item) => (
             <button
@@ -146,6 +123,29 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
             </button>
           ))}
         </div>
+
+        {/* Daily Summary Button - Moved to bottom */}
+        {news.length > 0 && (
+          <button
+            onClick={() => setIsDailyShareModalOpen(true)}
+            className="w-full flex items-center justify-between p-5 rounded-2xl bg-accent/5 border border-accent/20 hover:bg-accent/10 transition-all group mt-4 shadow-sm"
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-accent/10 rounded-xl group-hover:scale-110 transition-transform">
+                <LayoutGrid className="w-5 h-5 text-accent" />
+              </div>
+              <div className="text-left">
+                <h3 className="font-black text-accent text-sm tracking-tight">
+                  오늘의 소식 한눈에 공유
+                </h3>
+                <p className="text-[11px] text-accent/60 font-medium">
+                  5가지 주요 소식을 한 장의 카드에 담아보세요
+                </p>
+              </div>
+            </div>
+            <Share2 className="w-4 h-4 text-accent/40 group-hover:text-accent transition-colors" />
+          </button>
+        )}
       </div>
 
       {/* Right: Detail Area */}
