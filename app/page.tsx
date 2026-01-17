@@ -31,9 +31,13 @@ export async function generateMetadata({
     openGraph: {
       title: `${targetDate} 경제를 붙잡다, Hang on!`,
       description: "오늘의 핵심 경제 이슈를 확인하세요.",
+      url: `https://hangon.co.kr${date ? `?date=${date}` : ""}`,
+      siteName: "Hang on!",
+      locale: "ko_KR",
+      type: "website",
       images: [
         {
-          url: "/og-image.png",
+          url: "https://hangon.co.kr/og-image.png",
           width: 1200,
           height: 630,
           alt: "Hang on! Dashboard Preview",
@@ -44,7 +48,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: `${targetDate} 경제를 붙잡다, Hang on!`,
       description: "오늘의 핵심 경제 이슈를 확인하세요.",
-      images: ["/og-image.png"],
+      images: ["https://hangon.co.kr/og-image.png"],
     },
   };
 }

@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     url: "https://hangon.co.kr",
     images: [
       {
-        url: "/og-image.png", // metadataBase 덕분에 자동으로 https://hangon.co.kr/og-image.png 가 됨
+        url: "https://hangon.co.kr/og-image.png",
         width: 1200,
         height: 630,
         alt: "Hang on! Dashboard Preview",
@@ -54,7 +54,13 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Hang on! , 글로벌 경제 1분 요약",
     description: "매일 아침 업데이트되는 AI 경제 요약 서비스",
-    images: ["/og-image.png"],
+    images: ["https://hangon.co.kr/og-image.png"],
+  },
+
+  // 기타 메타태그 (네이버 등 대응)
+  other: {
+    "naver-site-verification": "e8GFaticEEwsz1Dk9jxOUBF1MsiZJIW7vV9QQV5Rulo", // google verification과 별개라면
+    image: "https://hangon.co.kr/og-image.png",
   },
 
   // 파비콘 및 아이콘 설정
