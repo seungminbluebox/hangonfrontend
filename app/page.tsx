@@ -7,6 +7,7 @@ import { MarketTicker } from "./components/MarketTicker";
 import { getMarketData } from "./lib/market";
 import { TrendingUp, Globe, Calendar, Mail } from "lucide-react";
 import { Metadata } from "next"; // 상단 import 추가
+import Link from "next/link";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -54,6 +55,25 @@ export default async function Home({
     .order("created_at", { ascending: false });
 
   const marketData = await getMarketData();
+
+  // [추가] 검색 엔진을 위한 구조화된 데이터 (JSON-LD) 생성
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    headline: `${targetDate} 글로벌 경제 핵심 요약`,
+    image: ["https://hangon.co.kr/og-image.png"],
+    datePublished: startOfDay,
+    dateModified: new Date().toISOString(),
+    author: [
+      {
+        "@type": "Organization",
+        name: "Hang on!",
+        url: "https://hangon.co.kr",
+      },
+    ],
+    description:
+      "오늘의 한국, 미국, 글로벌 경제 주요 이슈를 핵심요약해 드립니다.",
+  };
 
   if (error)
     return (
@@ -128,19 +148,32 @@ export default async function Home({
             </span>
           </div>
           <a
-            href="mailto:boxmann@naver.com"
+            href="mailto:boxmagic25@gmail.com"
             className="flex items-center gap-2 text-text-muted hover:text-accent transition-colors"
           >
             <Mail className="w-3.5 h-3.5" />
             <span className="text-[10px] font-medium tracking-tight">
-              blueball8537@gmail.com
+              Contact & Feedback
             </span>
           </a>
+          {/* [추가] 개인정보처리방침 링크 */}
+          <div className="text-[11px] font-medium text-text-muted/80 mt-1">
+            <Link
+              href="/privacy"
+              className="hover:text-accent transition-colors"
+            >
+              Privacy Policy
+            </Link>
+          </div>
         </div>
         <p className="text-text-muted text-[10px] font-medium">
           © {new Date().getFullYear()} Hang on! All rights reserved.
         </p>
       </footer>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
     </main>
   );
 }
