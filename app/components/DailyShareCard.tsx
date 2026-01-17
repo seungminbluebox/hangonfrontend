@@ -51,7 +51,7 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
       style: {
         transform: "scale(1)",
         transformOrigin: "top left",
-        width: "340px",
+        width: "320px",
         backgroundColor: "#ffffff",
         borderRadius: "35px",
         boxShadow: "none",
@@ -113,8 +113,8 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
         style: {
           transform: "scale(1)",
           transformOrigin: "top left",
-          width: "340px",
-          backgroundColor: "#ffffff",
+          width: "320px",
+          backgroundColor: "#F8F7F4",
           borderRadius: "35px",
           boxShadow: "none",
         },
@@ -168,7 +168,7 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
               style={{
                 fontFamily: "var(--font-sans)",
                 color: "#0f172a",
-                backgroundColor: "#ffffff",
+                backgroundColor: "#F8F7F4", //#F1FAFF
                 borderRadius: "35px",
               }}
             >
@@ -210,7 +210,7 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
                 ))}
               </div>
 
-              <div className="mt-4 pt-5 border-t border-slate-100 relative z-10 w-full">
+              <div className="mt-0 pt-0 border-t border-slate-100 relative z-10 w-full">
                 <div className="flex flex-col gap-1.5">
                   <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest leading-none">
                     Powered by HANG ON!

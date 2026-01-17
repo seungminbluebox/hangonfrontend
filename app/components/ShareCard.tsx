@@ -54,8 +54,8 @@ export function ShareCard({
       style: {
         transform: "scale(1)",
         transformOrigin: "top left",
-        width: "340px",
-        backgroundColor: "#ffffff",
+        width: "320px",
+        backgroundColor: "#F8F7F4",
         borderRadius: "35px",
         boxShadow: "none",
       },
@@ -132,8 +132,8 @@ export function ShareCard({
         style: {
           transform: "scale(1)",
           transformOrigin: "top left",
-          width: "340px",
-          backgroundColor: "#ffffff",
+          width: "320px",
+          backgroundColor: "#F8F7F4",
           borderRadius: "35px",
           boxShadow: "none",
         },
@@ -243,7 +243,7 @@ export function ShareCard({
                 </div>
               </div>
 
-              <div className="mt-6 pt-8 border-t border-slate-100 flex items-end justify-between relative z-10">
+              <div className="mt-0 pt-0 border-t border-slate-100 flex items-end justify-between relative z-10">
                 <div className="flex flex-col gap-0.5">
                   <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest">
                     Economic Insight
@@ -254,7 +254,7 @@ export function ShareCard({
                 </div>
                 <div className="flex flex-col items-end gap-1">
                   <span className="text-[8px] font-bold text-slate-300 uppercase tracking-tight">
-                    Check out more
+                    더 많은 정보는?
                   </span>
                   <span className="text-[10px] font-bold text-slate-400 font-mono tracking-tighter">
                     www.hangon.co.kr
