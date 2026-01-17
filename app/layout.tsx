@@ -88,6 +88,24 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "Hang on(행온)!",
+      alternateName: ["행온", "Hangon"],
+      url: "https://hangon.co.kr",
+      image: "https://hangon.co.kr/og-image.png",
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: "Hang on(행온)!",
+      url: "https://hangon.co.kr",
+      logo: "https://hangon.co.kr/og-image.png",
+    },
+  ];
+
   return (
     <html
       lang="ko"
@@ -96,6 +114,10 @@ export default function RootLayout({
     >
       <head>
         <link rel="manifest" href="/manifest.json" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `
