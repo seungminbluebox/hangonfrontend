@@ -49,6 +49,7 @@ export function ShareCard({
     if (!cardRef.current) return null;
     return await toBlob(cardRef.current, {
       cacheBust: true,
+      pixelRatio: 2,
       backgroundColor: "rgba(0,0,0,0)",
       style: {
         transform: "scale(1)",
@@ -56,6 +57,7 @@ export function ShareCard({
         width: "340px",
         backgroundColor: "#ffffff",
         borderRadius: "35px",
+        boxShadow: "none",
       },
     });
   };
@@ -125,6 +127,7 @@ export function ShareCard({
     try {
       const dataUrl = await toPng(cardRef.current, {
         cacheBust: true,
+        pixelRatio: 2,
         backgroundColor: "rgba(0,0,0,0)",
         style: {
           transform: "scale(1)",
@@ -132,6 +135,7 @@ export function ShareCard({
           width: "340px",
           backgroundColor: "#ffffff",
           borderRadius: "35px",
+          boxShadow: "none",
         },
       });
 

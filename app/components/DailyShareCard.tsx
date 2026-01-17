@@ -46,6 +46,7 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
     if (!cardRef.current) return null;
     return await toBlob(cardRef.current, {
       cacheBust: true,
+      pixelRatio: 2,
       backgroundColor: "rgba(0,0,0,0)",
       style: {
         transform: "scale(1)",
@@ -53,6 +54,7 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
         width: "340px",
         backgroundColor: "#ffffff",
         borderRadius: "35px",
+        boxShadow: "none",
       },
     });
   };
@@ -106,6 +108,7 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
     try {
       const dataUrl = await toPng(cardRef.current, {
         cacheBust: true,
+        pixelRatio: 2,
         backgroundColor: "rgba(0, 0, 0, 0)",
         style: {
           transform: "scale(1)",
@@ -113,6 +116,7 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
           width: "340px",
           backgroundColor: "#ffffff",
           borderRadius: "35px",
+          boxShadow: "none",
         },
       });
       const link = document.createElement("a");
