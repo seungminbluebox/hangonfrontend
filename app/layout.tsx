@@ -119,8 +119,8 @@ export default function RootLayout({
           {children}
           <InstallPWA />
         </Providers>
+        <GoogleAnalytics gaId="G-GGHNG01WQ9" />
       </body>
-      <GoogleAnalytics gaId="G-2RYMSF25ET" />
     </html>
   );
 }
