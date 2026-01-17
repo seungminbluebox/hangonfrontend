@@ -193,7 +193,7 @@ export function ShareCard({
             {/* 이미지로 렌더링될 영역: 더 세련된 카드 디자인 */}
             <div
               ref={cardRef}
-              className={`w-[340px] pt-8 px-8 pb-10 rounded-[35px] shadow-2xl relative overflow-hidden flex flex-col gap-6 border transition-colors duration-300 ${
+              className={`w-[320px] pt-8 px-8 pb-10 rounded-[35px] shadow-2xl relative overflow-hidden flex flex-col gap-6 border transition-colors duration-300 ${
                 shareTheme === "light"
                   ? "bg-[#F8F7F4] text-slate-900 border-slate-100"
                   : "bg-[#0f172a] text-slate-100 border-slate-800"
