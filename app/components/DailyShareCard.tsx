@@ -30,6 +30,7 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
   const [isCopied, setIsCopied] = useState(false);
   const [isImageCopied, setIsImageCopied] = useState(false);
   const [canShare, setCanShare] = useState(false);
+  const [shareTheme, setShareTheme] = useState<"light" | "dark">("light");
 
   useEffect(() => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -52,7 +53,7 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
         transform: "scale(1)",
         transformOrigin: "top left",
         width: "320px",
-        backgroundColor: "#ffffff",
+        backgroundColor: shareTheme === "light" ? "#F8F7F4" : "#0f172a",
         borderRadius: "35px",
         boxShadow: "none",
       },
@@ -114,7 +115,7 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
           transform: "scale(1)",
           transformOrigin: "top left",
           width: "320px",
-          backgroundColor: "#F8F7F4",
+          backgroundColor: shareTheme === "light" ? "#F8F7F4" : "#0f172a",
           borderRadius: "35px",
           boxShadow: "none",
         },
@@ -161,30 +162,48 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
         </div>
 
         <div className="px-4 py-6 bg-black/5 dark:bg-white/5 overflow-y-auto max-h-[60vh] flex flex-col items-center justify-center min-h-[450px]">
-          <div className="flex-shrink-0 scale-[0.75] xs:scale-[0.85] sm:scale-[0.9] origin-center transition-transform duration-300">
+          <div className="flex-shrink-0 scale-[0.75] xs:scale-[0.85] sm:scale-[0.9] origin-center transition-all duration-300">
             <div
               ref={cardRef}
-              className="w-[340px] bg-white text-slate-900 pt-8 px-8 pb-10 rounded-[35px] shadow-2xl relative overflow-hidden flex flex-col gap-6 border border-slate-100"
+              className={`w-[340px] pt-8 px-8 pb-10 rounded-[35px] shadow-2xl relative overflow-hidden flex flex-col gap-6 border transition-colors duration-300 ${
+                shareTheme === "light"
+                  ? "bg-[#F8F7F4] text-slate-900 border-slate-100"
+                  : "bg-[#0f172a] text-slate-100 border-slate-800"
+              }`}
               style={{
                 fontFamily: "var(--font-sans)",
-                color: "#0f172a",
-                backgroundColor: "#F8F7F4", //#F1FAFF
                 borderRadius: "35px",
               }}
             >
               <div className="absolute top-0 right-0 w-48 h-48 bg-accent/[0.03] rounded-full -mr-24 -mt-24 blur-3xl" />
               <div className="absolute bottom-0 left-0 w-40 h-40 bg-accent/[0.04] rounded-full -ml-20 -mb-20 blur-2xl" />
 
-              <div className="flex items-center justify-between relative z-10 border-b border-slate-100 pb-4">
+              <div
+                className={`flex items-center justify-between relative z-10 border-b pb-4 transition-colors ${
+                  shareTheme === "light"
+                    ? "border-slate-100"
+                    : "border-slate-800"
+                }`}
+              >
                 <div className="flex flex-col gap-1">
                   <span className="text-[12px] font-black text-accent tracking-[0.2em] uppercase">
                     Daily Summary
                   </span>
-                  <h2 className="text-xl font-black text-slate-800 tracking-tight leading-none">
+                  <h2
+                    className={`text-xl font-black tracking-tight leading-none transition-colors ${
+                      shareTheme === "light"
+                        ? "text-slate-800"
+                        : "text-slate-100"
+                    }`}
+                  >
                     데일리 경제 뉴스
                   </h2>
                 </div>
-                <span className="text-[11px] font-bold text-slate-400 font-mono">
+                <span
+                  className={`text-[11px] font-bold font-mono transition-colors ${
+                    shareTheme === "light" ? "text-slate-500" : "text-slate-400"
+                  }`}
+                >
                   {new Date(news[0]?.created_at || new Date())
                     .toLocaleDateString("ko-KR", {
                       month: "2-digit",
@@ -202,7 +221,13 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
                       {String(idx + 1).padStart(2, "0")}
                     </span>
                     <div className="flex flex-col gap-0.5">
-                      <h4 className="text-[14px] font-black text-slate-800 leading-snug break-keep">
+                      <h4
+                        className={`text-[14px] font-black leading-snug break-keep transition-colors ${
+                          shareTheme === "light"
+                            ? "text-slate-800"
+                            : "text-slate-200"
+                        }`}
+                      >
                         {item.keyword}
                       </h4>
                     </div>
@@ -210,16 +235,34 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
                 ))}
               </div>
 
-              <div className="mt-0 pt-0 border-t border-slate-100 relative z-10 w-full">
-                <div className="flex flex-col gap-1.5">
-                  <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest leading-none">
+              <div
+                className={`mt-0 pt-0 border-t relative z-10 w-full transition-colors ${
+                  shareTheme === "light"
+                    ? "border-slate-100"
+                    : "border-slate-800"
+                }`}
+              >
+                <div className="flex flex-col gap-1.5 py-4">
+                  <span
+                    className={`text-[9px] font-bold uppercase tracking-widest leading-none transition-colors ${
+                      shareTheme === "light"
+                        ? "text-slate-500"
+                        : "text-slate-400"
+                    }`}
+                  >
                     Powered by HANG ON!
                   </span>
                   <div className="flex flex-col gap-1 mt-0.5">
                     <span className="text-[14px] font-black text-accent tracking-tighter italic leading-none">
                       핵심만 골라 읽는 경제 습관
                     </span>
-                    <span className="text-[10px] font-bold text-slate-400 font-mono tracking-tighter whitespace-nowrap opacity-80">
+                    <span
+                      className={`text-[10px] font-bold font-mono tracking-tighter whitespace-nowrap transition-colors ${
+                        shareTheme === "light"
+                          ? "text-slate-500"
+                          : "text-slate-400"
+                      }`}
+                    >
                       www.hangon.co.kr
                     </span>
                   </div>
@@ -229,7 +272,30 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
           </div>
         </div>
 
-        <div className="p-4 bg-card border-t border-border-subtle flex flex-col gap-3">
+        <div className="p-4 bg-card border-t border-border-subtle flex flex-col gap-4">
+          <div className="flex bg-muted/50 p-1 rounded-2xl w-full">
+            <button
+              onClick={() => setShareTheme("light")}
+              className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
+                shareTheme === "light"
+                  ? "bg-white text-slate-900 shadow-sm"
+                  : "text-text-muted hover:text-foreground"
+              }`}
+            >
+              라이트 모드
+            </button>
+            <button
+              onClick={() => setShareTheme("dark")}
+              className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
+                shareTheme === "dark"
+                  ? "bg-slate-800 text-white shadow-sm"
+                  : "text-text-muted hover:text-foreground"
+              }`}
+            >
+              다크 모드
+            </button>
+          </div>
+
           <div className="grid grid-cols-2 gap-3">
             <button
               onClick={canShare ? handleWebShare : handleCopyImage}

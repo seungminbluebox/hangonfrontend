@@ -32,6 +32,7 @@ export function ShareCard({
   const [isCopied, setIsCopied] = useState(false);
   const [isImageCopied, setIsImageCopied] = useState(false);
   const [canShare, setCanShare] = useState(false);
+  const [shareTheme, setShareTheme] = useState<"light" | "dark">("light");
 
   useEffect(() => {
     // 모바일 기기이거나 공유 기능이 있으면 공유 버튼 활성화
@@ -55,7 +56,7 @@ export function ShareCard({
         transform: "scale(1)",
         transformOrigin: "top left",
         width: "320px",
-        backgroundColor: "#F8F7F4",
+        backgroundColor: shareTheme === "light" ? "#F8F7F4" : "#0f172a",
         borderRadius: "35px",
         boxShadow: "none",
       },
@@ -133,7 +134,7 @@ export function ShareCard({
           transform: "scale(1)",
           transformOrigin: "top left",
           width: "320px",
-          backgroundColor: "#F8F7F4",
+          backgroundColor: shareTheme === "light" ? "#F8F7F4" : "#0f172a",
           borderRadius: "35px",
           boxShadow: "none",
         },
@@ -188,15 +189,17 @@ export function ShareCard({
         </div>
 
         <div className="px-4 py-6 bg-black/5 dark:bg-white/5 overflow-y-auto max-h-[60vh] flex flex-col items-center justify-center min-h-[450px]">
-          <div className="flex-shrink-0 scale-[0.75] xs:scale-[0.85] sm:scale-[0.9] origin-center transition-transform duration-300">
+          <div className="flex-shrink-0 scale-[0.75] xs:scale-[0.85] sm:scale-[0.9] origin-center transition-all duration-300">
             {/* 이미지로 렌더링될 영역: 더 세련된 카드 디자인 */}
             <div
               ref={cardRef}
-              className="w-[340px] bg-white text-slate-900 pt-8 px-8 pb-10 rounded-[35px] shadow-2xl relative overflow-hidden flex flex-col gap-6 border border-slate-100"
+              className={`w-[340px] pt-8 px-8 pb-10 rounded-[35px] shadow-2xl relative overflow-hidden flex flex-col gap-6 border transition-colors duration-300 ${
+                shareTheme === "light"
+                  ? "bg-[#F8F7F4] text-slate-900 border-slate-100"
+                  : "bg-[#0f172a] text-slate-100 border-slate-800"
+              }`}
               style={{
                 fontFamily: "var(--font-sans)",
-                color: "#0f172a",
-                backgroundColor: "#ffffff",
                 borderRadius: "35px",
               }}
             >
@@ -204,14 +207,24 @@ export function ShareCard({
               <div className="absolute top-0 right-0 w-48 h-48 bg-accent/[0.03] rounded-full -mr-24 -mt-24 blur-3xl" />
               <div className="absolute bottom-0 left-0 w-40 h-40 bg-accent/[0.04] rounded-full -ml-20 -mb-20 blur-2xl" />
 
-              <div className="flex items-center justify-between relative z-10">
+              <div className="flex items-center justify-between relative z-10 transition-colors">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-6 bg-accent rounded-full" />
-                  <span className="text-[11px] font-black text-slate-400 tracking-[0.2em] uppercase">
+                  <span
+                    className={`text-[11px] font-black tracking-[0.2em] uppercase transition-colors ${
+                      shareTheme === "light"
+                        ? "text-slate-500"
+                        : "text-slate-400"
+                    }`}
+                  >
                     {category} BRIEF
                   </span>
                 </div>
-                <span className="text-[11px] font-bold text-slate-300 font-mono tracking-tighter">
+                <span
+                  className={`text-[11px] font-bold font-mono tracking-tighter transition-colors ${
+                    shareTheme === "light" ? "text-slate-500" : "text-slate-400"
+                  }`}
+                >
                   {new Date(date)
                     .toLocaleDateString("ko-KR", {
                       year: "numeric",
@@ -224,7 +237,11 @@ export function ShareCard({
               </div>
 
               <div className="relative z-10 flex flex-col gap-6">
-                <h2 className="text-2xl font-black leading-[1.3] tracking-tight break-keep text-slate-800">
+                <h2
+                  className={`text-2xl font-black leading-[1.3] tracking-tight break-keep transition-colors ${
+                    shareTheme === "light" ? "text-slate-800" : "text-slate-100"
+                  }`}
+                >
                   {title}
                 </h2>
 
@@ -235,7 +252,13 @@ export function ShareCard({
                     .map((line, i) => (
                       <div key={i} className="flex gap-3 items-start">
                         <div className="mt-2 w-1.5 h-1.5 rounded-full bg-accent/40 shrink-0" />
-                        <p className="text-[15px] leading-relaxed text-slate-600 font-semibold break-keep">
+                        <p
+                          className={`text-[15px] leading-relaxed font-semibold break-keep transition-colors ${
+                            shareTheme === "light"
+                              ? "text-slate-600"
+                              : "text-slate-300"
+                          }`}
+                        >
                           {line.replace(/^[•-]\s*/, "")}
                         </p>
                       </div>
@@ -243,9 +266,21 @@ export function ShareCard({
                 </div>
               </div>
 
-              <div className="mt-0 pt-0 border-t border-slate-100 flex items-end justify-between relative z-10">
+              <div
+                className={`mt-0 pt-0 border-t flex items-end justify-between relative z-10 py-4 transition-colors ${
+                  shareTheme === "light"
+                    ? "border-slate-100"
+                    : "border-slate-800"
+                }`}
+              >
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest">
+                  <span
+                    className={`text-[9px] font-bold uppercase tracking-widest transition-colors ${
+                      shareTheme === "light"
+                        ? "text-slate-500"
+                        : "text-slate-400"
+                    }`}
+                  >
                     Economic Insight
                   </span>
                   <span className="text-lg font-black text-accent tracking-tighter italic">
@@ -253,10 +288,22 @@ export function ShareCard({
                   </span>
                 </div>
                 <div className="flex flex-col items-end gap-1">
-                  <span className="text-[8px] font-bold text-slate-300 uppercase tracking-tight">
+                  <span
+                    className={`text-[8px] font-bold uppercase tracking-tight transition-colors ${
+                      shareTheme === "light"
+                        ? "text-slate-500"
+                        : "text-slate-400"
+                    }`}
+                  >
                     더 많은 정보는?
                   </span>
-                  <span className="text-[10px] font-bold text-slate-400 font-mono tracking-tighter">
+                  <span
+                    className={`text-[10px] font-bold font-mono tracking-tighter transition-colors ${
+                      shareTheme === "light"
+                        ? "text-slate-500"
+                        : "text-slate-400"
+                    }`}
+                  >
                     www.hangon.co.kr
                   </span>
                 </div>
@@ -265,7 +312,30 @@ export function ShareCard({
           </div>
         </div>
 
-        <div className="p-4 bg-card border-t border-border-subtle flex flex-col gap-3">
+        <div className="p-4 bg-card border-t border-border-subtle flex flex-col gap-4">
+          <div className="flex bg-muted/50 p-1 rounded-2xl w-full">
+            <button
+              onClick={() => setShareTheme("light")}
+              className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
+                shareTheme === "light"
+                  ? "bg-white text-slate-900 shadow-sm"
+                  : "text-text-muted hover:text-foreground"
+              }`}
+            >
+              라이트 모드
+            </button>
+            <button
+              onClick={() => setShareTheme("dark")}
+              className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
+                shareTheme === "dark"
+                  ? "bg-slate-800 text-white shadow-sm"
+                  : "text-text-muted hover:text-foreground"
+              }`}
+            >
+              다크 모드
+            </button>
+          </div>
+
           <div className="grid grid-cols-2 gap-3">
             {canShare ? (
               <button
