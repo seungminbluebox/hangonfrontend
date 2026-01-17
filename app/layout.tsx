@@ -16,6 +16,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://hangon.co.kr"),
   title: {
     default: "Hang on! | 글로벌 경제 1분 요약",
     template: "%s | Hang on!", // 하위 페이지에서 제목을 동적으로 바꿀 때 사용
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
     follow: true,
   },
 
-  // 소셜 미디어 공유 미리보기 (카톡, 페이스북 등)
+  // 소셜 미디어 공유 미리보기
   openGraph: {
     title: "Hang on! - 오늘의 경제를 붙잡다",
     description:
@@ -36,13 +37,14 @@ export const metadata: Metadata = {
     siteName: "Hang on!",
     locale: "ko_KR",
     type: "website",
-    // Vercel 배포 후 'public' 폴더에 og-image.png를 넣어두면 자동으로 잡힘
+    // [수정] 새 도메인으로 변경
+    url: "https://hangon.co.kr",
     images: [
       {
-        url: "/og-image.png",
+        url: "/og-image.png", // metadataBase 덕분에 자동으로 https://hangon.co.kr/og-image.png 가 됨
         width: 1200,
         height: 630,
-        alt: "Hang on! Daily News",
+        alt: "Hang on! Dashboard Preview",
       },
     ],
   },
@@ -59,7 +61,8 @@ export const metadata: Metadata = {
     icon: "/favicon.ico",
   },
 
-  // PWA 관련 설정 (iOS 대응)
+  // PWA 관련 설정
+  manifest: "/manifest.json", // [중요] manifest 경로 명시 (기존 코드에 없었다면 추가)
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -67,6 +70,9 @@ export const metadata: Metadata = {
   },
   formatDetection: {
     telephone: false,
+  },
+  verification: {
+    google: "e8GFaticEEwsz1Dk9jxOUBF1MsiZJIW7vV9QQV5Rulo", // 기존 코드가 유효한지 확인 필요
   },
 };
 
@@ -98,7 +104,7 @@ export default function RootLayout({
       </head>
       <meta
         name="google-site-verification"
-        content="s3EesPcMbnNyG3AyQ8QeuWZqx31h42Ze9188VtUYSNQ"
+        content="e8GFaticEEwsz1Dk9jxOUBF1MsiZJIW7vV9QQV5Rulo"
       />
       {/* {GTM_ID && <GoogleTagManager gtmId={GTM_ID} />} */}
       <body className="font-sans antialiased text-[15px] tracking-tight">

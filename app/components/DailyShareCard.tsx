@@ -220,7 +220,7 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
                       핵심만 골라 읽는 경제 습관
                     </span>
                     <span className="text-[10px] font-bold text-slate-400 font-mono tracking-tighter whitespace-nowrap opacity-80">
-                      https://hangon-bay.vercel.app
+                      www.hangon.co.kr
                     </span>
                   </div>
                 </div>

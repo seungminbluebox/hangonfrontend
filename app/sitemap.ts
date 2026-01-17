@@ -3,7 +3,7 @@ import { MetadataRoute } from "next";
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: "https://hangon-bay.vercel.app/",
+      url: "https://hangon.co.kr/",
       lastModified: new Date(),
       changeFrequency: "daily",
       priority: 1,

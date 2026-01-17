@@ -257,7 +257,7 @@ export function ShareCard({
                     Check out more
                   </span>
                   <span className="text-[10px] font-bold text-slate-400 font-mono tracking-tighter">
-                    https://hangon-bay.vercel.app
+                    www.hangon.co.kr
                   </span>
                 </div>
               </div>
