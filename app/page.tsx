@@ -133,7 +133,7 @@ export default async function Home({
           >
             <Mail className="w-3.5 h-3.5" />
             <span className="text-[10px] font-medium tracking-tight">
-              boxmagic25@gmail.com
+              blueball8537@gmail.com
             </span>
           </a>
         </div>
