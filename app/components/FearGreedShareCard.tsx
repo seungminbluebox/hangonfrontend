@@ -187,25 +187,24 @@ export function FearGreedShareCard({ data, onClose }: FearGreedShareCardProps) {
 
               <div className="flex flex-col gap-4 flex-1 justify-center">
                 <div
-                  className={`flex flex-col items-center justify-center pt-3 pb-1 rounded-[2.5rem] border shadow-sm relative overflow-hidden ${
+                  className={`flex flex-col items-center justify-center pt-6 pb-4 rounded-[3rem] border shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden ${
                     shareTheme === "light"
-                      ? "bg-white/60 border-neutral-200/50"
-                      : "bg-white/5 border-white/10"
+                      ? "bg-white/80 border-white"
+                      : "bg-white/[0.03] border-white/10"
                   }`}
                 >
                   <div
                     className={`absolute inset-0 pointer-events-none ${
                       shareTheme === "light"
-                        ? "bg-gradient-to-b from-transparent to-neutral-50/50"
-                        : "bg-gradient-to-b from-transparent to-white/5"
+                        ? "bg-gradient-to-b from-white to-transparent opacity-50"
+                        : "bg-gradient-to-b from-white/10 to-transparent opacity-20"
                     }`}
                   />
-                  <div className="relative w-52 h-26 overflow-hidden z-10 scale-[1.1] origin-bottom transition-transform">
+                  <div className="relative w-52 h-26 overflow-hidden z-10 scale-[1.05] origin-bottom transition-transform">
                     <svg
                       className="absolute top-0 left-0 w-52 h-52 -rotate-180"
                       viewBox="0 0 100 100"
                     >
-                      {/* ... (svg contents) */}
                       <circle
                         cx="50"
                         cy="50"
@@ -214,9 +213,9 @@ export function FearGreedShareCard({ data, onClose }: FearGreedShareCardProps) {
                         stroke={
                           shareTheme === "light"
                             ? "#f1f5f9"
-                            : "rgba(255,255,255,0.1)"
+                            : "rgba(255,255,255,0.05)"
                         }
-                        strokeWidth="12"
+                        strokeWidth="8"
                         strokeDasharray="132 264"
                       />
                       <circle
@@ -225,7 +224,7 @@ export function FearGreedShareCard({ data, onClose }: FearGreedShareCardProps) {
                         r="42"
                         fill="none"
                         stroke="#ef4444"
-                        strokeWidth="12"
+                        strokeWidth="10"
                         strokeDasharray="33 264"
                       />
                       <circle
@@ -234,7 +233,7 @@ export function FearGreedShareCard({ data, onClose }: FearGreedShareCardProps) {
                         r="42"
                         fill="none"
                         stroke="#f97316"
-                        strokeWidth="12"
+                        strokeWidth="10"
                         strokeDasharray="26 264"
                         strokeDashoffset="-33"
                       />
@@ -244,7 +243,7 @@ export function FearGreedShareCard({ data, onClose }: FearGreedShareCardProps) {
                         r="42"
                         fill="none"
                         stroke="#eab308"
-                        strokeWidth="12"
+                        strokeWidth="10"
                         strokeDasharray="14 264"
                         strokeDashoffset="-59"
                       />
@@ -254,7 +253,7 @@ export function FearGreedShareCard({ data, onClose }: FearGreedShareCardProps) {
                         r="42"
                         fill="none"
                         stroke="#10b981"
-                        strokeWidth="12"
+                        strokeWidth="10"
                         strokeDasharray="26 264"
                         strokeDashoffset="-73"
                       />
@@ -264,13 +263,13 @@ export function FearGreedShareCard({ data, onClose }: FearGreedShareCardProps) {
                         r="42"
                         fill="none"
                         stroke="#22c55e"
-                        strokeWidth="12"
+                        strokeWidth="10"
                         strokeDasharray="33 264"
                         strokeDashoffset="-99"
                       />
                     </svg>
                     <div
-                      className={`absolute bottom-0 left-1/2 w-1 h-22 -translate-x-1/2 origin-bottom transition-all duration-1000 z-20 ${
+                      className={`absolute bottom-0 left-1/2 w-0.5 h-20 -translate-x-1/2 origin-bottom transition-all duration-1000 z-20 ${
                         shareTheme === "light" ? "bg-neutral-900" : "bg-white"
                       }`}
                       style={{
@@ -279,47 +278,50 @@ export function FearGreedShareCard({ data, onClose }: FearGreedShareCardProps) {
                       }}
                     />
                     <div
-                      className={`absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-5 h-5 rounded-full z-30 shadow-sm border-[4px] ${
+                      className={`absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-4 h-4 rounded-full z-30 shadow-md border-[3px] ${
                         shareTheme === "light"
                           ? "bg-white border-neutral-900"
                           : "bg-[#0f172a] border-white"
                       }`}
                     />
                   </div>
-                  <div className="mt-5 text-center z-10">
+                  <div className="mt-4 text-center z-10">
                     <div
-                      className="text-6xl font-black tracking-tighter"
+                      className="text-6xl font-black tracking-tighter tabular-nums"
                       style={{
                         color: statusColor,
-                        filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.05))",
+                        filter:
+                          shareTheme === "light"
+                            ? "drop-shadow(0 4px 12px rgba(0,0,0,0.08))"
+                            : "none",
                       }}
                     >
                       {Math.round(data.value)}
                     </div>
                     <div
-                      className="text-[11px] font-black uppercase tracking-[.25em] mt-0.5"
+                      className="text-[10px] font-black uppercase tracking-[0.4em] mt-1 opacity-90"
                       style={{ color: statusColor }}
                     >
                       {data.description === "greed"
-                        ? "탐욕"
+                        ? "Greed"
                         : data.description === "extreme greed"
-                          ? "극도의 탐욕"
+                          ? "Extreme Greed"
                           : data.description === "fear"
-                            ? "공포"
+                            ? "Fear"
                             : data.description === "extreme fear"
-                              ? "극도의 공포"
-                              : "중립"}
+                              ? "Extreme Fear"
+                              : "Neutral"}
                     </div>
                   </div>
                 </div>
 
-                <div className="space-y-2 px-0.5">
+                <div className="space-y-1.5 px-2 text-center">
                   <h3
-                    className={`text-[21px] font-black italic leading-[1.25] tracking-tighter break-keep transition-colors ${
+                    className={`text-[20px] font-black italic leading-tight tracking-tighter break-keep transition-colors ${
                       shareTheme === "light" ? "text-neutral-900" : "text-white"
                     }`}
                   >
-                    {data.title}
+                    "{data.title}"
                   </h3>
                 </div>
               </div>
@@ -368,11 +370,15 @@ export function FearGreedShareCard({ data, onClose }: FearGreedShareCardProps) {
                       더 상세한 분석은?
                     </p>
                     <p
-                      className={`text-[12px] font-black tracking-tight mt-1 transition-colors ${
+                      className={`text-[13px] font-black tracking-tighter mt-1 transition-colors  ${
                         shareTheme === "light"
                           ? "text-neutral-900"
                           : "text-white"
                       }`}
+                      style={{
+                        fontFamily:
+                          'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                      }}
                     >
                       www.hangon.co.kr
                     </p>

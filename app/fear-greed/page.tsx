@@ -39,7 +39,7 @@ export default function FearGreedPage() {
                 탐욕스러워져라." — 워런 버핏
               </p>
             </div>
-            <div className="bg-secondary/20 rounded-3xl border border-border-subtle/40">
+            <div className="bg-secondary/20">
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs font-bold">
                   <span className="text-red-500">0 - 25: 극도의 공포</span>
