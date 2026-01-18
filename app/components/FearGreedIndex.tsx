@@ -2,7 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { Info, BrainCircuit, ShieldAlert, ArrowUpRight } from "lucide-react";
+import {
+  Info,
+  BrainCircuit,
+  ShieldAlert,
+  ArrowUpRight,
+  Share2,
+} from "lucide-react";
+import { FearGreedShareCard } from "./FearGreedShareCard";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -21,6 +28,7 @@ interface FearGreedData {
 export function FearGreedIndex() {
   const [data, setData] = useState<FearGreedData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -106,11 +114,20 @@ export function FearGreedIndex() {
 
   return (
     <div className="w-full space-y-6">
-      <div className="flex items-center gap-2 px-2">
-        <BrainCircuit className="w-5 h-5 text-accent" />
-        <h2 className="text-xl font-black tracking-tight italic">
-          <span className="text-accent">공탐지수</span> 분석
-        </h2>
+      <div className="flex items-center justify-between px-2">
+        <div className="flex items-center gap-2">
+          <BrainCircuit className="w-5 h-5 text-accent" />
+          <h2 className="text-xl font-black tracking-tight italic">
+            <span className="text-accent">공탐지수</span> 분석
+          </h2>
+        </div>
+        <button
+          onClick={() => setShowShareModal(true)}
+          className="flex items-center gap-2 bg-accent/10 hover:bg-accent/20 text-accent px-4 py-2 rounded-2xl border border-accent/20 transition-all font-black text-xs"
+        >
+          <Share2 className="w-3.5 h-3.5" />
+          공유하기
+        </button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -232,6 +249,13 @@ export function FearGreedIndex() {
           </div>
         </div>
       </div>
+
+      {showShareModal && (
+        <FearGreedShareCard
+          data={data}
+          onClose={() => setShowShareModal(false)}
+        />
+      )}
     </div>
   );
 }
