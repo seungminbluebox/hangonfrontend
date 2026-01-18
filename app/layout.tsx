@@ -1,5 +1,6 @@
 import { Providers } from "./providers";
 import { InstallPWA } from "./components/InstallPWA";
+import { Navigation } from "./components/Navigation";
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
@@ -138,7 +139,8 @@ export default function RootLayout({
       {/* {GTM_ID && <GoogleTagManager gtmId={GTM_ID} />} */}
       <body className="font-sans antialiased text-[15px] tracking-tight">
         <Providers>
-          {children}
+          <Navigation />
+          <div className="pt-16 md:pt-0">{children}</div>
           <InstallPWA />
         </Providers>
         <GoogleAnalytics gaId="G-GGHNG01WQ9" />

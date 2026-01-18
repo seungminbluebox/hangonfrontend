@@ -1,5 +1,4 @@
 import { createClient } from "@supabase/supabase-js";
-import { ThemeToggle } from "./components/ThemeToggle";
 import { InstallButton } from "./components/InstallButton";
 import { DateNavigation } from "./components/DateNavigation";
 import { NewsDashboard } from "./components/NewsDashboard";
@@ -136,26 +135,27 @@ export default async function Home({
           <InstallButton />
           <div className="flex items-center gap-3 sm:gap-4">
             <DateNavigation currentDate={targetDate} />
-            <ThemeToggle />
           </div>
         </div>
       </header>
 
-      {news && news.length > 0 ? (
-        <NewsDashboard news={news} />
-      ) : (
-        <div className="col-span-full py-32 text-center space-y-3">
-          <div className="mx-auto w-12 h-12 rounded-2xl bg-card border border-border-subtle flex items-center justify-center">
-            <Calendar className="w-6 h-6 text-text-muted opacity-20" />
+      <div className="scroll-mt-24">
+        {news && news.length > 0 ? (
+          <NewsDashboard news={news} />
+        ) : (
+          <div className="col-span-full py-32 text-center space-y-3">
+            <div className="mx-auto w-12 h-12 rounded-2xl bg-card border border-border-subtle flex items-center justify-center">
+              <Calendar className="w-6 h-6 text-text-muted opacity-20" />
+            </div>
+            <p className="text-text-muted font-medium text-sm">
+              이 날짜에는 등록된 뉴스가 없네요😅
+            </p>
+            <p className="text-text-muted font-medium text-sm">
+              다른 날짜를 확인해보세요!
+            </p>
           </div>
-          <p className="text-text-muted font-medium text-sm">
-            이 날짜에는 등록된 뉴스가 없네요😅
-          </p>
-          <p className="text-text-muted font-medium text-sm">
-            다른 날짜를 확인해보세요!
-          </p>
-        </div>
-      )}
+        )}
+      </div>
 
       <footer className="py-20 text-center space-y-4 border-t border-border-subtle">
         <div className="flex flex-col items-center justify-center gap-3">

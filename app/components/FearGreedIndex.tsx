@@ -1,0 +1,237 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { createClient } from "@supabase/supabase-js";
+import { Info, BrainCircuit, ShieldAlert, ArrowUpRight } from "lucide-react";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+);
+
+interface FearGreedData {
+  value: number;
+  description: string;
+  title: string;
+  analysis: string;
+  advice: string[];
+  updated_at: string;
+}
+
+export function FearGreedIndex() {
+  const [data, setData] = useState<FearGreedData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const { data: res, error } = await supabase
+          .from("fear_greed")
+          .select("*")
+          .eq("id", 1)
+          .single();
+
+        if (res) {
+          setData(res);
+        }
+      } catch (err) {
+        console.error("Error fetching Fear & Greed data:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="w-full h-[400px] bg-card/50 animate-pulse rounded-[2.5rem] border border-border-subtle" />
+    );
+  }
+
+  if (!data) return null;
+
+  // Gauge calculation: 0 to 180 degrees (from -90 to +90)
+  const needleRotation = (data.value / 100) * 180 - 90;
+
+  const getStatusColors = (value: number) => {
+    if (value <= 25)
+      return {
+        text: "text-red-500",
+        bg: "bg-red-500",
+        border: "border-red-500",
+      };
+    if (value <= 45)
+      return {
+        text: "text-orange-500",
+        bg: "bg-orange-500",
+        border: "border-orange-500",
+      };
+    if (value <= 55)
+      return {
+        text: "text-yellow-500",
+        bg: "bg-yellow-500",
+        border: "border-yellow-500",
+      };
+    if (value <= 75)
+      return {
+        text: "text-emerald-500",
+        bg: "bg-emerald-500",
+        border: "border-emerald-500",
+      };
+    return {
+      text: "text-green-500",
+      bg: "bg-green-500",
+      border: "border-green-500",
+    };
+  };
+
+  const colors = getStatusColors(data.value);
+
+  // SVG Gauge calculations
+  const radius = 42;
+  const circumference = 2 * Math.PI * radius;
+  const semiCircumference = circumference / 2;
+
+  // Segment proportions (total 100 units)
+  const segments = [
+    { size: 25, color: "text-red-500" },
+    { size: 20, color: "text-orange-500" },
+    { size: 10, color: "text-yellow-400" },
+    { size: 20, color: "text-emerald-500" },
+    { size: 25, color: "text-green-500" },
+  ];
+
+  let currentOffset = 0;
+
+  return (
+    <div className="w-full space-y-6">
+      <div className="flex items-center gap-2 px-2">
+        <BrainCircuit className="w-5 h-5 text-accent" />
+        <h2 className="text-xl font-black tracking-tight italic">
+          <span className="text-accent">공탐지수</span> 분석
+        </h2>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Left: Analog Gauge */}
+        <div className="lg:col-span-5 bg-card/40 border border-border-subtle rounded-[2.5rem] p-8 flex flex-col items-center justify-center relative overflow-hidden shadow-sm">
+          <div className="relative w-72 h-36 mt-8 overflow-hidden">
+            {/* SVG Arc segments */}
+            <svg
+              className="absolute top-0 left-0 w-72 h-72 -rotate-180"
+              viewBox="0 0 100 100"
+            >
+              {/* Background Arc */}
+              <circle
+                cx="50"
+                cy="50"
+                r={radius}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="12"
+                strokeDasharray={`${semiCircumference} ${circumference}`}
+                className="text-secondary/10"
+              />
+              {/* Colored Segments */}
+              {segments.map((seg, i) => {
+                const strokeDasharray = `${(seg.size / 100) * semiCircumference} ${circumference}`;
+                const strokeDashoffset = -currentOffset;
+                currentOffset += (seg.size / 100) * semiCircumference;
+                return (
+                  <circle
+                    key={i}
+                    cx="50"
+                    cy="50"
+                    r={radius}
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="12"
+                    strokeDasharray={strokeDasharray}
+                    strokeDashoffset={strokeDashoffset}
+                    className={`${seg.color} opacity-80`}
+                    style={{ transition: "stroke-dashoffset 1s ease-out" }}
+                  />
+                );
+              })}
+            </svg>
+
+            {/* The Needle */}
+            <div
+              className="absolute bottom-0 left-1/2 w-2 h-32 -translate-x-1/2 origin-bottom transition-all duration-1000 ease-out z-10 bg-foreground"
+              style={{
+                transform: `translateX(-50%) rotate(${needleRotation}deg)`,
+                clipPath: "polygon(50% 0%, 100% 100%, 0% 100%)",
+              }}
+            />
+            {/* Needle Center Point */}
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-8 h-8 bg-card border-[6px] border-foreground rounded-full z-20 shadow-xl" />
+          </div>
+
+          <div className="mt-8 text-center bg-secondary/5 px-8 py-4 rounded-3xl border border-border-subtle/30 shadow-inner">
+            <div
+              className={`text-7xl font-black  tracking-tighter transition-colors duration-500 ${colors.text}`}
+            >
+              {Math.round(data.value)}
+            </div>
+            <div
+              className={`text-sm font-black mt-1 uppercase tracking-[0.3em] ${colors.text}`}
+            >
+              {data.description === "greed"
+                ? "탐욕"
+                : data.description === "extreme greed"
+                  ? "극도의 탐욕"
+                  : data.description === "fear"
+                    ? "공포"
+                    : data.description === "extreme fear"
+                      ? "극도의 공포"
+                      : "중립"}
+            </div>
+          </div>
+
+          <div className="absolute bottom-4 right-8 flex items-center gap-1.5 opacity-30">
+            <div className="w-1 h-1 rounded-full bg-foreground" />
+            <span className="text-[10px] font-bold tracking-tight">
+              Market Mood Gauge
+            </span>
+          </div>
+        </div>
+
+        {/* Right: AI Analysis */}
+        <div className="lg:col-span-7 space-y-4">
+          <div className="bg-card/40 border border-border-subtle rounded-[2.5rem] p-8 shadow-sm">
+            <h3 className="text-xl font-black italic mb-4 leading-tight">
+              {data.title}
+            </h3>
+            <p className="text-[15px] leading-relaxed text-foreground/80 font-medium whitespace-pre-line">
+              {data.analysis}
+            </p>
+          </div>
+
+          <div className="bg-accent/5 border border-accent/20 rounded-[2.5rem] p-8 shadow-sm">
+            <div className="flex items-center gap-2 mb-4">
+              <ShieldAlert className="w-4 h-4 text-accent" />
+              <h4 className="text-xs font-black text-accent uppercase tracking-[0.2em]">
+                투자 대응 전략
+              </h4>
+            </div>
+            <div className="space-y-3">
+              {data.advice.map((item, idx) => (
+                <div key={idx} className="flex items-start gap-3">
+                  <div className="w-5 h-5 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0 mt-0.5">
+                    <span className="text-[10px] font-black text-accent">
+                      {idx + 1}
+                    </span>
+                  </div>
+                  <p className="text-sm font-bold text-foreground/70 tracking-tight">
+                    {item}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
