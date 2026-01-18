@@ -4,7 +4,15 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
-import { Menu, X, TrendingUp, BarChart3, PieChart, Home } from "lucide-react";
+import {
+  Menu,
+  X,
+  TrendingUp,
+  BarChart3,
+  PieChart,
+  Home,
+  CloudSun,
+} from "lucide-react";
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,7 +29,8 @@ export function Navigation() {
 
   const navLinks = [
     { name: "대시보드", href: "/", icon: Home },
-    { name: "공탐지수 분석", href: "/fear-greed", icon: PieChart },
+    { name: "주식 기상예보", href: "/market-weather", icon: CloudSun },
+    { name: "공탐지수", href: "/fear-greed", icon: PieChart },
   ];
 
   return (
