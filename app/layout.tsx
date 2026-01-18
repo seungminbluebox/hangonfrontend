@@ -42,8 +42,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "https://hangon.co.kr/og-image.png",
-        width: 800,
-        height: 420,
+        width: 1200,
+        height: 630,
         alt: "Hang on! Dashboard Preview",
       },
     ],
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
 
   // 트위터 미리보기 카드
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Hang on! , 글로벌 경제 1분 요약",
     description: "매일 아침 업데이트되는 AI 경제 요약 서비스",
     images: ["https://hangon.co.kr/og-image.png"],

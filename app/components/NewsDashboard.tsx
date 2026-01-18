@@ -23,7 +23,7 @@ interface NewsItem {
 
 export function NewsDashboard({ news }: { news: NewsItem[] }) {
   const [selectedId, setSelectedId] = useState<string | null>(
-    news.length > 0 ? news[0].id : null
+    news.length > 0 ? news[0].id : null,
   );
   const [isMobileDetailOpen, setIsMobileDetailOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
@@ -95,18 +95,34 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
                   : "bg-card border-border-subtle/80 hover:border-accent/30 shadow-sm"
               }`}
             >
-              <div className="flex items-center gap-3 mb-2">
-                <span
-                  className={`text-[10px] font-black px-2 py-0.5 rounded-full border tracking-widest transition-all duration-300 shadow-sm ${
-                    item.category === "KR"
-                      ? "bg-blue-50 text-blue-700! border-blue-200 dark:bg-blue-500/10 dark:text-blue-300! dark:border-blue-500/20"
-                      : item.category === "US"
-                      ? "bg-red-50 text-red-700! border-red-200 dark:bg-red-500/10 dark:text-red-300! dark:border-red-500/20"
-                      : "bg-emerald-50 text-emerald-700! border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-300! dark:border-emerald-500/20"
-                  }`}
-                >
-                  {item.category}
-                </span>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`text-[10px] font-black px-2 py-0.5 rounded-full border tracking-widest transition-all duration-300 shadow-sm ${
+                      item.category === "KR"
+                        ? "bg-blue-50 text-blue-700! border-blue-200 dark:bg-blue-500/10 dark:text-blue-300! dark:border-blue-500/20"
+                        : item.category === "US"
+                          ? "bg-red-50 text-red-700! border-red-200 dark:bg-red-500/10 dark:text-red-300! dark:border-red-500/20"
+                          : "bg-emerald-50 text-emerald-700! border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-300! dark:border-emerald-500/20"
+                    }`}
+                  >
+                    {item.category}
+                  </span>
+                  {(() => {
+                    const isNew =
+                      new Date().getTime() -
+                        new Date(item.created_at).getTime() <
+                      6 * 60 * 60 * 1000;
+                    if (isNew) {
+                      return (
+                        <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-accent text-white dark:text-background animate-pulse">
+                          NEW
+                        </span>
+                      );
+                    }
+                    return null;
+                  })()}
+                </div>
                 {selectedId === item.id && (
                   <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
                 )}
@@ -208,7 +224,7 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
                         finalUrl.includes("naver.com")
                       ) {
                         const isMobile = /iPhone|iPad|iPod|Android/i.test(
-                          navigator.userAgent
+                          navigator.userAgent,
                         );
                         if (isMobile) {
                           try {
@@ -226,7 +242,7 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
                               // 파이낸스 메인 뉴스 등 쿼리스트링이 다른 경우 대비
                               finalUrl = finalUrl.replace(
                                 "finance.naver.com",
-                                "m.finance.naver.com"
+                                "m.finance.naver.com",
                               );
                             }
                           } catch (e) {
@@ -272,17 +288,26 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
                       onClick={() => handleSelect(item.id)}
                       className="flex flex-col p-4 rounded-2xl text-left transition-all duration-300 border bg-card border-border-subtle/80 hover:border-accent/40 hover:translate-x-1"
                     >
-                      <span
-                        className={`text-[9px] font-black px-2 py-0.5 rounded-full border mb-2 w-fit ${
-                          item.category === "KR"
-                            ? "bg-blue-50 text-blue-700/80 border-blue-200 dark:bg-blue-500/5 dark:text-blue-400"
-                            : item.category === "US"
-                            ? "bg-red-50 text-red-700/80 border-red-200 dark:bg-red-500/5 dark:text-red-400"
-                            : "bg-emerald-50 text-emerald-700/80 border-emerald-200 dark:bg-emerald-500/5 dark:text-emerald-400"
-                        }`}
-                      >
-                        {item.category}
-                      </span>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span
+                          className={`text-[9px] font-black px-2 py-0.5 rounded-full border w-fit ${
+                            item.category === "KR"
+                              ? "bg-blue-50 text-blue-700/80 border-blue-200 dark:bg-blue-500/5 dark:text-blue-400"
+                              : item.category === "US"
+                                ? "bg-red-50 text-red-700/80 border-red-200 dark:bg-red-500/5 dark:text-red-400"
+                                : "bg-emerald-50 text-emerald-700/80 border-emerald-200 dark:bg-emerald-500/5 dark:text-emerald-400"
+                          }`}
+                        >
+                          {item.category}
+                        </span>
+                        {new Date().getTime() -
+                          new Date(item.created_at).getTime() <
+                          6 * 60 * 60 * 1000 && (
+                          <span className="text-[8px] font-black px-1 py-0.5 rounded bg-accent text-white dark:text-background">
+                            NEW
+                          </span>
+                        )}
+                      </div>
                       <p className="text-sm font-bold text-foreground/80 line-clamp-1 tracking-tight">
                         {item.keyword}
                       </p>
