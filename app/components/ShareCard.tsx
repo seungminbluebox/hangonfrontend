@@ -66,7 +66,7 @@ export function ShareCard({
   const handleWebShare = async () => {
     if (typeof navigator.share !== "function") {
       alert(
-        "현재 브라우저 환경에서는 바로 공유 기능을 사용할 수 없습니다. '이미지 저장'을 이용해 주세요!"
+        "현재 브라우저 환경에서는 바로 공유 기능을 사용할 수 없습니다. '이미지 저장'을 이용해 주세요!",
       );
       return;
     }
@@ -116,7 +116,7 @@ export function ShareCard({
     } catch (err) {
       console.error("이미지 복사 실패:", err);
       alert(
-        "이미지 복사를 지원하지 않는 브라우저입니다. 이미지 저장 기능을 이용해주세요."
+        "이미지 복사를 지원하지 않는 브라우저입니다. 이미지 저장 기능을 이용해주세요.",
       );
     }
   };
@@ -298,7 +298,7 @@ export function ShareCard({
                     더 많은 정보는?
                   </span>
                   <span
-                    className={`text-[10px] font-bold font-mono tracking-tighter transition-colors ${
+                    className={`text-[10px] font-bold transition-colors ${
                       shareTheme === "light"
                         ? "text-slate-500"
                         : "text-slate-400"

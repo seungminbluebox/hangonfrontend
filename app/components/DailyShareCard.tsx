@@ -63,7 +63,7 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
   const handleWebShare = async () => {
     if (typeof navigator.share !== "function") {
       alert(
-        "현재 브라우저 환경에서는 바로 공유 기능을 사용할 수 없습니다. '이미지 저장'을 이용해 주세요!"
+        "현재 브라우저 환경에서는 바로 공유 기능을 사용할 수 없습니다. '이미지 저장'을 이용해 주세요!",
       );
       return;
     }
@@ -257,7 +257,7 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
                       핵심만 골라 읽는 경제 습관
                     </span>
                     <span
-                      className={`text-[10px] font-bold font-mono tracking-tighter whitespace-nowrap transition-colors ${
+                      className={`text-[10px] font-bold whitespace-nowrap transition-colors ${
                         shareTheme === "light"
                           ? "text-slate-500"
                           : "text-slate-400"
@@ -311,8 +311,8 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
               {canShare
                 ? "전체 요약 공유하기"
                 : isImageCopied
-                ? "요약 이미지 복사됨!"
-                : "요약 이미지 복사하기"}
+                  ? "요약 이미지 복사됨!"
+                  : "요약 이미지 복사하기"}
             </button>
             <button
               onClick={handleDownload}
