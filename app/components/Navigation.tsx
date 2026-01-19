@@ -59,6 +59,7 @@ export function Navigation() {
     { name: "데일리 뉴스", href: "/", icon: Home },
     { name: "주식 기상예보", href: "/market-weather", icon: CloudSun },
     { name: "공탐지수 분석", href: "/fear-greed", icon: PieChart },
+    { name: "코스피 공탐지수", href: "/kospi-fear-greed", icon: BarChart3 },
   ];
 
   return (

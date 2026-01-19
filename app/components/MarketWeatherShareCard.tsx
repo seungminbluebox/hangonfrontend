@@ -228,11 +228,6 @@ export function MarketWeatherShareCard({
                   >
                     {data.temperature}°
                   </span>
-                  <span
-                    className={`text-xs font-bold opacity-40 uppercase tracking-widest ${shareTheme === "light" ? "text-neutral-900" : "text-white"}`}
-                  >
-                    Temp
-                  </span>
                 </div>
               </div>
 

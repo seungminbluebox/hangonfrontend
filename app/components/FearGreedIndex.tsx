@@ -25,10 +25,16 @@ interface FearGreedData {
   updated_at: string;
 }
 
-export function FearGreedIndex() {
+export function FearGreedIndex({
+  type = "global",
+}: {
+  type?: "global" | "kospi";
+}) {
   const [data, setData] = useState<FearGreedData | null>(null);
   const [loading, setLoading] = useState(true);
   const [showShareModal, setShowShareModal] = useState(false);
+
+  const targetId = type === "kospi" ? 2 : 1;
 
   useEffect(() => {
     async function fetchData() {
@@ -36,7 +42,7 @@ export function FearGreedIndex() {
         const { data: res, error } = await supabase
           .from("fear_greed")
           .select("*")
-          .eq("id", 1)
+          .eq("id", targetId)
           .single();
 
         if (res) {
@@ -49,7 +55,7 @@ export function FearGreedIndex() {
       }
     }
     fetchData();
-  }, []);
+  }, [targetId]);
 
   if (loading) {
     return (
@@ -62,39 +68,44 @@ export function FearGreedIndex() {
   // Gauge calculation: 0 to 180 degrees (from -90 to +90)
   const needleRotation = (data.value / 100) * 180 - 90;
 
-  const getStatusColors = (value: number) => {
+  const getStatusInfo = (value: number) => {
     if (value <= 25)
       return {
+        label: "극도의 공포",
         text: "text-red-500",
         bg: "bg-red-500",
         border: "border-red-500",
       };
     if (value <= 45)
       return {
+        label: "공포",
         text: "text-orange-500",
         bg: "bg-orange-500",
         border: "border-orange-500",
       };
     if (value <= 55)
       return {
+        label: "중립",
         text: "text-yellow-500",
         bg: "bg-yellow-500",
         border: "border-yellow-500",
       };
     if (value <= 75)
       return {
+        label: "탐욕",
         text: "text-emerald-500",
         bg: "bg-emerald-500",
         border: "border-emerald-500",
       };
     return {
+      label: "극도의 탐욕",
       text: "text-green-500",
       bg: "bg-green-500",
       border: "border-green-500",
     };
   };
 
-  const colors = getStatusColors(data.value);
+  const statusInfo = getStatusInfo(data.value);
 
   // SVG Gauge calculations
   const radius = 42;
@@ -118,7 +129,9 @@ export function FearGreedIndex() {
         <div className="flex items-center gap-2">
           <BrainCircuit className="w-5 h-5 text-accent" />
           <h2 className="text-xl font-black tracking-tight italic">
-            <span className="text-accent">공탐지수</span> 분석
+            <span className="text-accent">
+              {type === "kospi" ? "코스피" : ""} 공탐지수
+            </span>{" "}
           </h2>
         </div>
         <button
@@ -187,22 +200,14 @@ export function FearGreedIndex() {
 
           <div className="mt-8 text-center bg-secondary/5 px-8 py-4 rounded-3xl border border-border-subtle/30 shadow-inner">
             <div
-              className={`text-7xl font-black  tracking-tighter transition-colors duration-500 ${colors.text}`}
+              className={`text-7xl font-black  tracking-tighter transition-colors duration-500 ${statusInfo.text}`}
             >
               {Math.round(data.value)}
             </div>
             <div
-              className={`text-sm font-black mt-1 uppercase tracking-[0.3em] ${colors.text}`}
+              className={`text-sm font-black mt-1 uppercase tracking-[0.3em] ${statusInfo.text}`}
             >
-              {data.description === "greed"
-                ? "탐욕"
-                : data.description === "extreme greed"
-                  ? "극도의 탐욕"
-                  : data.description === "fear"
-                    ? "공포"
-                    : data.description === "extreme fear"
-                      ? "극도의 공포"
-                      : "중립"}
+              {statusInfo.label}
             </div>
           </div>
 
@@ -254,6 +259,7 @@ export function FearGreedIndex() {
         <FearGreedShareCard
           data={data}
           onClose={() => setShowShareModal(false)}
+          type={type}
         />
       )}
     </div>

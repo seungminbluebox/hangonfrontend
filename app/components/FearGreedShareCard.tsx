@@ -25,9 +25,14 @@ interface FearGreedData {
 interface FearGreedShareCardProps {
   data: FearGreedData;
   onClose: () => void;
+  type?: "global" | "kospi";
 }
 
-export function FearGreedShareCard({ data, onClose }: FearGreedShareCardProps) {
+export function FearGreedShareCard({
+  data,
+  onClose,
+  type = "global",
+}: FearGreedShareCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
@@ -109,7 +114,7 @@ export function FearGreedShareCard({ data, onClose }: FearGreedShareCardProps) {
       await navigator.share({
         files: [file],
         title: "[Hang on!] 공포와 탐욕 지수 분석",
-        text: `${data.title}\n현재 지수: ${data.value} (${data.description})`,
+        text: `${data.title}\n현재 지수: ${data.value} (${statusLabel})`,
       });
     } catch (err) {
       if ((err as Error).name !== "AbortError")
@@ -117,15 +122,17 @@ export function FearGreedShareCard({ data, onClose }: FearGreedShareCardProps) {
     }
   };
 
-  const getStatusColor = (value: number) => {
-    if (value <= 25) return "#ef4444";
-    if (value <= 45) return "#f97316";
-    if (value <= 55) return "#eab308";
-    if (value <= 75) return "#10b981";
-    return "#22c55e";
+  const getStatusInfo = (value: number) => {
+    if (value <= 25) return { color: "#ef4444", label: "Extreme Fear" };
+    if (value <= 45) return { color: "#f97316", label: "Fear" };
+    if (value <= 55) return { color: "#eab308", label: "Neutral" };
+    if (value <= 75) return { color: "#10b981", label: "Greed" };
+    return { color: "#22c55e", label: "Extreme Greed" };
   };
 
-  const statusColor = getStatusColor(data.value);
+  const statusInfo = getStatusInfo(data.value);
+  const statusColor = statusInfo.color;
+  const statusLabel = statusInfo.label;
   const needleRotation = (data.value / 100) * 180 - 90;
 
   return (
@@ -134,9 +141,6 @@ export function FearGreedShareCard({ data, onClose }: FearGreedShareCardProps) {
         <div className="p-4 border-b border-border-subtle flex items-center justify-between bg-muted/20 shrink-0">
           <div className="pl-2">
             <h3 className="font-black text-base">공탐지수 리포트 공유</h3>
-            <p className="text-[10px] text-text-muted font-medium">
-              현재 시장 심리를 한 장에 예쁘게 담았습니다.
-            </p>
           </div>
           <button
             onClick={onClose}
@@ -167,11 +171,7 @@ export function FearGreedShareCard({ data, onClose }: FearGreedShareCardProps) {
                       : "text-white/40"
                   }`}
                 >
-                  {new Date(data.updated_at).toLocaleDateString("ko-KR", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
+                  {new Date().toLocaleDateString("ko-KR")}
                 </p>
                 <div
                   className={`flex items-center gap-1.5 opacity-30 grayscale ${
@@ -302,15 +302,7 @@ export function FearGreedShareCard({ data, onClose }: FearGreedShareCardProps) {
                       className="text-[10px] font-black uppercase tracking-[0.4em] mt-1 opacity-90"
                       style={{ color: statusColor }}
                     >
-                      {data.description === "greed"
-                        ? "Greed"
-                        : data.description === "extreme greed"
-                          ? "Extreme Greed"
-                          : data.description === "fear"
-                            ? "Fear"
-                            : data.description === "extreme fear"
-                              ? "Extreme Fear"
-                              : "Neutral"}
+                      {statusLabel}
                     </div>
                   </div>
                 </div>
