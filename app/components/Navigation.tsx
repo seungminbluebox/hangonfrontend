@@ -13,6 +13,7 @@ import {
   Home,
   CloudSun,
   Compass,
+  RefreshCcw,
 } from "lucide-react";
 
 export function Navigation() {
@@ -57,11 +58,42 @@ export function Navigation() {
   }, [isOpen]);
 
   const navLinks = [
-    { name: "데일리 뉴스", href: "/", icon: Home },
-    { name: "주식 기상예보", href: "/market-weather", icon: CloudSun },
-    { name: "자금 흐름", href: "/money-flow", icon: Compass },
-    { name: "공탐지수 분석", href: "/fear-greed", icon: PieChart },
-    { name: "코스피 공탐지수", href: "/kospi-fear-greed", icon: BarChart3 },
+    {
+      name: "데일리 뉴스",
+      href: "/",
+      icon: Home,
+      desc: "오늘 꼭 알아야 할 핵심 이슈",
+    },
+    {
+      name: "주식 기상예보",
+      href: "/market-weather",
+      icon: CloudSun,
+      desc: "데이터로 본 시장의 날씨 예보",
+    },
+    {
+      name: "자금 흐름",
+      href: "/money-flow",
+      icon: Compass,
+      desc: "돈의 쏠림이 만드는 투자의 기회",
+    },
+    {
+      name: "환율분석 데스크",
+      href: "/currency-desk",
+      icon: RefreshCcw,
+      desc: "스마트한 환전 타이밍 중계",
+    },
+    {
+      name: "공탐지수 분석",
+      href: "/fear-greed",
+      icon: PieChart,
+      desc: "인간의 탐욕과 공포 데이터 분석",
+    },
+    {
+      name: "코스피 공탐지수",
+      href: "/kospi-fear-greed",
+      icon: BarChart3,
+      desc: "KOSPI 시장의 심리 지수 추적",
+    },
   ];
 
   return (
@@ -177,12 +209,17 @@ export function Navigation() {
                   transitionDelay: isOpen ? `${(index + 1) * 100}ms` : "0ms",
                 }}
               >
-                <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shrink-0">
                   <Icon className="w-5 h-5 text-accent" />
                 </div>
-                <span className="text-lg font-black tracking-tight">
-                  {link.name}
-                </span>
+                <div className="flex flex-col">
+                  <span className="text-lg font-black tracking-tight leading-tight">
+                    {link.name}
+                  </span>
+                  <span className="text-xs font-bold text-foreground/40 mt-0.5">
+                    {link.desc}
+                  </span>
+                </div>
               </Link>
             );
           })}
