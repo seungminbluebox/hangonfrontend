@@ -11,7 +11,9 @@ import {
   Compass,
   ArrowRightLeft,
   ChevronRight,
+  Share2,
 } from "lucide-react";
+import { MoneyFlowShareCard } from "./MoneyFlowShareCard";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -42,6 +44,10 @@ export function MoneyFlowTracker() {
   const [data, setData] = useState<MoneyFlowData | null>(null);
   const [loading, setLoading] = useState(true);
   const [showFullAnalysis, setShowFullAnalysis] = useState(false);
+  const [shareConfig, setShareConfig] = useState<{
+    isOpen: boolean;
+    type: "assets" | "sectors" | "report";
+  }>({ isOpen: false, type: "report" });
 
   useEffect(() => {
     async function fetchData() {
@@ -83,13 +89,22 @@ export function MoneyFlowTracker() {
     <div className="w-full space-y-4 md:space-y-6">
       {/* Header Analysis */}
       <div className="bg-gradient-to-br from-accent/10 via-background to-background border border-accent/20 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 shadow-sm">
-        <div className="flex items-center gap-2 mb-3 md:mb-4">
-          <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-accent/20 flex items-center justify-center">
-            <Compass className="w-3.5 h-3.5 md:w-4 md:h-4 text-accent" />
+        <div className="flex items-center justify-between mb-3 md:mb-4">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-accent/20 flex items-center justify-center">
+              <Compass className="w-3.5 h-3.5 md:w-4 md:h-4 text-accent" />
+            </div>
+            <h2 className="text-xl md:text-2xl font-black italic tracking-tight">
+              {data.title}
+            </h2>
           </div>
-          <h2 className="text-xl md:text-2xl font-black italic tracking-tight">
-            {data.title}
-          </h2>
+          <button
+            onClick={() => setShareConfig({ isOpen: true, type: "report" })}
+            className="p-2 md:p-2.5 bg-accent/10 hover:bg-accent/20 rounded-xl md:rounded-2xl transition-all"
+            title="리포트 공유"
+          >
+            <Share2 className="w-4 h-4 md:w-5 md:h-5 text-accent" />
+          </button>
         </div>
         <p className="text-base md:text-lg font-bold text-foreground/90 mb-4 leading-snug">
           {data.summary}
@@ -129,9 +144,13 @@ export function MoneyFlowTracker() {
               <ArrowRightLeft className="w-5 h-5 text-accent" />
               <h3 className="text-lg font-black italic">자산군별 자금 흐름</h3>
             </div>
-            {/* <span className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest">
-              Global Assets
-            </span> */}
+            <button
+              onClick={() => setShareConfig({ isOpen: true, type: "assets" })}
+              className="p-2 hover:bg-muted rounded-xl transition-all"
+              title="자산 흐름 공유"
+            >
+              <Share2 className="w-3.5 h-3.5 text-foreground/40" />
+            </button>
           </div>
 
           <div className="space-y-6 md:space-y-8">
@@ -176,9 +195,13 @@ export function MoneyFlowTracker() {
                 국내 섹터별 돈의 쏠림
               </h3>
             </div>
-            <span className="text-[9px] md:text-[10px] font-bold text-foreground/40 uppercase tracking-widest">
-              K-Sector Flow
-            </span>
+            <button
+              onClick={() => setShareConfig({ isOpen: true, type: "sectors" })}
+              className="p-2 hover:bg-muted rounded-xl transition-all"
+              title="섹터 쏠림 공유"
+            >
+              <Share2 className="w-3.5 h-3.5 text-foreground/40" />
+            </button>
           </div>
 
           <div className="grid grid-cols-2 gap-2 md:gap-3">
@@ -220,6 +243,14 @@ export function MoneyFlowTracker() {
           ))}
         </div>
       </div>
+
+      {shareConfig.isOpen && (
+        <MoneyFlowShareCard
+          data={data}
+          type={shareConfig.type}
+          onClose={() => setShareConfig({ ...shareConfig, isOpen: false })}
+        />
+      )}
     </div>
   );
 }
