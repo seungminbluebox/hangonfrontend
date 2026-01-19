@@ -17,6 +17,7 @@ import {
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [showMenuHint, setShowMenuHint] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -27,10 +28,23 @@ export function Navigation() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // 첫 방문 시 메뉴 힌트 표시
+  useEffect(() => {
+    const hasSeenMenuHint = localStorage.getItem("hasSeenMenuHint");
+    if (!hasSeenMenuHint) {
+      setShowMenuHint(true);
+      setTimeout(() => {
+        setShowMenuHint(false);
+        localStorage.setItem("hasSeenMenuHint", "true");
+      }, 5000);
+    }
+  }, []);
+
   // 모바일 메뉴가 열렸을 때 body 스크롤 막기
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
+      setShowMenuHint(false); // 메뉴 열면 힌트 숨김
     } else {
       document.body.style.overflow = "unset";
     }
@@ -42,9 +56,9 @@ export function Navigation() {
   }, [isOpen]);
 
   const navLinks = [
-    { name: "대시보드", href: "/", icon: Home },
+    { name: "데일리 뉴스", href: "/", icon: Home },
     { name: "주식 기상예보", href: "/market-weather", icon: CloudSun },
-    { name: "공탐지수", href: "/fear-greed", icon: PieChart },
+    { name: "공탐지수 분석", href: "/fear-greed", icon: PieChart },
   ];
 
   return (
@@ -96,48 +110,81 @@ export function Navigation() {
             {/* Mobile Menu Button */}
             <div className="flex md:hidden items-center gap-3">
               <ThemeToggle />
-              <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="p-2 rounded-xl bg-secondary/50 text-foreground"
-              >
-                {isOpen ? (
-                  <X className="w-6 h-6" />
-                ) : (
-                  <Menu className="w-6 h-6" />
+              <div className="relative">
+                <button
+                  onClick={() => setIsOpen(!isOpen)}
+                  className={`p-2 rounded-xl bg-accent/10 text-accent border-2 border-accent/20 shadow-lg shadow-accent/20 hover:bg-accent hover:text-white transition-all duration-300 ${
+                    showMenuHint ? "animate-pulse" : ""
+                  }`}
+                >
+                  {isOpen ? (
+                    <X className="w-6 h-6" />
+                  ) : (
+                    <Menu className="w-6 h-6" />
+                  )}
+                </button>
+                {showMenuHint && !isOpen && (
+                  <div className="absolute -bottom-12 right-0 bg-accent text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-lg animate-bounce whitespace-nowrap">
+                    메뉴 보기 👆
+                    <div className="absolute -top-1 right-4 w-2 h-2 bg-accent rotate-45"></div>
+                  </div>
                 )}
-              </button>
+              </div>
             </div>
           </div>
         </div>
       </nav>
 
       {/* Mobile Navigation Overlay */}
-      {isOpen && (
-        <div
-          className={`fixed inset-0 ${scrolled ? "top-[52px]" : "top-[72px]"} z-[55] bg-background/95 backdrop-blur-xl md:hidden overflow-y-auto`}
-        >
-          <div className="flex flex-col p-6 space-y-4">
-            {navLinks.map((link) => {
-              const Icon = link.icon;
-              return (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className="flex items-center gap-4 p-4 rounded-2xl bg-secondary/30 border border-border-subtle/50"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
-                    <Icon className="w-5 h-5 text-accent" />
-                  </div>
-                  <span className="text-lg font-black tracking-tight">
-                    {link.name}
-                  </span>
-                </Link>
-              );
-            })}
+      <div
+        className={`fixed inset-0 ${scrolled ? "top-[52px]" : "top-[72px]"} z-[55] bg-background/95 backdrop-blur-xl md:hidden overflow-y-auto transition-all duration-500 ease-out ${
+          isOpen
+            ? "translate-x-0 opacity-100"
+            : "translate-x-full opacity-0 pointer-events-none"
+        }`}
+      >
+        <div className="flex flex-col p-6 space-y-6">
+          {/* 메뉴 헤더 */}
+          <div
+            className={`transition-all duration-500 ${
+              isOpen ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0"
+            }`}
+            style={{ transitionDelay: isOpen ? "0ms" : "0ms" }}
+          >
+            <h2 className="text-2xl font-black tracking-tight text-foreground mb-2">
+              무엇이 궁금하신가요?🤔
+            </h2>
+            <div className="h-1 w-16 bg-accent rounded-full"></div>
           </div>
+
+          {/* 메뉴 아이템 */}
+          {navLinks.map((link, index) => {
+            const Icon = link.icon;
+            return (
+              <Link
+                key={link.name}
+                href={link.href}
+                onClick={() => setIsOpen(false)}
+                className={`flex items-center gap-4 p-4 rounded-2xl bg-secondary/30 border border-border-subtle/50 transition-all duration-500 hover:bg-secondary/50 hover:border-accent/30 ${
+                  isOpen
+                    ? "translate-x-0 opacity-100"
+                    : "translate-x-8 opacity-0"
+                }`}
+                style={{
+                  transitionDelay: isOpen ? `${(index + 1) * 100}ms` : "0ms",
+                }}
+              >
+                <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
+                  <Icon className="w-5 h-5 text-accent" />
+                </div>
+                <span className="text-lg font-black tracking-tight">
+                  {link.name}
+                </span>
+              </Link>
+            );
+          })}
         </div>
-      )}
+      </div>
     </>
   );
 }
