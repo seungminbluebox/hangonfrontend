@@ -149,8 +149,8 @@ export default function MarketWeatherPage() {
                 </div>
               </div>
               <p className="text-[11px] font-medium leading-relaxed text-text-muted/60 italic">
-                * 매크로 기상도는 국내(KOSPI, KOSDAQ) 및 해외 주요 지표를 AI가
-                종합 분석한 결과이며, 투자 참고용으로만 활용해 주세요.
+                * 주식 일기예보는 국내(KOSPI, KOSDAQ) 및 해외 주요 지표를 종합
+                분석한 결과이며, 투자 참고용으로만 활용해 주세요.
               </p>
             </div>
           </div>

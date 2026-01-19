@@ -12,6 +12,7 @@ import {
   PieChart,
   Home,
   CloudSun,
+  Compass,
 } from "lucide-react";
 
 export function Navigation() {
@@ -58,6 +59,7 @@ export function Navigation() {
   const navLinks = [
     { name: "데일리 뉴스", href: "/", icon: Home },
     { name: "주식 기상예보", href: "/market-weather", icon: CloudSun },
+    { name: "자금 흐름", href: "/money-flow", icon: Compass },
     { name: "공탐지수 분석", href: "/fear-greed", icon: PieChart },
     { name: "코스피 공탐지수", href: "/kospi-fear-greed", icon: BarChart3 },
   ];
