@@ -1,14 +1,18 @@
 import { Navigation } from "../components/Navigation";
 import { CurrencyDesk } from "../components/CurrencyDesk";
 import { Metadata } from "next";
+import { getMarketData } from "../lib/market";
 
 export const metadata: Metadata = {
-  title: "환율분석 데스크 | Hang on!",
+  title: "원/달러 환율 리포트 | Hang on!",
   description:
-    "실시간 환율 현황 중계와 AI가 제안하는 스마트한 환전 전략을 확인하세요.",
+    "실시간 달러 환율 현황 중계와 AI가 분석하는 스마트한 달러 투자 전략을 확인하세요.",
 };
 
-export default function CurrencyDeskPage() {
+export default async function CurrencyDeskPage() {
+  const marketData = await getMarketData();
+  const usdData = marketData.find((m) => m.name === "원/달러 환율");
+
   return (
     <main className="min-h-screen bg-background">
       <Navigation />
@@ -17,19 +21,19 @@ export default function CurrencyDeskPage() {
           <div className="flex items-center gap-2 mb-4">
             <div className="h-[2px] w-8 bg-blue-500 rounded-full" />
             <span className="text-xs font-black text-blue-500 uppercase tracking-[0.3em]">
-              Currency Report
+              환율 데스크
             </span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">
-            환율분석 <span className="text-blue-500 italic">데스크</span>
+          <h1 className="text-4xl md:text-6xl font-black italic tracking-tighter leading-[0.9]">
+            USD<span className="text-blue-500">/KRW</span>
           </h1>
-          <p className="mt-4 text-text-muted font-bold text-lg md:text-xl max-w-2xl leading-relaxed">
-            환전 타이밍, 고민되시나요? 지금 가장 유리한 환전 전략을 데이터로
-            읽어드립니다.
+          <p className="mt-4 text-text-muted font-bold max-w-lg leading-relaxed">
+            원/달러 환율의 흐름을 추적하여 실시간 현황을 중계하고, 환율 분석
+            리포트를 제공합니다.
           </p>
         </header>
 
-        <CurrencyDesk />
+        <CurrencyDesk liveData={usdData} />
       </div>
     </main>
   );

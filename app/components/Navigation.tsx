@@ -8,8 +8,7 @@ import {
   Menu,
   X,
   TrendingUp,
-  BarChart3,
-  PieChart,
+  Gauge,
   Home,
   CloudSun,
   Compass,
@@ -65,18 +64,6 @@ export function Navigation() {
       desc: "오늘 꼭 알아야 할 핵심 이슈",
     },
     {
-      name: "주식 기상예보",
-      href: "/market-weather",
-      icon: CloudSun,
-      desc: "데이터로 본 시장의 날씨 예보",
-    },
-    {
-      name: "자금 흐름",
-      href: "/money-flow",
-      icon: Compass,
-      desc: "돈의 쏠림이 만드는 투자의 기회",
-    },
-    {
       name: "환율분석 데스크",
       href: "/currency-desk",
       icon: RefreshCcw,
@@ -85,14 +72,26 @@ export function Navigation() {
     {
       name: "공탐지수 분석",
       href: "/fear-greed",
-      icon: PieChart,
+      icon: Gauge,
       desc: "인간의 탐욕과 공포 데이터 분석",
     },
     {
       name: "코스피 공탐지수",
       href: "/kospi-fear-greed",
-      icon: BarChart3,
+      icon: Gauge,
       desc: "KOSPI 시장의 심리 지수 추적",
+    },
+    {
+      name: "자금 흐름",
+      href: "/money-flow",
+      icon: Compass,
+      desc: "돈의 쏠림이 만드는 투자의 기회",
+    },
+    {
+      name: "주식 기상예보",
+      href: "/market-weather",
+      icon: CloudSun,
+      desc: "데이터 기반 시장 상황 분석",
     },
   ];
 
