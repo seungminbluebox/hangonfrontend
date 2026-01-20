@@ -13,6 +13,7 @@ import {
   CloudSun,
   Compass,
   RefreshCcw,
+  Landmark,
 } from "lucide-react";
 
 export function Navigation() {
@@ -92,6 +93,12 @@ export function Navigation() {
       href: "/market-weather",
       icon: CloudSun,
       desc: "데이터 기반 시장 상황 분석",
+    },
+    {
+      name: "한/미 금리 정보",
+      href: "/interest-rate",
+      icon: Landmark,
+      desc: "경제의 기초, 금리 현황과 지식",
     },
   ];
 
