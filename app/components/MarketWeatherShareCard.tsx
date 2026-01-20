@@ -65,15 +65,15 @@ export function MarketWeatherShareCard({
 
     return await toBlob(cardRef.current, {
       cacheBust: true,
-      pixelRatio: 2,
-      width: 330,
-      height: 440, // Exact 3:4 ratio (330/110=3, 440/110=4)
+      pixelRatio: 3,
       backgroundColor: "rgba(0,0,0,0)",
       style: {
-        transform: "none",
+        transform: "scale(1)",
+        transformOrigin: "top left",
         margin: "0",
         left: "0",
         top: "0",
+        width: "320px",
         position: "relative",
         borderRadius: "35px",
         boxShadow: "none",

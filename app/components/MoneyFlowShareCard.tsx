@@ -73,15 +73,15 @@ export function MoneyFlowShareCard({
 
     return await toBlob(cardRef.current, {
       cacheBust: true,
-      pixelRatio: 2,
-      width: 340,
-      height: type === "report" ? 560 : 500,
+      pixelRatio: 3,
       backgroundColor: "rgba(0,0,0,0)",
       style: {
-        transform: "none",
+        transform: "scale(1)",
+        transformOrigin: "top left",
         margin: "0",
         left: "0",
         top: "0",
+        width: "320px",
         position: "relative",
         borderRadius: "35px",
         boxShadow: "none",
@@ -313,7 +313,7 @@ export function MoneyFlowShareCard({
           <div className="relative group shrink-0">
             <div
               ref={cardRef}
-              className={`w-[340px] flex flex-col p-6 relative overflow-hidden transition-colors duration-300 ${
+              className={`w-[320px] flex flex-col p-6 relative overflow-hidden transition-colors duration-300 ${
                 shareTheme === "light"
                   ? "bg-[#F8F7F4] text-neutral-900"
                   : "bg-[#0f172a] text-white"

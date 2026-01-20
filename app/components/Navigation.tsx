@@ -105,45 +105,45 @@ export function Navigation() {
             : "bg-transparent py-4"
         }`}
       >
-        <div className="max-w-6xl mx-auto px-4 sm:px-8">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group">
               <div className="w-8 h-8 bg-accent rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition-transform shadow-lg shadow-accent/20">
                 <TrendingUp className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-black tracking-tighter italic">
+              <span className="text-xl font-black italic">
                 Hang on<span className="text-accent">!</span>
               </span>
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-8">
-              <div className="flex items-center gap-1 bg-secondary/30 p-1 rounded-2xl border border-border-subtle/50">
+            <div className="hidden lg:flex items-center gap-4 xl:gap-8">
+              <div className="flex items-center gap-1 xl:gap-2 bg-secondary/30 p-1.5 rounded-2xl border border-border-subtle/50">
                 {navLinks.map((link) => {
                   const Icon = link.icon;
                   return (
                     <Link
                       key={link.name}
                       href={link.href}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${
+                      className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${
                         pathname === link.href
                           ? "bg-background text-accent shadow-sm"
                           : "text-text-muted hover:text-foreground"
                       }`}
                     >
                       <Icon className="w-4 h-4" />
-                      {link.name}
+                      <span className="shrink-0">{link.name}</span>
                     </Link>
                   );
                 })}
               </div>
-              <div className="w-px h-6 bg-border-subtle/50" />
+              <div className="hidden xl:block w-px h-6 bg-border-subtle/50" />
               <ThemeToggle />
             </div>
 
             {/* Mobile Menu Button */}
-            <div className="flex md:hidden items-center gap-3">
+            <div className="flex lg:hidden items-center gap-3">
               <ThemeToggle />
               <div className="relative">
                 <button
@@ -172,7 +172,7 @@ export function Navigation() {
 
       {/* Mobile Navigation Overlay */}
       <div
-        className={`fixed inset-0 ${scrolled ? "top-[52px]" : "top-[72px]"} z-[55] bg-background/95 backdrop-blur-xl md:hidden overflow-y-auto transition-all duration-500 ease-out ${
+        className={`fixed inset-0 ${scrolled ? "top-[52px]" : "top-[72px]"} z-[55] bg-background/95 backdrop-blur-xl lg:hidden overflow-y-auto transition-all duration-500 ease-out ${
           isOpen
             ? "translate-x-0 opacity-100"
             : "translate-x-full opacity-0 pointer-events-none"

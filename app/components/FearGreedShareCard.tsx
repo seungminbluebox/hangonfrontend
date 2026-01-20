@@ -58,15 +58,15 @@ export function FearGreedShareCard({
     // We force a neutral state for the capture.
     return await toBlob(cardRef.current, {
       cacheBust: true,
-      pixelRatio: 2,
-      width: 330,
-      height: 560,
+      pixelRatio: 3,
       backgroundColor: "rgba(0,0,0,0)", // 투명 배경 설정
       style: {
-        transform: "none",
+        transform: "scale(1)",
+        transformOrigin: "top left",
         margin: "0",
         left: "0",
         top: "0",
+        width: "320px",
         position: "relative",
         borderRadius: "35px",
         boxShadow: "none",
@@ -152,11 +152,11 @@ export function FearGreedShareCard({
 
         <div className="px-4 bg-black/[0.02] dark:bg-white/[0.02] overflow-y-auto flex-1 flex flex-col items-center">
           {/* Container for scaled preview - Aligning more naturally with padding */}
-          <div className="pt-8 pb-12 flex flex-col items-center scale-[0.7] xs:scale-[0.85] sm:scale-100 origin-top transition-all duration-300">
+          <div className="pt-8 pb-12 flex flex-col items-center scale-[0.65] xs:scale-[0.8] sm:scale-95 origin-top transition-all duration-300">
             {/* Card Content - Optimized for 3:4 Fill with Single Insight */}
             <div
               ref={cardRef}
-              className={`w-[330px] h-[560px] p-7 rounded-[35px] shadow-2xl relative overflow-hidden transition-colors duration-300 border flex flex-col justify-between ${
+              className={`w-[360px] h-[600px] p-7 rounded-[35px] shadow-2xl relative overflow-hidden transition-colors duration-300 border flex flex-col justify-between ${
                 shareTheme === "light"
                   ? "bg-[#F8F7F4] text-neutral-900 border-neutral-100"
                   : "bg-[#0f172a] text-white border-white/5"
