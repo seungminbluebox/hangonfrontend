@@ -15,6 +15,7 @@ import {
   RefreshCcw,
   Landmark,
   Activity,
+  BarChart3,
   ChevronDown,
 } from "lucide-react";
 
@@ -102,6 +103,12 @@ export function Navigation() {
       href: "/money-flow",
       icon: Compass,
       desc: "돈의 쏠림이 만드는 투자의 기회",
+    },
+    {
+      name: "풋/콜 옵션 지표",
+      href: "/put-call-ratio",
+      icon: BarChart3,
+      desc: "CBOE PCR 기반의 시장 심리 분석",
     },
     {
       name: "주식 기상예보",
