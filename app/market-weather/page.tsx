@@ -1,14 +1,7 @@
 import { MarketWeather } from "../components/market-weather/MarketWeather";
 import { Metadata } from "next";
-import Link from "next/link";
-import {
-  ArrowLeft,
-  Sun,
-  CloudSun,
-  Cloud,
-  CloudRain,
-  CloudLightning,
-} from "lucide-react";
+import { BackButton } from "../components/layout/BackButton";
+import { Sun, CloudSun, Cloud, CloudRain, CloudLightning } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "글로벌 시장 기상도",
@@ -69,16 +62,8 @@ export default function MarketWeatherPage() {
 
   return (
     <main className="min-h-screen bg-background text-foreground max-w-6xl mx-auto px-4 sm:px-8 pb-20">
-      <div className="pt-8 sm:pt-16 mb-8">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-text-muted hover:text-accent transition-colors group"
-        >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          <span className="text-xs font-bold uppercase tracking-widest">
-            Back to Dashboard
-          </span>
-        </Link>
+      <div className="pt-6 md:pt-32">
+        <BackButton />
       </div>
 
       <div className="pt-2 sm:pt-5">

@@ -159,30 +159,32 @@ export function InterestRateChartShareCard({
               </div>
 
               {/* Simple Chart */}
-              <div
-                className={`relative z-10 h-[140px] w-full rounded-2xl p-4 ${shareTheme === "light" ? "bg-white/50 border border-neutral-100" : "bg-white/5 border border-white/5"}`}
-              >
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={recentData}>
-                    <XAxis dataKey="date" hide />
-                    <YAxis hide domain={["dataMin - 0.5", "dataMax + 0.5"]} />
-                    <Line
-                      type="monotone"
-                      dataKey="us"
-                      stroke="#3b82f6"
-                      strokeWidth={3}
-                      dot={false}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="kr"
-                      stroke="#10b981"
-                      strokeWidth={3}
-                      dot={false}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-                <div className="flex justify-center gap-4 mt-2">
+              <div className="relative z-10 flex flex-col gap-2">
+                <div
+                  className={`h-[140px] w-full rounded-2xl p-4 ${shareTheme === "light" ? "bg-white/50 border border-neutral-100" : "bg-white/5 border border-white/5"}`}
+                >
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={recentData}>
+                      <XAxis dataKey="date" hide />
+                      <YAxis hide domain={["dataMin - 0.5", "dataMax + 0.5"]} />
+                      <Line
+                        type="monotone"
+                        dataKey="us"
+                        stroke="#3b82f6"
+                        strokeWidth={3}
+                        dot={false}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="kr"
+                        stroke="#10b981"
+                        strokeWidth={3}
+                        dot={false}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="flex justify-center gap-4">
                   <div className="flex items-center gap-1.5">
                     <div className="w-2 h-2 rounded-full bg-blue-500" />
                     <span className="text-[9px] font-black opacity-40 uppercase tracking-widest">

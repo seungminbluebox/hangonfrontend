@@ -1,14 +1,17 @@
 import React from "react";
 import { Navigation } from "../components/layout/Navigation";
 import { MoneyFlowTracker } from "../components/money-flow/MoneyFlowTracker";
-import { ArrowRightLeft, Target } from "lucide-react";
+import { Target } from "lucide-react";
+import { BackButton } from "../components/layout/BackButton";
+import { ArrowRightLeft } from "lucide-react";
 
 export default function MoneyFlowPage() {
   return (
     <main className="min-h-screen bg-background text-foreground pb-32">
       <Navigation />
 
-      <div className="max-w-4xl mx-auto px-4 md:px-6 pt-2 md:pt-32 space-y-8 md:space-y-12">
+      <div className="max-w-4xl mx-auto px-4 md:px-6 pt-6 md:pt-32 space-y-8 md:space-y-12">
+        <BackButton />
         {/* Page Header */}
         <div className="space-y-3 md:space-y-4 text-center">
           <div className="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-full bg-accent/10 border border-accent/20 text-accent mb-2">

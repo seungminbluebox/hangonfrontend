@@ -1,8 +1,9 @@
-// app/privacy/page.tsx
+import { BackButton } from "../components/layout/BackButton";
 
 export default function PrivacyPage() {
   return (
     <main className="max-w-3xl mx-auto px-6 py-20 text-foreground">
+      <BackButton />
       <h1 className="text-3xl font-bold mb-8">개인정보처리방침</h1>
 
       <div className="space-y-6 text-sm leading-relaxed text-foreground/80">
@@ -53,12 +54,6 @@ export default function PrivacyPage() {
           </p>
           <p className="mt-2 font-medium">이메일: boxmagic25@gmail.com</p>
         </section>
-      </div>
-
-      <div className="mt-12 pt-8 border-t border-border-subtle text-center">
-        <a href="/" className="text-accent hover:underline font-bold">
-          ← 홈으로 돌아가기
-        </a>
       </div>
     </main>
   );

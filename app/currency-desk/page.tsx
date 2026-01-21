@@ -1,6 +1,7 @@
 import { Navigation } from "../components/layout/Navigation";
 import { CurrencyDesk } from "../components/currency/CurrencyDesk";
 import { Metadata } from "next";
+import { BackButton } from "../components/layout/BackButton";
 import { getMarketData } from "../lib/market";
 
 export const metadata: Metadata = {
@@ -35,7 +36,8 @@ export default async function CurrencyDeskPage() {
   return (
     <main className="min-h-screen bg-background text-foreground">
       <Navigation />
-      <div className="max-w-6xl mx-auto px-4 sm:px-8 pt-24 md:pt-32 pb-20">
+      <div className="max-w-6xl mx-auto px-4 sm:px-8 pt-6 md:pt-32 pb-20">
+        <BackButton />
         <header className="mb-10 md:mb-16">
           <div className="flex items-center gap-2 mb-4">
             <div className="h-[2px] w-8 bg-blue-500 rounded-full" />
