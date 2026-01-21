@@ -15,12 +15,14 @@ import {
   RefreshCcw,
   Landmark,
   Activity,
+  ChevronDown,
 } from "lucide-react";
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showMenuHint, setShowMenuHint] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -78,10 +80,10 @@ export function Navigation() {
       desc: "경제의 기초 체력, 양국 금리 정보",
     },
     {
-      name: "나스닥 선물",
+      name: "나스닥 선물(나선)",
       href: "/nasdaq-futures",
       icon: Activity,
-      desc: "글로벌 시장의 실시간 온도계",
+      desc: "미국 시장의 선행지표",
     },
     {
       name: "공탐지수 분석",
@@ -132,24 +134,146 @@ export function Navigation() {
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-4 xl:gap-8">
-              <div className="flex items-center gap-1 xl:gap-2 bg-secondary/30 p-1.5 rounded-2xl border border-border-subtle/50">
-                {navLinks.map((link) => {
-                  const Icon = link.icon;
-                  return (
-                    <Link
-                      key={link.name}
-                      href={link.href}
-                      className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${
-                        pathname === link.href
-                          ? "bg-background text-accent shadow-sm"
-                          : "text-text-muted hover:text-foreground"
+              <div className="flex items-center gap-1.5 bg-secondary/30 p-1 rounded-2xl border border-border-subtle/50">
+                {/* 1. 홈 (Standalone) */}
+                <Link
+                  href="/"
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${
+                    pathname === "/"
+                      ? "bg-background text-accent shadow-sm"
+                      : "text-text-muted hover:text-foreground hover:bg-background/40"
+                  }`}
+                >
+                  <Home className="w-4 h-4" />
+                  <span>뉴스홈</span>
+                </Link>
+
+                {/* 2. 실시간 지표 (Dropdown) */}
+                <div
+                  className="relative group h-full"
+                  onMouseEnter={() => setActiveDropdown("live")}
+                  onMouseLeave={() => setActiveDropdown(null)}
+                >
+                  <button
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
+                      [
+                        "/currency-desk",
+                        "/interest-rate",
+                        "/nasdaq-futures",
+                      ].includes(pathname)
+                        ? "text-accent"
+                        : "text-text-muted hover:text-foreground hover:bg-background/40"
+                    }`}
+                  >
+                    <Activity className="w-4 h-4" />
+                    <span>실시간 지표</span>
+                    <ChevronDown
+                      className={`w-3.5 h-3.5 transition-transform duration-300 ${
+                        activeDropdown === "live" ? "rotate-180" : ""
                       }`}
-                    >
-                      <Icon className="w-4 h-4" />
-                      <span className="shrink-0">{link.name}</span>
-                    </Link>
-                  );
-                })}
+                    />
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  <div
+                    className={`absolute top-full left-0 pt-2 w-56 transition-all duration-300 z-50 ${
+                      activeDropdown === "live"
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 translate-y-2 pointer-events-none"
+                    }`}
+                  >
+                    <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1 overflow-hidden">
+                      {navLinks.slice(1, 4).map((link) => {
+                        const Icon = link.icon;
+                        return (
+                          <Link
+                            key={link.name}
+                            href={link.href}
+                            className={`flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-bold transition-all ${
+                              pathname === link.href
+                                ? "bg-accent/10 text-accent"
+                                : "hover:bg-secondary/50 text-text-muted hover:text-foreground"
+                            }`}
+                          >
+                            <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
+                              <Icon className="w-4 h-4 text-accent" />
+                            </div>
+                            <div className="flex flex-col overflow-hidden">
+                              <span className="truncate">{link.name}</span>
+                              <span className="text-[10px] opacity-40 font-medium truncate mt-0.5">
+                                {link.desc}
+                              </span>
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3. 시장 통찰 (Dropdown) */}
+                <div
+                  className="relative group h-full"
+                  onMouseEnter={() => setActiveDropdown("analysis")}
+                  onMouseLeave={() => setActiveDropdown(null)}
+                >
+                  <button
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
+                      [
+                        "/fear-greed",
+                        "/kospi-fear-greed",
+                        "/money-flow",
+                        "/market-weather",
+                      ].includes(pathname)
+                        ? "text-accent"
+                        : "text-text-muted hover:text-foreground hover:bg-background/40"
+                    }`}
+                  >
+                    <Compass className="w-4 h-4" />
+                    <span>시장 통찰</span>
+                    <ChevronDown
+                      className={`w-3.5 h-3.5 transition-transform duration-300 ${
+                        activeDropdown === "analysis" ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  <div
+                    className={`absolute top-full right-0 md:left-0 pt-2 w-64 transition-all duration-300 z-50 ${
+                      activeDropdown === "analysis"
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 translate-y-2 pointer-events-none"
+                    }`}
+                  >
+                    <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1">
+                      {navLinks.slice(4).map((link) => {
+                        const Icon = link.icon;
+                        return (
+                          <Link
+                            key={link.name}
+                            href={link.href}
+                            className={`flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-bold transition-all ${
+                              pathname === link.href
+                                ? "bg-accent/10 text-accent"
+                                : "hover:bg-secondary/50 text-text-muted hover:text-foreground"
+                            }`}
+                          >
+                            <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
+                              <Icon className="w-4 h-4 text-accent" />
+                            </div>
+                            <div className="flex flex-col overflow-hidden">
+                              <span className="truncate">{link.name}</span>
+                              <span className="text-[10px] opacity-40 font-medium truncate mt-0.5">
+                                {link.desc}
+                              </span>
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
               </div>
               <div className="hidden xl:block w-px h-6 bg-border-subtle/50" />
               <ThemeToggle />

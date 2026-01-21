@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import { LineChart, Line, ResponsiveContainer, YAxis } from "recharts";
 import {
   TrendingUp,
@@ -12,6 +13,7 @@ import {
 import { MarketData } from "../../lib/market";
 
 export function MarketTicker({ data: initialData }: { data: MarketData[] }) {
+  const router = useRouter();
   const [isClient, setIsClient] = React.useState(false);
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [liveData, setLiveData] = React.useState<MarketData[]>(initialData);
@@ -67,41 +69,53 @@ export function MarketTicker({ data: initialData }: { data: MarketData[] }) {
         <div className="flex items-center flex-1 overflow-hidden">
           {/* Ticker text visible only when collapsed */}
           {!isExpanded && (
-            <div className="flex-1 overflow-hidden relative">
-              <div className="animate-marquee group-hover:[animation-play-state:paused] flex items-center gap-8 pr-8">
-                {/* 원활한 루프를 위해 데이터를 두 번 반복 */}
-                {[...displayData, ...displayData].map((item, idx) => (
-                  <div
-                    key={`${item.name}-${idx}`}
-                    className="flex items-center gap-1.5 whitespace-nowrap"
-                  >
-                    <span className="text-[10px] font-bold text-text-muted">
-                      {item.name}
-                    </span>
-                    <span className="text-[11px] font-black">{item.value}</span>
-                    {item.krwValue && (
-                      <span className="text-[9px] font-medium text-text-muted/70">
-                        ({item.krwValue})
-                      </span>
-                    )}
-                    <span
-                      className={`text-[9px] font-bold ${
-                        item.isUp
-                          ? "text-red-500"
-                          : item.isDown
-                            ? "text-blue-500"
-                            : "text-text-muted"
-                      }`}
-                    >
-                      {item.isUp ? "▲" : item.isDown ? "▼" : ""}
-                      {item.changePercent}
-                    </span>
-                  </div>
-                ))}
+            <div className="flex items-center w-full">
+              {/* LIVE Badge for Ticker */}
+              <div className="flex items-center gap-1.5 px-2 py-1 bg-red-500/10 rounded-lg mr-4 shrink-0">
+                <div className="w-1 h-1 rounded-full bg-red-500 animate-pulse" />
+                <span className="text-[9px] font-black text-red-500 uppercase tracking-wider">
+                  Live
+                </span>
               </div>
 
-              {/* Fade out mask to indicate more content */}
-              <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-background/80 to-transparent pointer-events-none" />
+              <div className="flex-1 overflow-hidden relative">
+                <div className="animate-marquee group-hover:[animation-play-state:paused] flex items-center gap-8 pr-8">
+                  {/* 원활한 루프를 위해 데이터를 두 번 반복 */}
+                  {[...displayData, ...displayData].map((item, idx) => (
+                    <div
+                      key={`${item.name}-${idx}`}
+                      className="flex items-center gap-1.5 whitespace-nowrap"
+                    >
+                      <span className="text-[10px] font-bold text-text-muted">
+                        {item.name}
+                      </span>
+                      <span className="text-[11px] font-black">
+                        {item.value}
+                      </span>
+                      {item.krwValue && (
+                        <span className="text-[9px] font-medium text-text-muted/70">
+                          ({item.krwValue})
+                        </span>
+                      )}
+                      <span
+                        className={`text-[9px] font-bold ${
+                          item.isUp
+                            ? "text-red-500"
+                            : item.isDown
+                              ? "text-blue-500"
+                              : "text-text-muted"
+                        }`}
+                      >
+                        {item.isUp ? "▲" : item.isDown ? "▼" : ""}
+                        {item.changePercent}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Fade out mask to indicate more content */}
+                <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-background/80 to-transparent pointer-events-none" />
+              </div>
             </div>
           )}
 
@@ -147,75 +161,113 @@ export function MarketTicker({ data: initialData }: { data: MarketData[] }) {
         <div className="p-4 pt-4">
           <div className="w-full overflow-x-auto no-scrollbar">
             <div className="flex gap-3 min-w-max pb-1">
-              {displayData.map((item) => (
-                <div
-                  key={item.name}
-                  className="flex flex-col p-3.5 bg-card border border-border-subtle/60 rounded-xl w-[160px] shadow-[0_2px_10px_rgba(0,0,0,0.02)] dark:shadow-none hover:border-accent/30 transition-all duration-300"
-                >
-                  <div className="flex justify-between items-start mb-1">
-                    <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">
-                      {item.name}
-                    </span>
-                    {item.isUp ? (
-                      <TrendingUp className="w-3 h-3 text-red-500" />
-                    ) : item.isDown ? (
-                      <TrendingDown className="w-3 h-3 text-blue-500" />
-                    ) : (
-                      <Minus className="w-3 h-3 text-gray-500" />
-                    )}
-                  </div>
+              {displayData.map((item) => {
+                const getLink = (name: string) => {
+                  if (name === "나스닥 선물") return "/nasdaq-futures";
+                  if (name === "원/달러 환율") return "/currency-desk";
+                  if (name === "KOSPI") return "/kospi-fear-greed";
+                  return null;
+                };
+                const link = getLink(item.name);
 
-                  <div className="flex flex-col mb-2">
-                    <div className="flex flex-col items-start leading-tight">
-                      <span className="text-base font-black tracking-tight">
-                        {item.value}
-                      </span>
-                      {item.krwValue && (
-                        <span className="text-[10px] font-medium text-text-muted mt-0.5">
-                          ({item.krwValue})
+                return (
+                  <div
+                    key={item.name}
+                    onClick={() => link && router.push(link)}
+                    className={`
+                      flex flex-col p-3.5 bg-card border border-border-subtle/60 rounded-xl w-[160px] 
+                      shadow-[0_2px_10px_rgba(0,0,0,0.02)] dark:shadow-none transition-all duration-300
+                      ${
+                        link
+                          ? "cursor-pointer hover:border-accent/40 hover:-translate-y-1 hover:shadow-lg hover:shadow-accent/5 active:scale-95 group/card"
+                          : "opacity-80"
+                      }
+                    `}
+                  >
+                    <div className="flex justify-between items-start mb-1">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">
+                          {item.name}
                         </span>
+                        {link && (
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 rounded-full bg-accent animate-pulse" />
+                            <span className="text-[7px] font-black text-accent uppercase tracking-tighter sm:hidden">
+                              Tap
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      {item.isUp ? (
+                        <TrendingUp className="w-3 h-3 text-red-500" />
+                      ) : item.isDown ? (
+                        <TrendingDown className="w-3 h-3 text-blue-500" />
+                      ) : (
+                        <Minus className="w-3 h-3 text-gray-500" />
                       )}
                     </div>
-                    <div
-                      className={`flex items-center gap-1 text-[10px] font-bold ${
-                        item.isUp
-                          ? "text-red-500"
-                          : item.isDown
-                            ? "text-blue-500"
-                            : "text-gray-500"
-                      }`}
-                    >
-                      <span>
-                        {item.isUp ? "▲" : item.isDown ? "▼" : ""}
-                        {item.change}
-                      </span>
-                      <span>{item.changePercent}</span>
+
+                    <div className="flex flex-col mb-2">
+                      <div className="flex flex-col items-start leading-tight">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-base font-black tracking-tight">
+                            {item.value}
+                          </span>
+                          {link && (
+                            <span className="text-[8px] font-black text-accent bg-accent/10 px-1.5 py-0.5 rounded sm:opacity-0 sm:group-hover/card:opacity-100 transition-opacity ml-1 flex items-center gap-0.5">
+                              {/* 모바일에서는 항상 보이고, 데스크탑에선 호버 시 보임 */}
+                              <span className="sm:inline hidden">GO</span>
+                              <span className="sm:hidden inline">VIEW</span>
+                            </span>
+                          )}
+                        </div>
+                        {item.krwValue && (
+                          <span className="text-[10px] font-medium text-text-muted mt-0.5">
+                            ({item.krwValue})
+                          </span>
+                        )}
+                      </div>
+                      <div
+                        className={`flex items-center gap-1 text-[10px] font-bold ${
+                          item.isUp
+                            ? "text-red-500"
+                            : item.isDown
+                              ? "text-blue-500"
+                              : "text-gray-500"
+                        }`}
+                      >
+                        <span>
+                          {item.isUp ? "▲" : item.isDown ? "▼" : ""}
+                          {item.change}
+                        </span>
+                        <span>{item.changePercent}</span>
+                      </div>
+                    </div>
+
+                    <div className="h-8 w-full mt-auto opacity-80">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={item.history}>
+                          <YAxis hide domain={["dataMin", "dataMax"]} />
+                          <Line
+                            type="monotone"
+                            dataKey="value"
+                            stroke={
+                              item.isUp
+                                ? "#ef4444"
+                                : item.isDown
+                                  ? "#3b82f6"
+                                  : "#94a3b8"
+                            }
+                            strokeWidth={2}
+                            dot={false}
+                            isAnimationActive={true}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
                     </div>
                   </div>
-
-                  <div className="h-8 w-full mt-auto opacity-80">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={item.history}>
-                        <YAxis hide domain={["dataMin", "dataMax"]} />
-                        <Line
-                          type="monotone"
-                          dataKey="value"
-                          stroke={
-                            item.isUp
-                              ? "#ef4444"
-                              : item.isDown
-                                ? "#3b82f6"
-                                : "#94a3b8"
-                          }
-                          strokeWidth={2}
-                          dot={false}
-                          isAnimationActive={true}
-                        />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
