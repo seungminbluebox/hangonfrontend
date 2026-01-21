@@ -88,8 +88,20 @@ export default async function Home({
         url: "https://hangon.co.kr",
       },
     ],
+    publisher: {
+      "@type": "Organization",
+      name: "Hang on!",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://hangon.co.kr/logo.png",
+      },
+    },
     description:
       "오늘의 한국, 미국, 글로벌 경제 주요 이슈를 핵심요약해 드립니다.",
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://hangon.co.kr${selectedDate ? `?date=${selectedDate}` : ""}`,
+    },
   };
 
   if (error)

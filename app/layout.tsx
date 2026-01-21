@@ -97,6 +97,11 @@ export default function RootLayout({
       alternateName: ["행온", "Hangon"],
       url: "https://hangon.co.kr",
       image: "https://hangon.co.kr/og-image.png",
+      potentialAction: {
+        "@type": "SearchAction",
+        target: "https://hangon.co.kr/?q={search_term_string}",
+        "query-input": "required name=search_term_string",
+      },
     },
     {
       "@context": "https://schema.org",

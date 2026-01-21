@@ -13,8 +13,27 @@ export default async function CurrencyDeskPage() {
   const marketData = await getMarketData();
   const usdData = marketData.find((m) => m.name === "원/달러 환율");
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://hangon.co.kr",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "환율 데스크",
+        item: "https://hangon.co.kr/currency-desk",
+      },
+    ],
+  };
+
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background text-foreground">
       <Navigation />
       <div className="max-w-6xl mx-auto px-4 sm:px-8 pt-24 md:pt-32 pb-20">
         <header className="mb-10 md:mb-16">
@@ -35,6 +54,10 @@ export default async function CurrencyDeskPage() {
 
         <CurrencyDesk liveData={usdData} />
       </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
     </main>
   );
 }
