@@ -270,7 +270,18 @@ export function InterestRateInfo({ initialData }: InterestRateInfoProps) {
                   }
                   minTickGap={30}
                 />
-                <YAxis hide domain={["dataMin - 0.5", "dataMax + 0.5"]} />
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{
+                    fontSize: 10,
+                    fontWeight: "bold",
+                    fill: "currentColor",
+                    opacity: 0.3,
+                  }}
+                  orientation="right"
+                  domain={["dataMin - 0.5", "dataMax + 0.5"]}
+                />
                 <Tooltip
                   content={<CustomTooltip />}
                   cursor={{

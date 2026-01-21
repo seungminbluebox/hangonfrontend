@@ -14,6 +14,7 @@ import {
   Compass,
   RefreshCcw,
   Landmark,
+  Activity,
 } from "lucide-react";
 
 export function Navigation() {
@@ -75,6 +76,12 @@ export function Navigation() {
       href: "/interest-rate",
       icon: Landmark,
       desc: "경제의 기초 체력, 양국 금리 정보",
+    },
+    {
+      name: "나스닥 선물",
+      href: "/nasdaq-futures",
+      icon: Activity,
+      desc: "글로벌 시장의 실시간 온도계",
     },
     {
       name: "공탐지수 분석",

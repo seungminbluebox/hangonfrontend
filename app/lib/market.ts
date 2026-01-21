@@ -6,7 +6,7 @@ export interface MarketData {
   changePercent: string;
   isUp: boolean;
   isDown: boolean;
-  history: { value: number }[];
+  history: { value: number | null; time: string }[];
 }
 
 const SYMBOLS = [
@@ -14,6 +14,7 @@ const SYMBOLS = [
   { name: "KOSDAQ", symbol: "^KQ11" },
   { name: "S&P 500", symbol: "^GSPC" },
   { name: "NASDAQ", symbol: "^IXIC" },
+  { name: "나스닥 선물", symbol: "NQ=F" },
   { name: "다우존스", symbol: "^DJI" },
   { name: "원/달러 환율", symbol: "USDKRW=X" },
   { name: "비트코인", symbol: "BTC-USD" },
@@ -23,9 +24,9 @@ const SYMBOLS = [
 
 async function fetchFromYahoo(symbol: string) {
   try {
-    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=30m&range=1d`;
+    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=5m&range=2d`;
     const response = await fetch(url, {
-      next: { revalidate: 60 }, // 1분 간격 캐싱
+      next: { revalidate: 10 }, // 10초 간격 캐싱
       headers: {
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
@@ -70,10 +71,22 @@ export async function getMarketData(): Promise<MarketData[]> {
         const changePercent = (change / previousClose) * 100;
 
         const quote = data.indicators.quote[0];
-        const closePrices: { value: number }[] =
+        const timestamps = data.timestamp || [];
+        const closePrices =
           quote.close
-            ?.filter((p: number | null): p is number => p !== null)
-            .map((p: number) => ({ value: p })) || [];
+            ?.map((p: number | null, i: number) => ({
+              value: p,
+              time: timestamps[i]
+                ? new Date(timestamps[i] * 1000).toLocaleString("ko-KR", {
+                    month: "numeric",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false,
+                  })
+                : "",
+            }))
+            .filter((item: any) => item.value !== null) || [];
 
         let krwValue: string | undefined = undefined;
         if (symbol === "BTC-USD") {

@@ -16,6 +16,7 @@ import {
   RefreshCcw,
 } from "lucide-react";
 import { LineChart, Line, ResponsiveContainer, YAxis } from "recharts";
+import { MarketData } from "../../lib/market";
 
 interface CurrencyItem {
   price: number;
@@ -32,10 +33,15 @@ interface CurrencyData {
 
 interface CurrencyShareCardProps {
   data: CurrencyData;
+  liveData?: MarketData;
   onClose: () => void;
 }
 
-export function CurrencyShareCard({ data, onClose }: CurrencyShareCardProps) {
+export function CurrencyShareCard({
+  data,
+  liveData,
+  onClose,
+}: CurrencyShareCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
@@ -187,30 +193,65 @@ export function CurrencyShareCard({ data, onClose }: CurrencyShareCardProps) {
                         </div>
                         <div className="flex items-baseline gap-1 mb-1">
                           <span className="text-4xl font-black tracking-tighter">
-                            {Math.floor(usdData.price).toLocaleString()}
+                            {liveData
+                              ? Math.floor(
+                                  parseFloat(liveData.value.replace(/,/g, "")),
+                                ).toLocaleString()
+                              : Math.floor(usdData.price).toLocaleString()}
                           </span>
                           <span className="text-sm font-bold opacity-40 italic">
                             KRW
                           </span>
                         </div>
                         <div
-                          className={`flex items-center gap-1 text-xs font-black ${usdData.change >= 0 ? "text-rose-500" : "text-emerald-500"}`}
+                          className={`flex items-center gap-1 text-xs font-black ${
+                            liveData
+                              ? liveData.isUp
+                                ? "text-red-500"
+                                : "text-blue-500"
+                              : usdData.change >= 0
+                                ? "text-red-500"
+                                : "text-blue-500"
+                          }`}
                         >
-                          {usdData.change >= 0 ? (
+                          {liveData ? (
+                            liveData.isUp ? (
+                              <ArrowUpRight className="w-3 h-3" />
+                            ) : (
+                              <ArrowDownRight className="w-3 h-3" />
+                            )
+                          ) : usdData.change >= 0 ? (
                             <ArrowUpRight className="w-3 h-3" />
                           ) : (
                             <ArrowDownRight className="w-3 h-3" />
                           )}
-                          {Math.abs(usdData.change)}% (전일대비)
+                          {liveData
+                            ? liveData.changePercent
+                                .replace("+", "")
+                                .replace("-", "")
+                            : Math.abs(usdData.change) + "%"}{" "}
+                          (전일대비)
                         </div>
 
                         <div className="h-20 mt-6 -mx-1">
                           <ResponsiveContainer width="100%" height="100%">
-                            <LineChart data={usdData.history}>
+                            <LineChart
+                              data={
+                                liveData ? liveData.history : usdData.history
+                              }
+                            >
                               <Line
                                 type="monotone"
                                 dataKey="value"
-                                stroke="#3b82f6"
+                                stroke={
+                                  liveData
+                                    ? liveData.isUp
+                                      ? "#ef4444"
+                                      : "#3b82f6"
+                                    : usdData.change >= 0
+                                      ? "#ef4444"
+                                      : "#3b82f6"
+                                }
                                 strokeWidth={3}
                                 dot={false}
                               />

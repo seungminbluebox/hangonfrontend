@@ -20,6 +20,7 @@ import {
   Line,
   XAxis,
   YAxis,
+  CartesianGrid,
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
@@ -45,10 +46,39 @@ interface CurrencyData {
   updated_at: string;
 }
 
-export function CurrencyDesk({ liveData }: { liveData?: MarketData }) {
+export function CurrencyDesk({
+  liveData: initialLiveData,
+}: {
+  liveData?: MarketData;
+}) {
   const [data, setData] = useState<CurrencyData | null>(null);
   const [loading, setLoading] = useState(true);
   const [showShare, setShowShare] = useState(false);
+  const [liveData, setLiveData] = useState<MarketData | undefined>(
+    initialLiveData,
+  );
+
+  // 10초마다 라이브 가격 데이터 갱신
+  useEffect(() => {
+    const pollInterval = setInterval(async () => {
+      try {
+        const response = await fetch("/api/market");
+        if (response.ok) {
+          const marketData = await response.json();
+          const usdData = marketData.find(
+            (m: any) => m.name === "원/달러 환율",
+          );
+          if (usdData) {
+            setLiveData(usdData);
+          }
+        }
+      } catch (err) {
+        console.error("Live data polling error:", err);
+      }
+    }, 10000);
+
+    return () => clearInterval(pollInterval);
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -69,6 +99,9 @@ export function CurrencyDesk({ liveData }: { liveData?: MarketData }) {
       }
     }
     fetchData();
+    // AI 분석 데이터도 1분마다 갱신하여 최신 상태 유지
+    const interval = setInterval(fetchData, 60000);
+    return () => clearInterval(interval);
   }, []);
 
   if (loading) {
@@ -92,6 +125,10 @@ export function CurrencyDesk({ liveData }: { liveData?: MarketData }) {
       ? Math.floor(data.currency_data["USD/KRW"].price)
       : null;
 
+  const isUp = liveData
+    ? liveData.isUp
+    : (data?.currency_data["USD/KRW"].change || 0) >= 0;
+
   return (
     <div className="w-full space-y-4 md:space-y-6">
       {/* Header & AI Report */}
@@ -102,9 +139,17 @@ export function CurrencyDesk({ liveData }: { liveData?: MarketData }) {
               <DollarSign className="w-5 h-5 md:w-6 md:h-6 text-blue-500" />
             </div>
             <div>
-              <h2 className="text-xl md:text-3xl font-black italic tracking-tight">
-                원/달러 환율 리포트
-              </h2>
+              <div className="flex items-center gap-2">
+                <h2 className="text-xl md:text-3xl font-black italic tracking-tight">
+                  원/달러 환율 리포트
+                </h2>
+                <div className="flex items-center gap-1.5 px-2 py-0.5 bg-red-500/10 rounded-full">
+                  <div className="w-1 h-1 rounded-full bg-red-500 animate-pulse" />
+                  <span className="text-[9px] font-black text-red-500 uppercase tracking-wider">
+                    Live
+                  </span>
+                </div>
+              </div>
               <p className="text-[10px] md:text-xs font-bold text-foreground/40 uppercase tracking-widest mt-0.5">
                 USD/KRW Analysis
               </p>
@@ -117,7 +162,7 @@ export function CurrencyDesk({ liveData }: { liveData?: MarketData }) {
               className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-500 rounded-xl transition-all text-sm font-black group"
             >
               <Share2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
-              이미지 공유
+              공유
             </button>
           </div>
         </div>
@@ -153,10 +198,10 @@ export function CurrencyDesk({ liveData }: { liveData?: MarketData }) {
                   liveData
                     ? liveData.isUp
                       ? "text-red-500"
-                      : "text-emerald-500"
+                      : "text-blue-500"
                     : data!.currency_data["USD/KRW"].change >= 0
                       ? "text-red-500"
-                      : "text-emerald-500"
+                      : "text-blue-500"
                 }`}
               >
                 {liveData ? (
@@ -196,10 +241,24 @@ export function CurrencyDesk({ liveData }: { liveData?: MarketData }) {
                       x2="0"
                       y2="1"
                     >
-                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                      <stop
+                        offset="5%"
+                        stopColor={liveData?.isUp ? "#ef4444" : "#3b82f6"}
+                        stopOpacity={0.3}
+                      />
+                      <stop
+                        offset="95%"
+                        stopColor={liveData?.isUp ? "#ef4444" : "#3b82f6"}
+                        stopOpacity={0}
+                      />
                     </linearGradient>
                   </defs>
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    vertical={false}
+                    stroke="currentColor"
+                    opacity={0.05}
+                  />
                   <Tooltip
                     contentStyle={{
                       backgroundColor: "#1e293b",
@@ -225,12 +284,36 @@ export function CurrencyDesk({ liveData }: { liveData?: MarketData }) {
                   <Line
                     type="monotone"
                     dataKey="value"
-                    stroke="#3b82f6"
+                    stroke={liveData?.isUp ? "#ef4444" : "#3b82f6"}
                     strokeWidth={4}
                     dot={false}
                     activeDot={{ r: 6, strokeWidth: 0 }}
                   />
-                  <YAxis hide domain={["dataMin - 1", "dataMax + 1"]} />
+                  <YAxis
+                    domain={["dataMin - 5", "dataMax + 5"]}
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{
+                      fontSize: 10,
+                      fontWeight: "bold",
+                      fill: "currentColor",
+                      opacity: 0.3,
+                    }}
+                    orientation="right"
+                  />
+                  <XAxis
+                    dataKey="time"
+                    hide={false}
+                    axisLine={false}
+                    tickLine={false}
+                    minTickGap={60}
+                    tick={{
+                      fontSize: 10,
+                      fontWeight: "bold",
+                      fill: "currentColor",
+                      opacity: 0.3,
+                    }}
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -244,7 +327,9 @@ export function CurrencyDesk({ liveData }: { liveData?: MarketData }) {
             <div className="mb-4 pb-4 border-b border-white/5">
               <p className="text-sm md:text-base font-bold text-foreground/60 leading-relaxed flex items-center flex-wrap gap-1">
                 현재 원/달러 환율은
-                <span className="text-blue-500 dark:text-blue-400 font-black px-1.5 py-0.5 bg-blue-500/5 rounded-lg tracking-tight">
+                <span
+                  className={`${isUp ? "text-red-500" : "text-blue-500"} font-black px-1.5 py-0.5 ${isUp ? "bg-red-500/10" : "bg-blue-500/10"} rounded-lg tracking-tight`}
+                >
                   {currentPriceInt?.toLocaleString()}원
                 </span>
                 대를 기록 중이에요. 이를 바탕으로 한 시장 흐름 분석입니다.
@@ -297,7 +382,11 @@ export function CurrencyDesk({ liveData }: { liveData?: MarketData }) {
 
       {/* Share Modal */}
       {showShare && data && (
-        <CurrencyShareCard data={data} onClose={() => setShowShare(false)} />
+        <CurrencyShareCard
+          data={data}
+          liveData={liveData}
+          onClose={() => setShowShare(false)}
+        />
       )}
     </div>
   );

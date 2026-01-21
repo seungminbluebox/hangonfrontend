@@ -9,11 +9,31 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
-import { MarketData } from "../lib/market";
+import { MarketData } from "../../lib/market";
 
-export function MarketTicker({ data }: { data: MarketData[] }) {
+export function MarketTicker({ data: initialData }: { data: MarketData[] }) {
   const [isClient, setIsClient] = React.useState(false);
   const [isExpanded, setIsExpanded] = React.useState(false);
+  const [liveData, setLiveData] = React.useState<MarketData[]>(initialData);
+
+  // Poll for live data every 10 seconds
+  React.useEffect(() => {
+    const pollInterval = setInterval(async () => {
+      try {
+        const response = await fetch("/api/market");
+        if (response.ok) {
+          const newData = await response.json();
+          if (Array.isArray(newData)) {
+            setLiveData(newData);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to poll market data:", error);
+      }
+    }, 10000);
+
+    return () => clearInterval(pollInterval);
+  }, []);
 
   React.useEffect(() => {
     setIsClient(true);
@@ -31,7 +51,7 @@ export function MarketTicker({ data }: { data: MarketData[] }) {
     );
   }
 
-  const displayData = data && data.length > 0 ? data : [];
+  const displayData = liveData && liveData.length > 0 ? liveData : [];
 
   if (isClient && displayData.length === 0) {
     return null;
@@ -69,8 +89,8 @@ export function MarketTicker({ data }: { data: MarketData[] }) {
                         item.isUp
                           ? "text-red-500"
                           : item.isDown
-                          ? "text-blue-500"
-                          : "text-text-muted"
+                            ? "text-blue-500"
+                            : "text-text-muted"
                       }`}
                     >
                       {item.isUp ? "▲" : item.isDown ? "▼" : ""}
@@ -161,8 +181,8 @@ export function MarketTicker({ data }: { data: MarketData[] }) {
                         item.isUp
                           ? "text-red-500"
                           : item.isDown
-                          ? "text-blue-500"
-                          : "text-gray-500"
+                            ? "text-blue-500"
+                            : "text-gray-500"
                       }`}
                     >
                       <span>
@@ -184,8 +204,8 @@ export function MarketTicker({ data }: { data: MarketData[] }) {
                             item.isUp
                               ? "#ef4444"
                               : item.isDown
-                              ? "#3b82f6"
-                              : "#94a3b8"
+                                ? "#3b82f6"
+                                : "#94a3b8"
                           }
                           strokeWidth={2}
                           dot={false}
