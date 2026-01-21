@@ -1,5 +1,5 @@
-import { Navigation } from "../components/Navigation";
-import { CurrencyDesk } from "../components/CurrencyDesk";
+import { Navigation } from "../components/layout/Navigation";
+import { CurrencyDesk } from "../components/currency/CurrencyDesk";
 import { Metadata } from "next";
 import { getMarketData } from "../lib/market";
 

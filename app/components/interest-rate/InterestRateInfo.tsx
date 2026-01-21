@@ -10,7 +10,7 @@ import {
   Clock,
   Share2,
 } from "lucide-react";
-import { InterestRates } from "../lib/rates";
+import { InterestRates } from "../../lib/rates";
 import {
   LineChart,
   Line,

@@ -1,6 +1,6 @@
 import React from "react";
-import { Navigation } from "../components/Navigation";
-import { MoneyFlowTracker } from "../components/MoneyFlowTracker";
+import { Navigation } from "../components/layout/Navigation";
+import { MoneyFlowTracker } from "../components/money-flow/MoneyFlowTracker";
 import { ArrowRightLeft, Target } from "lucide-react";
 
 export default function MoneyFlowPage() {

@@ -9,7 +9,7 @@ import {
   Share2,
   LayoutGrid,
 } from "lucide-react";
-import { ShareCard } from "./ShareCard";
+import { ShareCard } from "../layout/ShareCard";
 import { DailyShareCard } from "./DailyShareCard";
 
 interface NewsItem {

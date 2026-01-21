@@ -1,5 +1,5 @@
-import { Navigation } from "../components/Navigation";
-import { InterestRateInfo } from "../components/InterestRateInfo";
+import { Navigation } from "../components/layout/Navigation";
+import { InterestRateInfo } from "../components/interest-rate/InterestRateInfo";
 import { Metadata } from "next";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";

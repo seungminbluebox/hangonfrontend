@@ -1,4 +1,4 @@
-import { MarketWeather } from "../components/MarketWeather";
+import { MarketWeather } from "../components/market-weather/MarketWeather";
 import { Metadata } from "next";
 import Link from "next/link";
 import {

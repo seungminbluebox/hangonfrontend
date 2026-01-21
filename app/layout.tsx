@@ -1,6 +1,6 @@
 import { Providers } from "./providers";
-import { InstallPWA } from "./components/InstallPWA";
-import { Navigation } from "./components/Navigation";
+import { InstallPWA } from "./components/layout/InstallPWA";
+import { Navigation } from "./components/layout/Navigation";
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";

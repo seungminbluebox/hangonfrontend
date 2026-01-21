@@ -1,4 +1,4 @@
-import { FearGreedIndex } from "../components/FearGreedIndex";
+import { FearGreedIndex } from "../components/fear-greed/FearGreedIndex";
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";

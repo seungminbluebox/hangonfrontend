@@ -23,8 +23,8 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { MarketData } from "../lib/market";
-import { CurrencyShareCard } from "@/app/components/CurrencyShareCard";
+import { MarketData } from "../../lib/market";
+import { CurrencyShareCard } from "./CurrencyShareCard";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,

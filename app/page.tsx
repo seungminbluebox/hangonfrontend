@@ -1,8 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
-import { InstallButton } from "./components/InstallButton";
-import { DateNavigation } from "./components/DateNavigation";
-import { NewsDashboard } from "./components/NewsDashboard";
-import { MarketTicker } from "./components/MarketTicker";
+import { InstallButton } from "./components/layout/InstallButton";
+import { DateNavigation } from "./components/layout/DateNavigation";
+import { NewsDashboard } from "./components/news/NewsDashboard";
+import { MarketTicker } from "./components/layout/MarketTicker";
 import { getMarketData } from "./lib/market";
 import { TrendingUp, Globe, Calendar, Mail } from "lucide-react";
 import { Metadata } from "next"; // 상단 import 추가
