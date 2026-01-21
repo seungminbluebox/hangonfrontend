@@ -315,51 +315,143 @@ export function Navigation() {
             : "translate-x-full opacity-0 pointer-events-none"
         }`}
       >
-        <div className="flex flex-col p-6 space-y-6">
+        <div className="flex flex-col p-6 space-y-8 pb-32">
           {/* 메뉴 헤더 */}
           <div
             className={`transition-all duration-500 ${
               isOpen ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0"
             }`}
-            style={{ transitionDelay: isOpen ? "0ms" : "0ms" }}
           >
             <h2 className="text-2xl font-black tracking-tight text-foreground mb-2">
-              무엇이 궁금하신가요?🤔
+              무엇이 궁금하신가요? 🤔
             </h2>
-            <div className="h-1 w-16 bg-accent rounded-full"></div>
+            <div className="h-1 w-12 bg-accent rounded-full"></div>
           </div>
 
-          {/* 메뉴 아이템 */}
-          {navLinks.map((link, index) => {
-            const Icon = link.icon;
-            return (
-              <Link
-                key={link.name}
-                href={link.href}
-                onClick={() => setIsOpen(false)}
-                className={`flex items-center gap-4 p-4 rounded-2xl bg-secondary/30 border border-border-subtle/50 transition-all duration-500 hover:bg-secondary/50 hover:border-accent/30 ${
-                  isOpen
-                    ? "translate-x-0 opacity-100"
-                    : "translate-x-8 opacity-0"
-                }`}
-                style={{
-                  transitionDelay: isOpen ? `${(index + 1) * 100}ms` : "0ms",
-                }}
-              >
-                <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shrink-0">
-                  <Icon className="w-5 h-5 text-accent" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-lg font-black tracking-tight leading-tight">
-                    {link.name}
-                  </span>
-                  <span className="text-xs font-bold text-foreground/40 mt-0.5">
-                    {link.desc}
-                  </span>
-                </div>
-              </Link>
-            );
-          })}
+          {/* 카테고리 1: 뉴스 */}
+          <div className="space-y-3">
+            <h3 className="text-[10px] font-black text-text-muted/40 uppercase tracking-widest ml-1">
+              Main Dashboard
+            </h3>
+            <div className="grid grid-cols-1 gap-2">
+              {[navLinks[0]].map((link) => {
+                const Icon = link.icon;
+                return (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className={`flex items-center gap-4 p-4 rounded-2xl bg-secondary/30 border border-border-subtle/50 transition-all duration-500 ${
+                      isOpen
+                        ? "translate-x-0 opacity-100"
+                        : "translate-x-8 opacity-0"
+                    }`}
+                    style={{ transitionDelay: isOpen ? "100ms" : "0ms" }}
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shrink-0">
+                      <Icon className="w-5 h-5 text-accent" />
+                    </div>
+                    <div className="flex flex-col overflow-hidden">
+                      <span className="text-sm font-black tracking-tight truncate">
+                        {link.name}
+                      </span>
+                      <span className="text-[10px] font-bold text-foreground/40 mt-0.5 truncate">
+                        {link.desc}
+                      </span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 카테고리 2: 실시간 지표 */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 ml-1">
+              <Activity className="w-3 h-3 text-accent/50" />
+              <h3 className="text-[10px] font-black text-text-muted/40 uppercase tracking-widest">
+                실시간 지표가 궁금하다면?
+              </h3>
+            </div>
+            <div className="grid grid-cols-1 gap-2">
+              {navLinks.slice(1, 4).map((link, index) => {
+                const Icon = link.icon;
+                return (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className={`flex items-center gap-4 p-4 rounded-2xl bg-secondary/30 border border-border-subtle/50 transition-all duration-500 ${
+                      isOpen
+                        ? "translate-x-0 opacity-100"
+                        : "translate-x-8 opacity-0"
+                    }`}
+                    style={{
+                      transitionDelay: isOpen
+                        ? `${(index + 2) * 100}ms`
+                        : "0ms",
+                    }}
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shrink-0">
+                      <Icon className="w-5 h-5 text-accent" />
+                    </div>
+                    <div className="flex flex-col overflow-hidden">
+                      <span className="text-sm font-black tracking-tight truncate">
+                        {link.name}
+                      </span>
+                      <span className="text-[10px] font-bold text-foreground/40 mt-0.5 truncate">
+                        {link.desc}
+                      </span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 카테고리 3: 시장 분석 */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 ml-1">
+              <Compass className="w-3 h-3 text-accent/50" />
+              <h3 className="text-[10px] font-black text-text-muted/40 uppercase tracking-widest">
+                시장 상황이 궁금하다면?
+              </h3>
+            </div>
+            <div className="grid grid-cols-1 gap-2">
+              {navLinks.slice(4).map((link, index) => {
+                const Icon = link.icon;
+                return (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className={`flex items-center gap-4 p-4 rounded-2xl bg-secondary/30 border border-border-subtle/50 transition-all duration-500 ${
+                      isOpen
+                        ? "translate-x-0 opacity-100"
+                        : "translate-x-8 opacity-0"
+                    }`}
+                    style={{
+                      transitionDelay: isOpen
+                        ? `${(index + 5) * 100}ms`
+                        : "0ms",
+                    }}
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shrink-0">
+                      <Icon className="w-5 h-5 text-accent" />
+                    </div>
+                    <div className="flex flex-col overflow-hidden">
+                      <span className="text-sm font-black tracking-tight truncate">
+                        {link.name}
+                      </span>
+                      <span className="text-[10px] font-bold text-foreground/40 mt-0.5 truncate">
+                        {link.desc}
+                      </span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </>
