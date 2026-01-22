@@ -66,7 +66,7 @@ export function FearGreedShareCard({
         margin: "0",
         left: "0",
         top: "0",
-        width: "320px",
+        width: "360px",
         position: "relative",
         borderRadius: "35px",
         boxShadow: "none",

@@ -69,7 +69,7 @@ export function CurrencyShareCard({
       style: {
         transform: "scale(1)",
         transformOrigin: "top left",
-        width: "320px",
+        width: "360px",
         backgroundColor: shareTheme === "light" ? "#F8F7F4" : "#0f172a",
         borderRadius: "35px",
         boxShadow: "none",

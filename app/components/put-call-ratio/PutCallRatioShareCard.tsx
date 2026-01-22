@@ -21,6 +21,9 @@ import {
   MessageSquare,
   Sparkles,
   Zap,
+  Lightbulb,
+  Info,
+  Wand2,
 } from "lucide-react";
 
 interface PutCallRatioShareCardProps {
@@ -322,7 +325,7 @@ export function PutCallRatioShareCard({
                     }`}
                   >
                     <div className="flex items-center gap-1.5 mb-3 flex-nowrap">
-                      <Sparkles className="w-3.5 h-3.5 text-accent shrink-0" />
+                      <Lightbulb className="w-3.5 h-3.5 text-accent shrink-0" />
                       <h4 className="text-[12px] font-black italic tracking-tight">
                         {data.analysis.title}
                       </h4>
