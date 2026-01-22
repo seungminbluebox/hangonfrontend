@@ -22,6 +22,11 @@ import {
   ChevronDown,
   ChevronUp,
   Share2,
+  Cpu,
+  Microscope,
+  SearchCode,
+  Waves,
+  Zap,
 } from "lucide-react";
 import { clsx } from "clsx";
 import { PutCallRatioShareCard } from "./PutCallRatioShareCard";
@@ -390,12 +395,11 @@ export function PutCallRatioTracker() {
           >
             <div className="flex items-center gap-4">
               <div className="hidden md:flex p-3 rounded-2xl bg-accent text-white shadow-lg shadow-accent/20">
-                <BrainCircuit className="w-6 h-6" />
+                <Microscope className="w-6 h-6" />
               </div>
               <div>
                 <h3 className="text-lg md:text-xl font-black italic tracking-tight flex items-center gap-2">
                   {analysis.title}
-                  <Sparkles className="w-4 h-4 text-accent animate-pulse" />
                 </h3>
                 <p className="text-xs md:text-sm font-bold text-foreground/60">
                   {analysis.summary}

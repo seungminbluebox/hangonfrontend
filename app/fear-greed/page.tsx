@@ -3,9 +3,9 @@ import { Metadata } from "next";
 import { BackButton } from "../components/layout/BackButton";
 
 export const metadata: Metadata = {
-  title: "공포와 탐욕 지수 AI 분석",
+  title: "공포와 탐욕 지수 분석",
   description:
-    "CNN Fear & Greed Index를 바탕으로 한 AI 시장 심리 분석 리포트입니다.",
+    "CNN Fear & Greed Index를 바탕으로 한 시장 심리 분석 리포트입니다.",
 };
 
 export default function FearGreedPage() {

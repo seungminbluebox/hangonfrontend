@@ -8,6 +8,7 @@ import {
   ShieldAlert,
   ArrowUpRight,
   Share2,
+  Microscope,
 } from "lucide-react";
 import { FearGreedShareCard } from "./FearGreedShareCard";
 
@@ -127,7 +128,7 @@ export function FearGreedIndex({
     <div className="w-full space-y-6">
       <div className="flex items-center justify-between px-2">
         <div className="flex items-center gap-2">
-          <BrainCircuit className="w-5 h-5 text-accent" />
+          <Microscope className="w-5 h-5 text-accent" />
           <h2 className="text-xl font-black tracking-tight italic">
             <span className="text-accent">
               {type === "kospi" ? "코스피" : ""} 공탐지수

@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigation } from "../components/layout/Navigation";
 import { BackButton } from "../components/layout/BackButton";
-import { BarChart3 } from "lucide-react";
+import { BarChart3, Library, Target } from "lucide-react";
 import { PutCallRatioTracker } from "@/app/components/put-call-ratio/PutCallRatioTracker";
 
 export default function PutCallRatioPage() {
@@ -54,7 +54,7 @@ export default function PutCallRatioPage() {
 
             <div className="relative z-10">
               <h3 className="text-2xl md:text-3xl font-black italic mb-10 flex items-center gap-3">
-                <span className="text-accent">01.</span> 지표 읽는 법
+                <span className="text-accent">Tip. </span> 지표 읽는 법
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">

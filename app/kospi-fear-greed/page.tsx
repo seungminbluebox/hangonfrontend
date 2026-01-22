@@ -3,8 +3,8 @@ import { Metadata } from "next";
 import { BackButton } from "../components/layout/BackButton";
 
 export const metadata: Metadata = {
-  title: "코스피 공포와 탐욕 지수 AI 분석",
-  description: "코스피 지표를 바탕으로 산출된 AI 시장 심리 분석 리포트입니다.",
+  title: "코스피 공포와 탐욕 지수 분석",
+  description: "코스피 지표를 바탕으로 산출된 시장 심리 분석 리포트입니다.",
 };
 
 export default function KospiFearGreedPage() {

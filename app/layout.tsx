@@ -60,7 +60,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Hang on! , 글로벌 경제 1분 요약",
-    description: "매일 아침 업데이트되는 AI 경제 요약 서비스",
+    description: "매일 아침 업데이트되는 경제 요약 서비스",
     images: ["https://hangon.co.kr/og-image.png"],
   },
 
