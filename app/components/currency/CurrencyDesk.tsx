@@ -293,6 +293,9 @@ export function CurrencyDesk({
                     domain={["dataMin - 5", "dataMax + 5"]}
                     axisLine={false}
                     tickLine={false}
+                    tickFormatter={(value) =>
+                      Math.floor(value).toLocaleString()
+                    }
                     tick={{
                       fontSize: 10,
                       fontWeight: "bold",

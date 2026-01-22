@@ -57,6 +57,8 @@ export function MoneyFlowShareCard({
   const [canShare, setCanShare] = useState(false);
   const [shareTheme, setShareTheme] = useState<"light" | "dark">("light");
 
+  const cardHeight = type === "assets" ? 550 : type === "sectors" ? 400 : 460;
+
   useEffect(() => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     if (
@@ -81,7 +83,8 @@ export function MoneyFlowShareCard({
         margin: "0",
         left: "0",
         top: "0",
-        width: "320px",
+        width: "360px",
+        height: `${cardHeight}px`,
         position: "relative",
         borderRadius: "35px",
         boxShadow: "none",
@@ -313,64 +316,44 @@ export function MoneyFlowShareCard({
           <div className="relative group shrink-0">
             <div
               ref={cardRef}
-              className={`w-[320px] flex flex-col p-6 relative overflow-hidden transition-colors duration-300 ${
+              className={`w-[360px] p-7 rounded-[35px] shadow-2xl relative overflow-hidden transition-colors duration-300 border flex flex-col justify-between ${
                 shareTheme === "light"
-                  ? "bg-[#F8F7F4] text-neutral-900"
-                  : "bg-[#0f172a] text-white"
+                  ? "bg-[#F8F7F4] text-neutral-900 border-neutral-100"
+                  : "bg-[#0f172a] text-white border-white/5"
               }`}
-              style={{ borderRadius: "35px" }}
+              style={{ borderRadius: "35px", height: `${cardHeight}px` }}
             >
-              {/* Logo / Header */}
-              <div className="flex items-center justify-between mb-5 z-10">
-                <div className="flex items-center gap-1.5">
-                  <div className="w-5 h-5 bg-accent rounded-lg flex items-center justify-center">
-                    <TrendingUp className="w-3 h-3 text-white" />
-                  </div>
-                  <span
-                    className={`text-sm font-black italic tracking-tighter ${shareTheme === "light" ? "text-neutral-900" : "text-white"}`}
-                  >
-                    Hang on<span className="text-accent">!</span>
+              {/* Header */}
+              <div className="flex justify-between items-center mb-2">
+                <p
+                  className={`text-[10px] font-black uppercase tracking-[0.2em] ${shareTheme === "light" ? "text-neutral-400" : "text-white/40"}`}
+                >
+                  {new Date().toLocaleDateString("ko-KR")}
+                </p>
+                <div
+                  className={`flex items-center gap-1.5 opacity-30 grayscale ${shareTheme === "light" ? "text-neutral-900" : "text-white"}`}
+                >
+                  <TrendingUp className="w-3.5 h-3.5" />
+                  <span className="text-[10px] font-black uppercase tracking-widest italic leading-none">
+                    Hang on!
                   </span>
                 </div>
-                <span className="text-[9px] font-black opacity-30 tracking-widest uppercase">
-                  {new Date().toISOString().split("T")[0]}
-                </span>
               </div>
 
               {/* Main Content */}
-              <div className="z-10 flex-1 flex flex-col justify-center">
+              <div className="z-10 flex-1 flex flex-col justify-center py-2">
                 {renderContent()}
               </div>
 
-              {/* Footer */}
-              <div className="mt-6 pt-4 border-t border-black/5 dark:border-white/5 z-10">
-                <div className="flex items-center justify-between">
-                  <div className="flex flex-col">
-                    <span className="text-xs font-black opacity-40 italic tracking-tighter">
-                      Money Flow
-                    </span>
-                  </div>
-                  <div
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-colors ${
-                      shareTheme === "light"
-                        ? "bg-white border-neutral-200 shadow-[0_2px_4px_rgba(0,0,0,0.02)]"
-                        : "bg-white/5 border-white/10 shadow-none"
-                    }`}
-                  >
-                    <Globe
-                      className={`w-2.5 h-2.5 ${shareTheme === "light" ? "text-accent" : "text-accent/60"}`}
-                    />
-                    <span
-                      className={`text-[10px] font-bold tracking-tight lowercase ${
-                        shareTheme === "light"
-                          ? "text-neutral-900"
-                          : "text-white/90"
-                      }`}
-                    >
-                      www.hangon.co.kr
-                    </span>
-                  </div>
-                </div>
+              {/* Bottom: App Link & CTA */}
+              <div className="mt-auto relative z-10 flex justify-center pt-2">
+                <p
+                  className={`text-[13px] font-black tracking-tighter opacity-30 ${
+                    shareTheme === "light" ? "text-neutral-900" : "text-white"
+                  }`}
+                >
+                  www.hangon.co.kr
+                </p>
               </div>
 
               {/* Pattern Background */}

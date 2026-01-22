@@ -73,7 +73,8 @@ export function MarketWeatherShareCard({
         margin: "0",
         left: "0",
         top: "0",
-        width: "320px",
+        width: "360px",
+        height: "400px",
         position: "relative",
         borderRadius: "35px",
         boxShadow: "none",
@@ -178,35 +179,24 @@ export function MarketWeatherShareCard({
             {/* Capture Area: 330x440 (3:4 ratio) */}
             <div
               ref={cardRef}
-              className={`w-[330px] h-[440px] p-7 rounded-[35px] shadow-2xl relative overflow-hidden flex flex-col justify-between border ${
+              className={`w-[360px] h-[400px] p-7 rounded-[35px] shadow-2xl relative overflow-hidden flex flex-col justify-between border transition-colors duration-300 ${
                 shareTheme === "light"
                   ? "bg-[#F0F4F8] text-neutral-900 border-neutral-100"
                   : "bg-[#0f172a] text-white border-white/5"
               }`}
             >
               {/* Header */}
-              <div className="flex justify-between items-center">
-                <div className="flex flex-col">
-                  <span
-                    className={`text-[10px] font-black tracking-widest uppercase opacity-40 ${shareTheme === "light" ? "text-neutral-500" : "text-white"}`}
-                  >
-                    Market Forecast
-                  </span>
-                  <p
-                    className={`text-[10px] font-bold ${shareTheme === "light" ? "text-neutral-400" : "text-white/40"}`}
-                  >
-                    {new Date(data.updated_at).toLocaleDateString("ko-KR", {
-                      month: "long",
-                      day: "numeric",
-                    })}{" "}
-                    기준
-                  </p>
-                </div>
-                <div
-                  className={`flex items-center gap-1 opacity-30 grayscale ${shareTheme === "light" ? "text-neutral-900" : "text-white"}`}
+              <div className="flex justify-between items-center mb-2">
+                <p
+                  className={`text-[10px] font-black uppercase tracking-[0.2em] ${shareTheme === "light" ? "text-neutral-400" : "text-white/40"}`}
                 >
-                  <TrendingUp className="w-3 h-3" />
-                  <span className="text-[9px] font-black uppercase tracking-tighter italic">
+                  {new Date().toLocaleDateString("ko-KR")}
+                </p>
+                <div
+                  className={`flex items-center gap-1.5 opacity-30 grayscale ${shareTheme === "light" ? "text-neutral-900" : "text-white"}`}
+                >
+                  <TrendingUp className="w-3.5 h-3.5" />
+                  <span className="text-[10px] font-black uppercase tracking-widest italic leading-none">
                     Hang on!
                   </span>
                 </div>
@@ -240,13 +230,15 @@ export function MarketWeatherShareCard({
                 </p>
               </div>
 
-              {/* Branding Footer */}
-              <div className="flex justify-center items-center gap-2 mt-4 opacity-40">
-                <div className="w-8 h-[1px] bg-current" />
-                <span className="text-[9px] font-black tracking-[0.3em] uppercase">
+              {/* Bottom: App Link & CTA */}
+              <div className="mt-auto relative z-10 flex justify-center pt-2">
+                <p
+                  className={`text-[13px] font-black tracking-tighter opacity-30 ${
+                    shareTheme === "light" ? "text-neutral-900" : "text-white"
+                  }`}
+                >
                   www.hangon.co.kr
-                </span>
-                <div className="w-8 h-[1px] bg-current" />
+                </p>
               </div>
             </div>
           </div>

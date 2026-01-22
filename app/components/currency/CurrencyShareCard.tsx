@@ -137,156 +137,165 @@ export function CurrencyShareCard({
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-6 flex flex-col items-center gap-6">
-          {/* Card Preview */}
-          <div className="relative group shrink-0">
-            <div className="scale-[0.85] xs:scale-90 sm:scale-100 origin-center shrink-0">
-              <div
-                ref={cardRef}
-                className={`w-[320px] rounded-[35px] overflow-hidden transition-colors duration-300 shrink-0 ${
-                  shareTheme === "light"
-                    ? "bg-[#F8F7F4] text-slate-900"
-                    : "bg-[#0f172a] text-slate-50"
-                }`}
-              >
-                {/* Branding Header */}
-                <div
-                  className={`p-6 pb-2 flex items-center justify-between ${shareTheme === "dark" ? "border-slate-800" : "border-slate-200"}`}
+        <div className="px-4 bg-black/[0.02] dark:bg-white/[0.02] overflow-y-auto flex-1 flex flex-col items-center">
+          <div className="pt-8 pb-12 flex flex-col items-center scale-[0.65] xs:scale-[0.8] sm:scale-95 origin-top transition-all duration-300">
+            <div
+              ref={cardRef}
+              className={`w-[360px] h-[500px] p-7 rounded-[35px] shadow-2xl relative overflow-hidden transition-colors duration-300 border flex flex-col justify-between ${
+                shareTheme === "light"
+                  ? "bg-[#F8F7F4] text-neutral-900 border-neutral-100"
+                  : "bg-[#0f172a] text-white border-white/5"
+              }`}
+            >
+              {/* Header: Date and Logo */}
+              <div className="flex justify-between items-center mb-2">
+                <p
+                  className={`text-[10px] font-black uppercase tracking-[0.2em] ${
+                    shareTheme === "light"
+                      ? "text-neutral-400"
+                      : "text-white/40"
+                  }`}
                 >
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center">
-                      <DollarSign className="w-5 h-5 text-white" />
-                    </div>
-                    <span
-                      className={`text-sm font-black italic tracking-tighter ${shareTheme === "dark" ? "text-slate-200" : "text-slate-800"}`}
-                    >
-                      www.hangon.co.kr
-                    </span>
-                  </div>
-                  <span
-                    className={`text-[10px] font-black uppercase tracking-widest whitespace-nowrap ${shareTheme === "dark" ? "text-slate-500" : "text-slate-400"}`}
-                  >
-                    {new Date().toLocaleDateString("ko-KR", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
+                  {new Date().toLocaleDateString("ko-KR")}
+                </p>
+                <div
+                  className={`flex items-center gap-1.5 opacity-30 grayscale ${
+                    shareTheme === "light" ? "text-neutral-900" : "text-white"
+                  }`}
+                >
+                  <TrendingUp className="w-3.5 h-3.5" />
+                  <span className="text-[10px] font-black uppercase tracking-widest italic leading-none">
+                    Hang on!
                   </span>
                 </div>
+              </div>
 
-                <div className="p-6 pt-2">
-                  <h2
-                    className={`text-xl font-black italic mb-6 leading-tight ${shareTheme === "dark" ? "text-white" : "text-slate-900"}`}
-                  >
-                    USD/KRW 추이
-                  </h2>
+              <div className="flex flex-col flex-1">
+                <h2
+                  className={`text-xl font-black italic mb-6 leading-tight ${
+                    shareTheme === "light" ? "text-slate-900" : "text-white"
+                  }`}
+                >
+                  USD/KRW 추이
+                </h2>
 
-                  {usdData && (
-                    <div className="space-y-6">
+                {usdData && (
+                  <div className="space-y-6">
+                    <div
+                      className={`p-5 rounded-3xl ${shareTheme === "dark" ? "bg-white/5 border border-white/5" : "bg-white border border-slate-200"}`}
+                    >
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-[10px] font-black bg-blue-500 text-white px-1.5 py-0.5 rounded uppercase">
+                          Live
+                        </span>
+                      </div>
+                      <div className="flex items-baseline gap-1 mb-1">
+                        <span className="text-4xl font-black tracking-tighter">
+                          {liveData
+                            ? Math.floor(
+                                parseFloat(liveData.value.replace(/,/g, "")),
+                              ).toLocaleString()
+                            : Math.floor(usdData.price).toLocaleString()}
+                        </span>
+                        <span className="text-sm font-bold opacity-40 italic">
+                          KRW
+                        </span>
+                      </div>
                       <div
-                        className={`p-5 rounded-3xl ${shareTheme === "dark" ? "bg-white/5 border border-white/5" : "bg-white border border-slate-200"}`}
+                        className={`flex items-center gap-1 text-xs font-black ${
+                          liveData
+                            ? liveData.isUp
+                              ? "text-red-500"
+                              : "text-blue-500"
+                            : usdData.change >= 0
+                              ? "text-red-500"
+                              : "text-blue-500"
+                        }`}
                       >
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="text-[10px] font-black bg-blue-500 text-white px-1.5 py-0.5 rounded uppercase">
-                            Live
-                          </span>
-                        </div>
-                        <div className="flex items-baseline gap-1 mb-1">
-                          <span className="text-4xl font-black tracking-tighter">
-                            {liveData
-                              ? Math.floor(
-                                  parseFloat(liveData.value.replace(/,/g, "")),
-                                ).toLocaleString()
-                              : Math.floor(usdData.price).toLocaleString()}
-                          </span>
-                          <span className="text-sm font-bold opacity-40 italic">
-                            KRW
-                          </span>
-                        </div>
-                        <div
-                          className={`flex items-center gap-1 text-xs font-black ${
-                            liveData
-                              ? liveData.isUp
-                                ? "text-red-500"
-                                : "text-blue-500"
-                              : usdData.change >= 0
-                                ? "text-red-500"
-                                : "text-blue-500"
-                          }`}
-                        >
-                          {liveData ? (
-                            liveData.isUp ? (
-                              <ArrowUpRight className="w-3 h-3" />
-                            ) : (
-                              <ArrowDownRight className="w-3 h-3" />
-                            )
-                          ) : usdData.change >= 0 ? (
+                        {liveData ? (
+                          liveData.isUp ? (
                             <ArrowUpRight className="w-3 h-3" />
                           ) : (
                             <ArrowDownRight className="w-3 h-3" />
-                          )}
-                          {liveData
-                            ? liveData.changePercent
-                                .replace("+", "")
-                                .replace("-", "")
-                            : Math.abs(usdData.change) + "%"}{" "}
-                          (전일대비)
-                        </div>
+                          )
+                        ) : usdData.change >= 0 ? (
+                          <ArrowUpRight className="w-3 h-3" />
+                        ) : (
+                          <ArrowDownRight className="w-3 h-3" />
+                        )}
+                        {liveData
+                          ? liveData.changePercent
+                              .replace("+", "")
+                              .replace("-", "")
+                          : Math.abs(usdData.change) + "%"}{" "}
+                        (전일대비)
+                      </div>
 
-                        <div className="h-20 mt-6 -mx-1">
-                          <ResponsiveContainer width="100%" height="100%">
-                            <LineChart
-                              data={
-                                liveData ? liveData.history : usdData.history
+                      <div className="h-20 mt-6 -mx-1">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <LineChart
+                            data={liveData ? liveData.history : usdData.history}
+                          >
+                            <Line
+                              type="monotone"
+                              dataKey="value"
+                              stroke={
+                                liveData
+                                  ? liveData.isUp
+                                    ? "#ef4444"
+                                    : "#3b82f6"
+                                  : usdData.change >= 0
+                                    ? "#ef4444"
+                                    : "#3b82f6"
                               }
-                            >
-                              <Line
-                                type="monotone"
-                                dataKey="value"
-                                stroke={
-                                  liveData
-                                    ? liveData.isUp
-                                      ? "#ef4444"
-                                      : "#3b82f6"
-                                    : usdData.change >= 0
-                                      ? "#ef4444"
-                                      : "#3b82f6"
-                                }
-                                strokeWidth={3}
-                                dot={false}
-                              />
-                              <YAxis
-                                hide
-                                domain={["dataMin - 1", "dataMax + 1"]}
-                              />
-                            </LineChart>
-                          </ResponsiveContainer>
-                        </div>
+                              strokeWidth={3}
+                              dot={false}
+                            />
+                            <YAxis
+                              hide
+                              domain={["dataMin - 1", "dataMax + 1"]}
+                              tickFormatter={(value) =>
+                                Math.floor(value).toLocaleString()
+                              }
+                            />
+                          </LineChart>
+                        </ResponsiveContainer>
                       </div>
                     </div>
-                  )}
-
-                  {/* AI Analysis Highlight */}
-                  <div className="mt-6 pt-6 border-t border-dashed opacity-50 border-gray-400">
-                    <div className="flex items-center gap-1.5 mb-1 text-[10px] font-black uppercase letter-spacing-1">
-                      <TrendingUp className="w-3 h-3 text-blue-500" />
-                      Insight
-                    </div>
-                    <p
-                      className={`text-[11px] font-bold leading-relaxed ${shareTheme === "dark" ? "text-slate-400" : "text-slate-500"}`}
-                    >
-                      {(() => {
-                        const lines = data.analysis
-                          .split("\n")
-                          .filter((line) => line.trim().length > 0);
-                        return (
-                          lines[2] ||
-                          lines[0] ||
-                          "현재 환율 시장의 변동성을 유의하세요."
-                        );
-                      })()}
-                    </p>
                   </div>
+                )}
+
+                {/* AI Analysis Highlight */}
+                <div className="mt-6 pt-6 border-t border-dashed opacity-50 border-gray-400">
+                  <div className="flex items-center gap-1.5 mb-1 text-[10px] font-black uppercase letter-spacing-1">
+                    <TrendingUp className="w-3 h-3 text-blue-500" />
+                    Insight
+                  </div>
+                  <p
+                    className={`text-[11px] font-bold leading-relaxed ${shareTheme === "dark" ? "text-slate-400" : "text-slate-500"}`}
+                  >
+                    {(() => {
+                      const lines = data.analysis
+                        .split("\n")
+                        .filter((line) => line.trim().length > 0);
+                      return (
+                        lines[2] ||
+                        lines[0] ||
+                        "현재 환율 시장의 변동성을 유의하세요."
+                      );
+                    })()}
+                  </p>
+                </div>
+
+                {/* Bottom: App Link & CTA */}
+                <div className="mt-auto relative z-10 flex justify-center pt-2">
+                  <p
+                    className={`text-[13px] font-black tracking-tighter opacity-30 ${
+                      shareTheme === "light" ? "text-neutral-900" : "text-white"
+                    }`}
+                  >
+                    www.hangon.co.kr
+                  </p>
                 </div>
               </div>
             </div>

@@ -2,7 +2,7 @@ import { Providers } from "./providers";
 import { InstallPWA } from "./components/layout/InstallPWA";
 import { Navigation } from "./components/layout/Navigation";
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Inter, Playfair_Display, Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
@@ -13,6 +13,12 @@ const inter = Inter({
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
+  subsets: ["latin"],
+});
+
+const notoSansKR = Noto_Sans_KR({
+  variable: "--font-noto-kr",
+  weight: ["400", "700", "900"],
   subsets: ["latin"],
 });
 
@@ -116,7 +122,7 @@ export default function RootLayout({
     <html
       lang="ko"
       suppressHydrationWarning
-      className={`${inter.variable} ${playfair.variable}`}
+      className={`${inter.variable} ${playfair.variable} ${notoSansKR.variable}`}
     >
       <head>
         <link rel="manifest" href="/manifest.json" />

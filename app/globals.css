@@ -29,7 +29,7 @@
   --color-text-muted: var(--text-muted);
   --color-accent: var(--accent);
 
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui;
+  --font-sans: var(--font-inter), var(--font-noto-kr), ui-sans-serif, system-ui;
   --font-serif: var(--font-playfair), ui-serif, Georgia;
 }
 

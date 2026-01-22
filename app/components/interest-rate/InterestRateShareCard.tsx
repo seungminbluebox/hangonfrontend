@@ -66,7 +66,8 @@ export function InterestRateShareCard({
         margin: "0",
         left: "0",
         top: "0",
-        width: "320px",
+        width: "360px",
+        height: "400px",
         position: "relative",
         borderRadius: "35px",
         boxShadow: "none",
@@ -131,74 +132,69 @@ export function InterestRateShareCard({
           <div className="pt-8 pb-12 flex flex-col items-center scale-[0.7] xs:scale-[0.85] sm:scale-100 origin-top transition-all duration-300">
             <div
               ref={cardRef}
-              className={`w-[320px] p-7 rounded-[35px] shadow-2xl relative overflow-hidden transition-colors duration-300 border flex flex-col gap-6 ${
+              className={`w-[360px] h-[400px] p-7 rounded-[35px] shadow-2xl relative overflow-hidden transition-colors duration-300 border flex flex-col justify-between ${
                 shareTheme === "light"
                   ? "bg-[#F8F7F4] text-neutral-900 border-neutral-100"
                   : "bg-[#0f172a] text-white border-white/5"
               }`}
             >
               {/* Header */}
-              <div className="flex justify-between items-center relative z-10">
-                <div className="flex flex-col gap-0.5">
-                  <p
-                    className={`text-[10px] font-black uppercase tracking-[0.2em] ${shareTheme === "light" ? "text-neutral-400" : "text-white/40"}`}
-                  >
-                    {dateString} (KST)
-                  </p>
-                  <div className="flex items-center gap-1.5 opacity-30 grayscale">
-                    <TrendingUp className="w-3.5 h-3.5" />
-                    <span className="text-[10px] font-black tracking-widest uppercase">
-                      Hang On!
-                    </span>
-                  </div>
-                </div>
-                <div
-                  className={`w-9 h-9 rounded-xl bg-orange-500/10 flex items-center justify-center ${shareTheme === "light" ? "bg-orange-500/5 text-orange-500" : "text-orange-400"}`}
+              <div className="flex justify-between items-center mb-6">
+                <p
+                  className={`text-[10px] font-black uppercase tracking-[0.2em] ${shareTheme === "light" ? "text-neutral-400" : "text-white/40"}`}
                 >
-                  <Landmark className="w-4.5 h-4.5" />
+                  {new Date().toLocaleDateString("ko-KR")}
+                </p>
+                <div
+                  className={`flex items-center gap-1.5 opacity-30 grayscale ${shareTheme === "light" ? "text-neutral-900" : "text-white"}`}
+                >
+                  <TrendingUp className="w-3.5 h-3.5" />
+                  <span className="text-[10px] font-black uppercase tracking-widest italic leading-none">
+                    Hang on!
+                  </span>
                 </div>
               </div>
 
               {/* Title Area */}
-              <div className="relative z-10">
-                <h2 className="text-2xl font-black italic tracking-tighter leading-none mb-2">
+              <div className="relative z-10 mb-6">
+                <h2 className="text-2xl font-black italic tracking-tighter leading-none mb-3">
                   한·미 금리 비교 리포트
                 </h2>
-                <div className="h-1 w-10 bg-orange-500 rounded-full" />
+                <div className="h-1.5 w-12 bg-orange-500 rounded-full" />
               </div>
 
               {/* Main Content: Rates & Gap */}
-              <div className="flex flex-col gap-4 relative z-10">
+              <div className="flex flex-col gap-5 relative z-10">
                 {/* Gap Highlighter */}
                 <div
-                  className={`p-4 rounded-3xl border flex items-center justify-between ${shareTheme === "light" ? "bg-white border-orange-500/20 shadow-sm" : "bg-white/5 border-orange-500/20"}`}
+                  className={`p-5 rounded-3xl border flex items-center justify-between ${shareTheme === "light" ? "bg-white border-orange-500/20 shadow-sm" : "bg-white/5 border-orange-500/20"}`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-orange-500/10 flex items-center justify-center">
-                      <ArrowRightLeft className="w-4.5 h-4.5 text-orange-500" />
+                    <div className="w-10 h-10 rounded-full bg-orange-500/10 flex items-center justify-center">
+                      <ArrowRightLeft className="w-5 h-5 text-orange-500" />
                     </div>
-                    <span className="text-xs font-black italic opacity-60">
+                    <span className="text-sm font-black italic opacity-60">
                       금리 격차
                     </span>
                   </div>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-2xl font-black italic tracking-tighter text-orange-500">
+                    <span className="text-3xl font-black italic tracking-tighter text-orange-500">
                       {gap}
                     </span>
-                    <span className="text-xs font-black italic text-orange-500/40">
+                    <span className="text-sm font-black italic text-orange-500/40">
                       %p
                     </span>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-4">
                   {/* US Rate */}
                   <div
-                    className={`p-4 rounded-3xl border flex flex-col gap-2 ${shareTheme === "light" ? "bg-white border-blue-500/10 shadow-sm" : "bg-white/5 border-blue-500/10"}`}
+                    className={`p-5 rounded-3xl border flex flex-col gap-3 ${shareTheme === "light" ? "bg-white border-blue-500/10 shadow-sm" : "bg-white/5 border-blue-500/10"}`}
                   >
                     <div className="flex items-center gap-2">
-                      <div className="w-5 h-5 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                        <span className="text-[7px] font-black text-blue-500">
+                      <div className="w-6 h-6 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                        <span className="text-[8px] font-black text-blue-500">
                           USA
                         </span>
                       </div>
@@ -215,11 +211,11 @@ export function InterestRateShareCard({
 
                   {/* KR Rate */}
                   <div
-                    className={`p-4 rounded-3xl border flex flex-col gap-2 ${shareTheme === "light" ? "bg-white border-emerald-500/10 shadow-sm" : "bg-white/5 border-emerald-500/10"}`}
+                    className={`p-5 rounded-3xl border flex flex-col gap-3 ${shareTheme === "light" ? "bg-white border-emerald-500/10 shadow-sm" : "bg-white/5 border-emerald-500/10"}`}
                   >
                     <div className="flex items-center gap-2">
-                      <div className="w-5 h-5 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                        <span className="text-[7px] font-black text-emerald-500">
+                      <div className="w-6 h-6 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                        <span className="text-[8px] font-black text-emerald-500">
                           KOR
                         </span>
                       </div>
@@ -236,22 +232,15 @@ export function InterestRateShareCard({
                 </div>
               </div>
 
-              {/* Bottom Insight */}
-              <div className="relative z-10 pt-5 border-t border-dashed border-neutral-300 dark:border-white/10">
-                <div className="flex flex-col gap-1 items-end text-right">
-                  <span
-                    className={`text-[9px] font-bold uppercase tracking-widest leading-none transition-colors ${
-                      shareTheme === "light"
-                        ? "text-slate-500"
-                        : "text-slate-400"
-                    }`}
-                  >
-                    더 많은 정보는?
-                  </span>
-                  <span className="text-[14px] font-black text-accent tracking-tighter italic leading-none mt-0.5">
-                    www.hangon.co.kr
-                  </span>
-                </div>
+              {/* Bottom: App Link & CTA */}
+              <div className="mt-auto relative z-10 flex justify-center pt-2">
+                <p
+                  className={`text-[13px] font-black tracking-tighter opacity-30 ${
+                    shareTheme === "light" ? "text-neutral-900" : "text-white"
+                  }`}
+                >
+                  www.hangon.co.kr
+                </p>
               </div>
 
               {/* Background Accents */}

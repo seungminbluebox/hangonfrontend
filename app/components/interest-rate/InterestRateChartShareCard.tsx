@@ -52,7 +52,8 @@ export function InterestRateChartShareCard({
         margin: "0",
         left: "0",
         top: "0",
-        width: "320px",
+        width: "360px",
+        height: "400px",
         position: "relative",
         borderRadius: "35px",
         boxShadow: "none",
@@ -119,37 +120,39 @@ export function InterestRateChartShareCard({
           <div className="pt-8 pb-12 flex flex-col items-center scale-[0.7] xs:scale-[0.85] sm:scale-100 origin-top transition-all duration-300">
             <div
               ref={cardRef}
-              className={`w-[320px] p-7 rounded-[35px] shadow-2xl relative overflow-hidden transition-colors duration-300 border flex flex-col gap-6 ${
+              className={`w-[360px] h-[400px] p-7 rounded-[35px] shadow-2xl relative overflow-hidden transition-colors duration-300 border flex flex-col justify-between ${
                 shareTheme === "light"
                   ? "bg-[#F8F7F4] text-neutral-900 border-neutral-100"
                   : "bg-[#0f172a] text-white border-white/5"
               }`}
             >
               {/* Header */}
-              <div className="flex justify-between items-center relative z-10">
-                <div className="flex items-center gap-1.5 opacity-30 grayscale">
+              <div className="flex justify-between items-center mb-6">
+                <p
+                  className={`text-[10px] font-black uppercase tracking-[0.2em] ${shareTheme === "light" ? "text-neutral-400" : "text-white/40"}`}
+                >
+                  {new Date().toLocaleDateString("ko-KR")}
+                </p>
+                <div
+                  className={`flex items-center gap-1.5 opacity-30 grayscale ${shareTheme === "light" ? "text-neutral-900" : "text-white"}`}
+                >
                   <TrendingUp className="w-3.5 h-3.5" />
-                  <span className="text-[10px] font-black tracking-widest uppercase">
-                    Hang On!
+                  <span className="text-[10px] font-black uppercase tracking-widest italic leading-none">
+                    Hang on!
                   </span>
                 </div>
-                <p
-                  className={`text-[9px] font-black uppercase tracking-[0.1em] ${shareTheme === "light" ? "text-neutral-400" : "text-white/40"}`}
-                >
-                  {dateString}
-                </p>
               </div>
 
               {/* Minimal Gap Area */}
-              <div className="relative z-10 flex items-center justify-between py-2">
+              <div className="relative z-10 flex items-center justify-between py-4 mb-2">
                 <div className="flex flex-col">
-                  <h2 className="text-xl font-black italic tracking-tighter leading-none mb-1">
+                  <h2 className="text-xl font-black italic tracking-tighter leading-none mb-2">
                     한·미 금리 격차
                   </h2>
-                  <div className="h-1 w-8 bg-orange-500 rounded-full" />
+                  <div className="h-1.5 w-10 bg-orange-500 rounded-full" />
                 </div>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-3xl font-black italic tracking-tighter text-orange-500">
+                  <span className="text-4xl font-black italic tracking-tighter text-orange-500">
                     {currentGap}
                   </span>
                   <span className="text-sm font-black italic text-orange-500/40">
@@ -159,9 +162,9 @@ export function InterestRateChartShareCard({
               </div>
 
               {/* Simple Chart */}
-              <div className="relative z-10 flex flex-col gap-2">
+              <div className="relative z-10 flex flex-col gap-4">
                 <div
-                  className={`h-[140px] w-full rounded-2xl p-4 ${shareTheme === "light" ? "bg-white/50 border border-neutral-100" : "bg-white/5 border border-white/5"}`}
+                  className={`h-[150px] w-full rounded-2xl p-5 ${shareTheme === "light" ? "bg-white/50 border border-neutral-100" : "bg-white/5 border border-white/5"}`}
                 >
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={recentData}>
@@ -200,18 +203,15 @@ export function InterestRateChartShareCard({
                 </div>
               </div>
 
-              {/* Bottom Info - Right Aligned as requested */}
-              <div className="relative z-10 pt-4 border-t border-dashed border-neutral-200 dark:border-white/10">
-                <div className="flex flex-col gap-1 items-end">
-                  <span
-                    className={`text-[8px] font-bold uppercase tracking-widest leading-none ${shareTheme === "light" ? "text-slate-500" : "text-slate-400"}`}
-                  >
-                    더 많은 정보는?
-                  </span>
-                  <span className="text-[12px] font-black text-accent tracking-tighter italic leading-none mt-0.5">
-                    www.hangon.co.kr
-                  </span>
-                </div>
+              {/* Bottom: App Link & CTA */}
+              <div className="mt-auto relative z-10 flex justify-center pt-2">
+                <p
+                  className={`text-[13px] font-black tracking-tighter opacity-30 ${
+                    shareTheme === "light" ? "text-neutral-900" : "text-white"
+                  }`}
+                >
+                  www.hangon.co.kr
+                </p>
               </div>
 
               {/* Background Accents */}

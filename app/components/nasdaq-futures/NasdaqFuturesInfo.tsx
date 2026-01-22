@@ -80,8 +80,8 @@ export function NasdaqFuturesInfo({
     <div className="space-y-12">
       {/* Live Quote Card */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2 bg-secondary/20 border border-border-subtle rounded-[2.5rem] p-8 md:p-10 flex flex-col justify-between">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+        <div className="md:col-span-2 bg-secondary/20 border border-border-subtle rounded-[2.5rem] p-8 pr-0 md:p-10 flex flex-col justify-between">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 mr-8">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-2xl bg-accent/10 flex items-center justify-center">
                 <Activity className="w-5 h-5 text-accent" />
@@ -107,10 +107,9 @@ export function NasdaqFuturesInfo({
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setShowShare(true)}
-                className="flex items-center gap-2 px-5 py-2.5 bg-accent/10 hover:bg-accent/20 text-accent rounded-2xl transition-all text-sm font-black group"
+                className="w-11 h-11 flex items-center justify-center bg-accent/10 hover:bg-accent/20 text-accent rounded-2xl transition-all group"
               >
-                <Share2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                공유
+                <Share2 className="w-5 h-5 group-hover:scale-110 transition-transform" />
               </button>
               <div className="flex flex-col items-end">
                 <div className="flex items-baseline gap-2">

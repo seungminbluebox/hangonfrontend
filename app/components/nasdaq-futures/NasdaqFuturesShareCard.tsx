@@ -53,12 +53,13 @@ export function NasdaqFuturesShareCard({
       style: {
         transform: "scale(1)",
         transformOrigin: "top left",
-        width: "320px",
-        backgroundColor: shareTheme === "light" ? "#F8F7F4" : "#0f172a",
+        width: "360px",
+        height: "500px",
+        position: "relative",
         borderRadius: "35px",
         boxShadow: "none",
         border: "none",
-        position: "relative",
+        backgroundColor: shareTheme === "light" ? "#F8F7F4" : "#0f172a",
       },
     });
   };
@@ -129,38 +130,30 @@ export function NasdaqFuturesShareCard({
             <div className="scale-[0.85] xs:scale-90 sm:scale-100 origin-center shrink-0">
               <div
                 ref={cardRef}
-                className={`w-[320px] rounded-[35px] overflow-hidden transition-colors duration-300 shrink-0 ${
+                className={`w-[360px] h-[500px] p-7 rounded-[35px] shadow-2xl relative overflow-hidden transition-colors duration-300 border flex flex-col justify-between ${
                   shareTheme === "light"
-                    ? "bg-[#F8F7F4] text-slate-900"
-                    : "bg-[#0f172a] text-slate-50"
+                    ? "bg-[#F8F7F4] text-neutral-900 border-neutral-100"
+                    : "bg-[#0f172a] text-white border-white/5"
                 }`}
               >
-                {/* Branding Header */}
-                <div
-                  className={`p-6 pb-2 flex items-center justify-between ${shareTheme === "dark" ? "border-slate-800" : "border-slate-200"}`}
-                >
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-red-500 flex items-center justify-center">
-                      <TrendingUp className="w-5 h-5 text-white" />
-                    </div>
-                    <span
-                      className={`text-sm font-black italic tracking-tighter ${shareTheme === "dark" ? "text-slate-200" : "text-slate-800"}`}
-                    >
-                      www.hangon.co.kr
+                {/* Header */}
+                <div className="flex justify-between items-center mb-2 relative z-10">
+                  <p
+                    className={`text-[10px] font-black uppercase tracking-[0.2em] ${shareTheme === "light" ? "text-neutral-400" : "text-white/40"}`}
+                  >
+                    {new Date().toLocaleDateString("ko-KR")}
+                  </p>
+                  <div
+                    className={`flex items-center gap-1.5 opacity-30 grayscale ${shareTheme === "light" ? "text-neutral-900" : "text-white"}`}
+                  >
+                    <TrendingUp className="w-3.5 h-3.5" />
+                    <span className="text-[10px] font-black uppercase tracking-widest italic leading-none">
+                      Hang on!
                     </span>
                   </div>
-                  <span
-                    className={`text-[10px] font-black uppercase tracking-widest whitespace-nowrap ${shareTheme === "dark" ? "text-slate-500" : "text-slate-400"}`}
-                  >
-                    {new Date().toLocaleDateString("ko-KR", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </span>
                 </div>
 
-                <div className="p-6 pt-2">
+                <div className="p-0 pt-2 flex-1 flex flex-col relative z-10">
                   <h2
                     className={`text-xl font-black italic mb-6 leading-tight ${shareTheme === "dark" ? "text-white" : "text-slate-900"}`}
                   >
@@ -248,6 +241,19 @@ export function NasdaqFuturesShareCard({
                       className={`text-[11px] font-bold leading-relaxed ${shareTheme === "dark" ? "text-slate-400" : "text-slate-500"}`}
                     >
                       미국 기술주의 미래를 보여주는 실시간 시장 지표입니다.
+                    </p>
+                  </div>
+
+                  {/* Bottom: App Link & CTA */}
+                  <div className="mt-auto relative z-10 flex justify-center pt-2">
+                    <p
+                      className={`text-[13px] font-black tracking-tighter opacity-30 ${
+                        shareTheme === "light"
+                          ? "text-neutral-900"
+                          : "text-white"
+                      }`}
+                    >
+                      www.hangon.co.kr
                     </p>
                   </div>
                 </div>

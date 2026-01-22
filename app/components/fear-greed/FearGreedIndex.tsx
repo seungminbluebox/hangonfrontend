@@ -188,14 +188,14 @@ export function FearGreedIndex({
 
             {/* The Needle */}
             <div
-              className="absolute bottom-0 left-1/2 w-2 h-32 -translate-x-1/2 origin-bottom transition-all duration-1000 ease-out z-10 bg-foreground"
+              className="absolute bottom-0 left-1/2 w-2 h-32 origin-bottom transition-all duration-1000 ease-out z-10 bg-foreground"
               style={{
                 transform: `translateX(-50%) rotate(${needleRotation}deg)`,
                 clipPath: "polygon(50% 0%, 100% 100%, 0% 100%)",
               }}
             />
             {/* Needle Center Point */}
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-8 h-8 bg-card border-[6px] border-foreground rounded-full z-20 shadow-xl" />
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-8 h-8 bg-foreground rounded-full z-20 shadow-lg border-[6px] border-card" />
           </div>
 
           <div className="mt-8 text-center bg-secondary/5 px-8 py-4 rounded-3xl border border-border-subtle/30 shadow-inner">

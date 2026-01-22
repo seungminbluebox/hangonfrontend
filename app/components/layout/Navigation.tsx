@@ -87,6 +87,12 @@ export function Navigation() {
       desc: "미국 시장의 선행지표",
     },
     {
+      name: "미국 풋/콜 옵션 지표",
+      href: "/put-call-ratio",
+      icon: BarChart3,
+      desc: "옵션 시장을 통해 읽는 투자 심리",
+    },
+    {
       name: "공탐지수 분석",
       href: "/fear-greed",
       icon: Gauge,
@@ -103,12 +109,6 @@ export function Navigation() {
       href: "/money-flow",
       icon: Compass,
       desc: "돈의 쏠림이 만드는 투자의 기회",
-    },
-    {
-      name: "풋/콜 옵션 지표",
-      href: "/put-call-ratio",
-      icon: BarChart3,
-      desc: "CBOE PCR 기반의 시장 심리 분석",
     },
     {
       name: "주식 기상예보",
@@ -167,6 +167,7 @@ export function Navigation() {
                         "/currency-desk",
                         "/interest-rate",
                         "/nasdaq-futures",
+                        "/put-call-ratio",
                       ].includes(pathname)
                         ? "text-accent"
                         : "text-text-muted hover:text-foreground hover:bg-background/40"
@@ -190,7 +191,7 @@ export function Navigation() {
                     }`}
                   >
                     <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1 overflow-hidden">
-                      {navLinks.slice(1, 4).map((link) => {
+                      {navLinks.slice(1, 5).map((link) => {
                         const Icon = link.icon;
                         return (
                           <Link
@@ -254,7 +255,7 @@ export function Navigation() {
                     }`}
                   >
                     <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1">
-                      {navLinks.slice(4).map((link) => {
+                      {navLinks.slice(5).map((link) => {
                         const Icon = link.icon;
                         return (
                           <Link
@@ -381,7 +382,7 @@ export function Navigation() {
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(1, 4).map((link, index) => {
+              {navLinks.slice(1, 5).map((link, index) => {
                 const Icon = link.icon;
                 return (
                   <Link
@@ -425,7 +426,7 @@ export function Navigation() {
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(4).map((link, index) => {
+              {navLinks.slice(5).map((link, index) => {
                 const Icon = link.icon;
                 return (
                   <Link
@@ -439,7 +440,7 @@ export function Navigation() {
                     }`}
                     style={{
                       transitionDelay: isOpen
-                        ? `${(index + 5) * 100}ms`
+                        ? `${(index + 6) * 100}ms`
                         : "0ms",
                     }}
                   >

@@ -8,6 +8,7 @@ import {
   Check,
   Share2,
   Quote,
+  TrendingUp,
   Image as ImageIcon,
 } from "lucide-react";
 
@@ -47,15 +48,18 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
     if (!cardRef.current) return null;
     return await toBlob(cardRef.current, {
       cacheBust: true,
-      pixelRatio: 2,
+      pixelRatio: 3,
       backgroundColor: "rgba(0,0,0,0)",
       style: {
         transform: "scale(1)",
         transformOrigin: "top left",
-        width: "320px",
+        width: "360px",
+        height: "540px",
         backgroundColor: shareTheme === "light" ? "#F8F7F4" : "#0f172a",
         borderRadius: "35px",
         boxShadow: "none",
+        border: "none",
+        position: "relative",
       },
     });
   };
@@ -109,15 +113,18 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
     try {
       const dataUrl = await toPng(cardRef.current, {
         cacheBust: true,
-        pixelRatio: 2,
+        pixelRatio: 3,
         backgroundColor: "rgba(0, 0, 0, 0)",
         style: {
           transform: "scale(1)",
           transformOrigin: "top left",
-          width: "320px",
+          width: "360px",
+          height: "540px",
           backgroundColor: shareTheme === "light" ? "#F8F7F4" : "#0f172a",
           borderRadius: "35px",
           boxShadow: "none",
+          border: "none",
+          position: "relative",
         },
       });
       const link = document.createElement("a");
@@ -161,11 +168,11 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
           </button>
         </div>
 
-        <div className="px-4 py-6 bg-black/5 dark:bg-white/5 overflow-y-auto max-h-[60vh] flex flex-col items-center justify-center min-h-[450px]">
-          <div className="flex-shrink-0 scale-[0.75] xs:scale-[0.85] sm:scale-[0.9] origin-center transition-all duration-300">
+        <div className="px-4 bg-black/[0.02] dark:bg-white/[0.02] overflow-y-auto flex-1 flex flex-col items-center">
+          <div className="pt-8 pb-12 flex flex-col items-center scale-[0.65] xs:scale-[0.8] sm:scale-95 origin-center transition-all duration-300">
             <div
               ref={cardRef}
-              className={`w-[320px] pt-8 px-8 pb-10 rounded-[35px] shadow-2xl relative overflow-hidden flex flex-col gap-6 border transition-colors duration-300 ${
+              className={`w-[360px] h-[540px] p-7 rounded-[35px] shadow-2xl relative overflow-hidden flex flex-col justify-between border transition-colors duration-300 ${
                 shareTheme === "light"
                   ? "bg-[#F8F7F4] text-slate-900 border-slate-100"
                   : "bg-[#0f172a] text-slate-100 border-slate-800"
@@ -175,8 +182,22 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
                 borderRadius: "35px",
               }}
             >
-              <div className="absolute top-0 right-0 w-48 h-48 bg-accent/[0.03] rounded-full -mr-24 -mt-24 blur-3xl" />
-              <div className="absolute bottom-0 left-0 w-40 h-40 bg-accent/[0.04] rounded-full -ml-20 -mb-20 blur-2xl" />
+              {/* Header */}
+              <div className="flex justify-between items-center mb-2 relative z-10">
+                <p
+                  className={`text-[10px] font-black uppercase tracking-[0.2em] ${shareTheme === "light" ? "text-neutral-400" : "text-white/40"}`}
+                >
+                  {new Date().toLocaleDateString("ko-KR")}
+                </p>
+                <div
+                  className={`flex items-center gap-1.5 opacity-30 grayscale ${shareTheme === "light" ? "text-neutral-900" : "text-white"}`}
+                >
+                  <TrendingUp className="w-3.5 h-3.5" />
+                  <span className="text-[10px] font-black uppercase tracking-widest italic leading-none">
+                    Hang on!
+                  </span>
+                </div>
+              </div>
 
               <div
                 className={`flex items-center justify-between relative z-10 border-b pb-4 transition-colors ${
@@ -186,9 +207,6 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
                 }`}
               >
                 <div className="flex flex-col gap-1">
-                  <span className="text-[12px] font-black text-accent tracking-[0.2em] uppercase">
-                    Daily Summary
-                  </span>
                   <h2
                     className={`text-xl font-black tracking-tight leading-none transition-colors ${
                       shareTheme === "light"
@@ -199,22 +217,9 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
                     데일리 경제 뉴스
                   </h2>
                 </div>
-                <span
-                  className={`text-[11px] font-bold font-mono transition-colors ${
-                    shareTheme === "light" ? "text-slate-500" : "text-slate-400"
-                  }`}
-                >
-                  {new Date(news[0]?.created_at || new Date())
-                    .toLocaleDateString("ko-KR", {
-                      month: "2-digit",
-                      day: "2-digit",
-                    })
-                    .replace(/\. /g, ".")
-                    .replace(/\.$/, "")}
-                </span>
               </div>
 
-              <div className="relative z-10 flex flex-col gap-3">
+              <div className="relative z-10 flex flex-col gap-3 flex-1 justify-center py-4">
                 {news.slice(0, 5).map((item, idx) => (
                   <div key={item.id} className="flex gap-4 items-center py-1">
                     <span className="text-sm font-black text-accent/40">
@@ -235,38 +240,15 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
                 ))}
               </div>
 
-              <div
-                className={`mt-0 pt-0 border-t relative z-10 w-full transition-colors ${
-                  shareTheme === "light"
-                    ? "border-slate-100"
-                    : "border-slate-800"
-                }`}
-              >
-                <div className="flex flex-col gap-1.5 py-4">
-                  <span
-                    className={`text-[9px] font-bold uppercase tracking-widest leading-none transition-colors ${
-                      shareTheme === "light"
-                        ? "text-slate-500"
-                        : "text-slate-400"
-                    }`}
-                  >
-                    Powered by HANG ON!
-                  </span>
-                  <div className="flex flex-col gap-1 mt-0.5">
-                    <span className="text-[14px] font-black text-accent tracking-tighter italic leading-none">
-                      핵심만 골라 읽는 경제 습관
-                    </span>
-                    <span
-                      className={`text-[10px] font-bold whitespace-nowrap transition-colors ${
-                        shareTheme === "light"
-                          ? "text-slate-500"
-                          : "text-slate-400"
-                      }`}
-                    >
-                      www.hangon.co.kr
-                    </span>
-                  </div>
-                </div>
+              {/* Bottom: App Link & CTA */}
+              <div className="mt-auto relative z-10 flex justify-center pt-2">
+                <p
+                  className={`text-[13px] font-black tracking-tighter opacity-30 ${
+                    shareTheme === "light" ? "text-neutral-900" : "text-white"
+                  }`}
+                >
+                  www.hangon.co.kr
+                </p>
               </div>
             </div>
           </div>

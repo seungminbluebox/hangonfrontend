@@ -156,7 +156,7 @@ export function FearGreedShareCard({
             {/* Card Content - Optimized for 3:4 Fill with Single Insight */}
             <div
               ref={cardRef}
-              className={`w-[360px] h-[600px] p-7 rounded-[35px] shadow-2xl relative overflow-hidden transition-colors duration-300 border flex flex-col justify-between ${
+              className={`w-[360px] h-[540px] p-7 rounded-[35px] shadow-2xl relative overflow-hidden transition-colors duration-300 border flex flex-col justify-between ${
                 shareTheme === "light"
                   ? "bg-[#F8F7F4] text-neutral-900 border-neutral-100"
                   : "bg-[#0f172a] text-white border-white/5"
@@ -269,7 +269,7 @@ export function FearGreedShareCard({
                       />
                     </svg>
                     <div
-                      className={`absolute bottom-0 left-1/2 w-0.5 h-20 -translate-x-1/2 origin-bottom transition-all duration-1000 z-20 ${
+                      className={`absolute bottom-0 left-1/2 w-1 h-20 origin-bottom transition-all duration-1000 z-20 ${
                         shareTheme === "light" ? "bg-neutral-900" : "bg-white"
                       }`}
                       style={{
@@ -280,8 +280,8 @@ export function FearGreedShareCard({
                     <div
                       className={`absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-4 h-4 rounded-full z-30 shadow-md border-[3px] ${
                         shareTheme === "light"
-                          ? "bg-white border-neutral-900"
-                          : "bg-[#0f172a] border-white"
+                          ? "bg-neutral-900 border-white"
+                          : "bg-white border-[#0f172a]"
                       }`}
                     />
                   </div>
@@ -344,46 +344,15 @@ export function FearGreedShareCard({
                   </div>
                 </div>
 
-                <div
-                  className={`pt-4 flex items-center justify-between border-t transition-all ${
-                    shareTheme === "light"
-                      ? "border-neutral-100"
-                      : "border-white/10"
-                  }`}
-                >
-                  <div className="flex flex-col gap-0.5">
-                    <p
-                      className={`text-[8px] font-black leading-none ${
-                        shareTheme === "light"
-                          ? "text-neutral-400"
-                          : "text-white/30"
-                      }`}
-                    >
-                      더 상세한 분석은?
-                    </p>
-                    <p
-                      className={`text-[13px] font-black tracking-tighter mt-1 transition-colors  ${
-                        shareTheme === "light"
-                          ? "text-neutral-900"
-                          : "text-white"
-                      }`}
-                      style={{
-                        fontFamily:
-                          'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                      }}
-                    >
-                      www.hangon.co.kr
-                    </p>
-                  </div>
-                  <div>
-                    <TrendingUp
-                      className={`w-5 h-5 ${
-                        shareTheme === "light"
-                          ? "text-neutral-200"
-                          : "text-white/20"
-                      }`}
-                    />
-                  </div>
+                {/* Bottom: App Link & CTA */}
+                <div className="mt-auto relative z-10 flex justify-center pt-2">
+                  <p
+                    className={`text-[13px] font-black tracking-tighter opacity-30 ${
+                      shareTheme === "light" ? "text-neutral-900" : "text-white"
+                    }`}
+                  >
+                    www.hangon.co.kr
+                  </p>
                 </div>
               </div>
             </div>
