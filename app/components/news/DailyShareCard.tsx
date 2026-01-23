@@ -53,8 +53,8 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
       style: {
         transform: "scale(1)",
         transformOrigin: "top left",
-        width: "360px",
-        height: "540px",
+        width: "320px",
+        height: "460px",
         backgroundColor: shareTheme === "light" ? "#F8F7F4" : "#0f172a",
         borderRadius: "35px",
         boxShadow: "none",
@@ -118,8 +118,8 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
         style: {
           transform: "scale(1)",
           transformOrigin: "top left",
-          width: "360px",
-          height: "540px",
+          width: "320px",
+          height: "460px",
           backgroundColor: shareTheme === "light" ? "#F8F7F4" : "#0f172a",
           borderRadius: "35px",
           boxShadow: "none",
@@ -172,7 +172,7 @@ export function DailyShareCard({ news, onClose }: DailyShareCardProps) {
           <div className="pt-8 pb-12 flex flex-col items-center scale-[0.65] xs:scale-[0.8] sm:scale-95 origin-center transition-all duration-300">
             <div
               ref={cardRef}
-              className={`w-[360px] h-[540px] p-7 rounded-[35px] shadow-2xl relative overflow-hidden flex flex-col justify-between border transition-colors duration-300 ${
+              className={`w-[320px] h-[460px] p-7 rounded-[35px] shadow-2xl relative overflow-hidden flex flex-col justify-between border transition-colors duration-300 ${
                 shareTheme === "light"
                   ? "bg-[#F8F7F4] text-slate-900 border-slate-100"
                   : "bg-[#0f172a] text-slate-100 border-slate-800"

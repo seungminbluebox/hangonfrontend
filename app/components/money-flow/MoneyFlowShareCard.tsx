@@ -27,12 +27,7 @@ interface FlowItem {
 }
 
 interface MoneyFlowData {
-  flow_data: {
-    Risk: Record<string, FlowItem>;
-    Safe: Record<string, FlowItem>;
-    Sectors: Record<string, FlowItem>;
-  };
-  title: string;
+  flow_data: Record<string, Record<string, FlowItem>>;
   summary: string;
   analysis: string;
   strategy: string[];
@@ -43,12 +38,14 @@ interface MoneyFlowShareCardProps {
   data: MoneyFlowData;
   onClose: () => void;
   type: "assets" | "sectors" | "report";
+  marketType: "domestic" | "us" | "safe";
 }
 
 export function MoneyFlowShareCard({
   data,
   onClose,
   type,
+  marketType,
 }: MoneyFlowShareCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState(false);
@@ -57,7 +54,22 @@ export function MoneyFlowShareCard({
   const [canShare, setCanShare] = useState(false);
   const [shareTheme, setShareTheme] = useState<"light" | "dark">("light");
 
-  const cardHeight = type === "assets" ? 550 : type === "sectors" ? 400 : 460;
+  const titleMap = {
+    domestic: "오늘의 국내 증시 자산 흐름🌊",
+    us: "오늘의 미국 증시 자산 흐름💲",
+    safe: "오늘의 안전자산 흐름🪙",
+  };
+
+  const title = titleMap[marketType];
+
+  const cardHeight =
+    type === "assets"
+      ? 550
+      : type === "sectors"
+        ? 500
+        : marketType === "domestic"
+          ? 530
+          : 580;
 
   useEffect(() => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -131,14 +143,16 @@ export function MoneyFlowShareCard({
       type === "assets"
         ? "자산군별 자금 흐름"
         : type === "sectors"
-          ? "국내 섹터별 돈의 쏠림"
+          ? marketType === "us"
+            ? "미국 섹터별 돈의 쏠림"
+            : "국내 섹터별 돈의 쏠림"
           : "자금 흐름 분석 리포트";
 
     try {
       await navigator.share({
         files: [file],
         title: `[Hang on!] ${shareTitle}`,
-        text: `${data.title}\n${data.summary}\n더 자세한 내용은 웹사이트에서 확인하세요!`,
+        text: `${title}\n${data.summary}\n더 자세한 내용은 웹사이트에서 확인하세요!`,
       });
     } catch (err) {
       if ((err as Error).name !== "AbortError")
@@ -150,73 +164,82 @@ export function MoneyFlowShareCard({
     if (type === "assets") {
       return (
         <div className="space-y-4 px-1">
-          <div className="flex items-center gap-2 mb-2">
-            <ArrowRightLeft
-              className={`w-5 h-5 ${shareTheme === "light" ? "text-neutral-900" : "text-accent"}`}
-            />
-            <h3
-              className={`text-lg font-black italic ${shareTheme === "light" ? "text-neutral-900" : "text-white"}`}
-            >
-              자산군별 자금 흐름
-            </h3>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <ArrowRightLeft
+                className={`w-5 h-5 ${shareTheme === "light" ? "text-neutral-900" : "text-accent"}`}
+              />
+              <h3
+                className={`text-lg font-black italic ${shareTheme === "light" ? "text-neutral-900" : "text-white"}`}
+              >
+                자산군별 자금 흐름
+              </h3>
+            </div>
+            <span className="text-[10px] font-bold opacity-30 italic">
+              *vol: 상대 거래량
+            </span>
           </div>
           <div className="space-y-4">
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 px-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
-                <span className="text-[10px] font-black uppercase tracking-wider opacity-60">
-                  위험 자산
-                </span>
-              </div>
-              <div className="grid grid-cols-2 gap-2.5">
-                {Object.entries(data.flow_data.Risk).map(([name, item]) => (
-                  <AssetCardMini
-                    key={name}
-                    name={name}
-                    item={item}
-                    theme={shareTheme}
-                  />
-                ))}
-              </div>
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 px-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                <span className="text-[10px] font-black uppercase tracking-wider opacity-60">
-                  안전 자산
-                </span>
-              </div>
-              <div className="grid grid-cols-2 gap-2.5">
-                {Object.entries(data.flow_data.Safe).map(([name, item]) => (
-                  <AssetCardMini
-                    key={name}
-                    name={name}
-                    item={item}
-                    theme={shareTheme}
-                  />
-                ))}
-              </div>
-            </div>
+            {Object.entries(data.flow_data)
+              .filter(([key]) => key !== "Sectors")
+              .map(([category, items]) => (
+                <div key={category} className="space-y-2">
+                  <div className="flex items-center gap-2 px-1">
+                    <div
+                      className={`w-1.5 h-1.5 rounded-full ${
+                        category === "Assets"
+                          ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
+                          : "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]"
+                      }`}
+                    />
+                    <span className="text-[10px] font-black uppercase tracking-wider opacity-60">
+                      {category === "Index"
+                        ? "지수 및 주요 지표"
+                        : category === "Assets"
+                          ? "안전자산 및 기타"
+                          : category}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2.5">
+                    {Object.entries(items).map(([name, item]) => (
+                      <AssetCardMini
+                        key={name}
+                        name={name}
+                        item={item}
+                        theme={shareTheme}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
           </div>
         </div>
       );
     }
 
     if (type === "sectors") {
+      const sectors = data.flow_data.Sectors || {};
       return (
         <div className="space-y-6 px-1">
-          <div className="flex items-center gap-2 mb-4">
-            <Layers
-              className={`w-5 h-5 ${shareTheme === "light" ? "text-neutral-900" : "text-accent"}`}
-            />
-            <h3
-              className={`text-lg font-black italic ${shareTheme === "light" ? "text-neutral-900" : "text-white"}`}
-            >
-              국내 섹터별 돈의 쏠림
-            </h3>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <Layers
+                className={`w-5 h-5 ${shareTheme === "light" ? "text-neutral-900" : "text-accent"}`}
+              />
+              <h3
+                className={`text-lg font-black italic ${shareTheme === "light" ? "text-neutral-900" : "text-white"}`}
+              >
+                {marketType === "us"
+                  ? "미국 섹터별 돈의 쏠림 💲"
+                  : "국내 섹터별 돈의 쏠림 💸"}
+              </h3>
+            </div>
+            <span className="text-[10px] font-bold opacity-30 italic">
+              *vol: 상대 거래량
+            </span>
           </div>
           <div className="grid grid-cols-2 gap-2.5">
-            {Object.entries(data.flow_data.Sectors).map(([name, item]) => (
+            {Object.entries(sectors).map(([name, item]) => (
               <SectorCardMini
                 key={name}
                 name={name}
@@ -236,33 +259,65 @@ export function MoneyFlowShareCard({
 
       return (
         <div className="px-1">
-          <div className="flex flex-col gap-4">
-            {/* Title & Summary with enhanced styling */}
-            <div className="relative group">
-              <div className="absolute -left-3 top-0 bottom-0 w-1 bg-accent rounded-full opacity-50" />
-              <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-3">
+            {/* Title & Summary */}
+            <div className="flex flex-col gap-1.5">
+              <h3
+                className={`text-xl font-black italic tracking-tighter ${shareTheme === "light" ? "text-neutral-900" : "text-white"}`}
+              >
+                {title}
+              </h3>
+              <p
+                className={`text-[12px] font-bold leading-snug ${shareTheme === "light" ? "text-neutral-600" : "text-white/60"}`}
+              >
+                {data.summary}
+              </p>
+            </div>
+
+            {/* Money Flow Section */}
+            <div className="bg-accent/5 rounded-[1.5rem] p-3.5 border border-accent/10">
+              <div className="flex justify-between items-center mb-3">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[9px] font-black bg-accent text-white px-1.5 py-0.5 rounded uppercase tracking-wider">
-                    Today
+                  <ArrowRightLeft className="w-3 h-3 text-accent" />
+                  <span className="text-[10px] font-black italic text-accent uppercase tracking-tight">
+                    자금 흐름 현황
                   </span>
-                  <div className="h-[1px] flex-1 bg-black/5 dark:bg-white/5" />
                 </div>
-                <h3
-                  className={`text-xl font-black italic leading-[1.2] ${shareTheme === "light" ? "text-neutral-900" : "text-white"}`}
-                >
-                  {data.title}
-                </h3>
-                <p
-                  className={`text-[13px] font-bold leading-relaxed ${shareTheme === "light" ? "text-neutral-700/80" : "text-white/70"}`}
-                >
-                  {data.summary}
-                </p>
+                <span className="text-[10px] font-bold opacity-30 italic">
+                  *vol: 상대 거래량
+                </span>
+              </div>
+
+              <div className="space-y-3">
+                {Object.entries(data.flow_data)
+                  .filter(([key]) => key !== "Sectors")
+                  .map(([category, items]) => (
+                    <div key={category} className="space-y-1.5">
+                      <div className="flex items-center gap-1.5 px-0.5">
+                        <span className="text-[8px] font-black uppercase tracking-wider opacity-40">
+                          {category === "Index"
+                            ? "Market Index"
+                            : "Asset Class"}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        {Object.entries(items).map(([name, item]) => (
+                          <AssetCardMini
+                            key={name}
+                            name={name}
+                            item={item}
+                            theme={shareTheme}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
               </div>
             </div>
 
-            {/* Analysis & Strategy merged */}
-            <div className="mt-1 space-y-3 pt-3 border-t border-black/5 dark:border-white/5">
-              <div className="space-y-1 font-bold">
+            {/* Analysis & Strategy in vertical stack */}
+            <div className="flex flex-col gap-4 mt-1">
+              <div className="space-y-1.5">
                 <div className="flex items-center gap-1.5 opacity-40">
                   <Activity className="w-2.5 h-2.5" />
                   <span className="text-[9px] uppercase tracking-widest font-black">
@@ -270,21 +325,21 @@ export function MoneyFlowShareCard({
                   </span>
                 </div>
                 <p
-                  className={`text-[11px] leading-relaxed ${shareTheme === "light" ? "text-neutral-700" : "text-white/70"}`}
+                  className={`text-[11px] leading-relaxed font-bold ${shareTheme === "light" ? "text-neutral-700" : "text-white/70"}`}
                 >
                   {firstAnalysis}
                 </p>
               </div>
 
-              <div className="space-y-1 font-bold">
+              <div className="space-y-1.5 pt-3 border-t border-black/5 dark:border-white/5">
                 <div className="flex items-center gap-1.5 text-accent/80">
                   <Target className="w-2.5 h-2.5" />
                   <span className="text-[9px] uppercase tracking-widest font-black">
-                    전략 구성
+                    전략
                   </span>
                 </div>
                 <p
-                  className={`text-[11px] leading-relaxed ${shareTheme === "light" ? "text-neutral-900" : "text-white"}`}
+                  className={`text-[11px] leading-relaxed font-bold ${shareTheme === "light" ? "text-neutral-900" : "text-white"}`}
                 >
                   {firstStrategy}
                 </p>
@@ -434,31 +489,31 @@ function AssetCardMini({
   const isPositive = item.change >= 0;
   return (
     <div
-      className={`p-3 rounded-xl border ${
+      className={`p-2.5 rounded-xl border transition-colors ${
         theme === "light"
-          ? "bg-white border-neutral-200"
+          ? "bg-white border-neutral-100 shadow-sm"
           : "bg-white/5 border-white/10"
       }`}
     >
-      <div className="flex justify-between items-start mb-1">
-        <span className="text-[10px] font-black opacity-60 overflow-hidden text-ellipsis whitespace-nowrap">
+      <div className="flex justify-between items-center mb-1">
+        <span className="text-[10px] font-black opacity-50 overflow-hidden text-ellipsis whitespace-nowrap">
           {name}
         </span>
         {isPositive ? (
-          <ArrowUpRight className="w-2.5 h-2.5 text-emerald-500" />
+          <ArrowUpRight className="w-2 h-2 text-emerald-500 opacity-70" />
         ) : (
-          <ArrowDownRight className="w-2.5 h-2.5 text-red-500" />
+          <ArrowDownRight className="w-2 h-2 text-red-500 opacity-70" />
         )}
       </div>
-      <div className="flex flex-col">
+      <div className="flex items-baseline gap-1.5">
         <span
-          className={`text-sm font-black tracking-tighter ${isPositive ? "text-emerald-500" : "text-red-500"}`}
+          className={`text-xs font-black tracking-tighter ${isPositive ? "text-emerald-500" : "text-red-500"}`}
         >
           {isPositive ? "+" : ""}
           {item.change}%
         </span>
-        <span className="text-[8px] font-bold opacity-30 tabular-nums lowercase">
-          vol {item.rel_vol}x
+        <span className="text-[7px] font-bold opacity-30 tabular-nums lowercase">
+          {item.rel_vol}x
         </span>
       </div>
     </div>

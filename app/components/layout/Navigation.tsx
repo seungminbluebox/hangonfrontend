@@ -10,7 +10,6 @@ import {
   TrendingUp,
   Gauge,
   Home,
-  CloudSun,
   Compass,
   RefreshCcw,
   Landmark,
@@ -68,6 +67,51 @@ export function Navigation() {
       icon: Home,
       desc: "오늘 꼭 알아야 할 핵심 이슈",
     },
+    // 국내 증시
+    {
+      name: "K-공탐지수",
+      href: "/kospi-fear-greed",
+      icon: Gauge,
+      desc: "KOSPI 시장의 심리 지수 추적",
+    },
+    {
+      name: "국내 자금흐름",
+      href: "/money-flow/domestic",
+      icon: Compass,
+      desc: "한국 시장의 돈의 쏠림 분석",
+    },
+    // 미국 증시
+    {
+      name: "공탐지수",
+      href: "/fear-greed",
+      icon: Gauge,
+      desc: "미국 시장의 탐욕과 공포",
+    },
+    {
+      name: "미국 자금흐름",
+      href: "/money-flow/us",
+      icon: Compass,
+      desc: "미국 섹터별 자금 유입 추적",
+    },
+    {
+      name: "나스닥 선물",
+      href: "/nasdaq-futures",
+      icon: Activity,
+      desc: "미국 시장의 선행지표",
+    },
+    {
+      name: "풋/콜 옵션",
+      href: "/put-call-ratio",
+      icon: BarChart3,
+      desc: "옵션 시장 투자 심리",
+    },
+    // 글로벌 매크로
+    {
+      name: "안전자산 흐름",
+      href: "/money-flow/safe",
+      icon: Compass,
+      desc: "금, 달러 등 안전자산 추적",
+    },
     {
       name: "환율분석 데스크",
       href: "/currency-desk",
@@ -78,43 +122,7 @@ export function Navigation() {
       name: "한/미 금리 현황",
       href: "/interest-rate",
       icon: Landmark,
-      desc: "경제의 기초 체력, 양국 금리 정보",
-    },
-    {
-      name: "나스닥 선물(나선)",
-      href: "/nasdaq-futures",
-      icon: Activity,
-      desc: "미국 시장의 선행지표",
-    },
-    {
-      name: "미국 풋/콜 옵션 지표",
-      href: "/put-call-ratio",
-      icon: BarChart3,
-      desc: "옵션 시장을 통해 읽는 투자 심리",
-    },
-    {
-      name: "공탐지수 분석",
-      href: "/fear-greed",
-      icon: Gauge,
-      desc: "인간의 탐욕과 공포 데이터 분석",
-    },
-    {
-      name: "코스피 공탐지수",
-      href: "/kospi-fear-greed",
-      icon: Gauge,
-      desc: "KOSPI 시장의 심리 지수 추적",
-    },
-    {
-      name: "자금 흐름",
-      href: "/money-flow",
-      icon: Compass,
-      desc: "돈의 쏠림이 만드는 투자의 기회",
-    },
-    {
-      name: "주식 기상예보",
-      href: "/market-weather",
-      icon: CloudSun,
-      desc: "데이터 기반 시장 상황 분석",
+      desc: "양국 금리 정보",
     },
   ];
 
@@ -155,29 +163,26 @@ export function Navigation() {
                   <span>뉴스홈</span>
                 </Link>
 
-                {/* 2. 실시간 지표 (Dropdown) */}
+                {/* 2. 국내 증시 (Dropdown) */}
                 <div
                   className="relative group h-full"
-                  onMouseEnter={() => setActiveDropdown("live")}
+                  onMouseEnter={() => setActiveDropdown("domestic")}
                   onMouseLeave={() => setActiveDropdown(null)}
                 >
                   <button
                     className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
-                      [
-                        "/currency-desk",
-                        "/interest-rate",
-                        "/nasdaq-futures",
-                        "/put-call-ratio",
-                      ].includes(pathname)
+                      ["/kospi-fear-greed", "/money-flow/domestic"].includes(
+                        pathname,
+                      )
                         ? "text-accent"
                         : "text-text-muted hover:text-foreground hover:bg-background/40"
                     }`}
                   >
-                    <Activity className="w-4 h-4" />
-                    <span>실시간 지표</span>
+                    <Landmark className="w-4 h-4" />
+                    <span>국내 증시</span>
                     <ChevronDown
                       className={`w-3.5 h-3.5 transition-transform duration-300 ${
-                        activeDropdown === "live" ? "rotate-180" : ""
+                        activeDropdown === "domestic" ? "rotate-180" : ""
                       }`}
                     />
                   </button>
@@ -185,13 +190,13 @@ export function Navigation() {
                   {/* Dropdown Menu */}
                   <div
                     className={`absolute top-full left-0 pt-2 w-56 transition-all duration-300 z-50 ${
-                      activeDropdown === "live"
+                      activeDropdown === "domestic"
                         ? "opacity-100 translate-y-0"
                         : "opacity-0 translate-y-2 pointer-events-none"
                     }`}
                   >
                     <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1 overflow-hidden">
-                      {navLinks.slice(1, 5).map((link) => {
+                      {navLinks.slice(1, 3).map((link) => {
                         const Icon = link.icon;
                         return (
                           <Link
@@ -219,18 +224,82 @@ export function Navigation() {
                   </div>
                 </div>
 
-                {/* 3. 시장 통찰 (Dropdown) */}
+                {/* 3. 미국 증시 (Dropdown) */}
                 <div
                   className="relative group h-full"
-                  onMouseEnter={() => setActiveDropdown("analysis")}
+                  onMouseEnter={() => setActiveDropdown("us")}
                   onMouseLeave={() => setActiveDropdown(null)}
                 >
                   <button
                     className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
                       [
                         "/fear-greed",
-                        "/kospi-fear-greed",
-                        "/money-flow",
+                        "/money-flow/us",
+                        "/nasdaq-futures",
+                        "/put-call-ratio",
+                      ].includes(pathname)
+                        ? "text-accent"
+                        : "text-text-muted hover:text-foreground hover:bg-background/40"
+                    }`}
+                  >
+                    <TrendingUp className="w-4 h-4" />
+                    <span>미국 증시</span>
+                    <ChevronDown
+                      className={`w-3.5 h-3.5 transition-transform duration-300 ${
+                        activeDropdown === "us" ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  <div
+                    className={`absolute top-full left-0 pt-2 w-64 transition-all duration-300 z-50 ${
+                      activeDropdown === "us"
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 translate-y-2 pointer-events-none"
+                    }`}
+                  >
+                    <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1">
+                      {navLinks.slice(3, 7).map((link) => {
+                        const Icon = link.icon;
+                        return (
+                          <Link
+                            key={link.name}
+                            href={link.href}
+                            className={`flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-bold transition-all ${
+                              pathname === link.href
+                                ? "bg-accent/10 text-accent"
+                                : "hover:bg-secondary/50 text-text-muted hover:text-foreground"
+                            }`}
+                          >
+                            <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
+                              <Icon className="w-4 h-4 text-accent" />
+                            </div>
+                            <div className="flex flex-col overflow-hidden">
+                              <span className="truncate">{link.name}</span>
+                              <span className="text-[10px] opacity-40 font-medium truncate mt-0.5">
+                                {link.desc}
+                              </span>
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4. 글로벌 매크로 (Dropdown) */}
+                <div
+                  className="relative group h-full"
+                  onMouseEnter={() => setActiveDropdown("macro")}
+                  onMouseLeave={() => setActiveDropdown(null)}
+                >
+                  <button
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
+                      [
+                        "/money-flow/safe",
+                        "/currency-desk",
+                        "/interest-rate",
                         "/market-weather",
                       ].includes(pathname)
                         ? "text-accent"
@@ -238,10 +307,10 @@ export function Navigation() {
                     }`}
                   >
                     <Compass className="w-4 h-4" />
-                    <span>시장 통찰</span>
+                    <span>글로벌 매크로</span>
                     <ChevronDown
                       className={`w-3.5 h-3.5 transition-transform duration-300 ${
-                        activeDropdown === "analysis" ? "rotate-180" : ""
+                        activeDropdown === "macro" ? "rotate-180" : ""
                       }`}
                     />
                   </button>
@@ -249,13 +318,13 @@ export function Navigation() {
                   {/* Dropdown Menu */}
                   <div
                     className={`absolute top-full right-0 md:left-0 pt-2 w-64 transition-all duration-300 z-50 ${
-                      activeDropdown === "analysis"
+                      activeDropdown === "macro"
                         ? "opacity-100 translate-y-0"
                         : "opacity-0 translate-y-2 pointer-events-none"
                     }`}
                   >
                     <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1">
-                      {navLinks.slice(5).map((link) => {
+                      {navLinks.slice(7).map((link) => {
                         const Icon = link.icon;
                         return (
                           <Link
@@ -373,16 +442,16 @@ export function Navigation() {
             </div>
           </div>
 
-          {/* 카테고리 2: 실시간 지표 */}
+          {/* 카테고리 2: 국내 증시 */}
           <div className="space-y-3">
             <div className="flex items-center gap-2 ml-1">
-              <Activity className="w-3 h-3 text-accent/50" />
+              <Landmark className="w-3 h-3 text-accent/50" />
               <h3 className="text-[10px] font-black text-text-muted/40 uppercase tracking-widest">
-                실시간 지표가 궁금하다면?
+                국내 증시 Insight
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(1, 5).map((link, index) => {
+              {navLinks.slice(1, 3).map((link, index) => {
                 const Icon = link.icon;
                 return (
                   <Link
@@ -417,16 +486,16 @@ export function Navigation() {
             </div>
           </div>
 
-          {/* 카테고리 3: 시장 분석 */}
+          {/* 카테고리 3: 미국 증시 */}
           <div className="space-y-3">
             <div className="flex items-center gap-2 ml-1">
-              <Compass className="w-3 h-3 text-accent/50" />
+              <TrendingUp className="w-3 h-3 text-accent/50" />
               <h3 className="text-[10px] font-black text-text-muted/40 uppercase tracking-widest">
-                시장 상황이 궁금하다면?
+                미국 증시 Trend
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(5).map((link, index) => {
+              {navLinks.slice(3, 7).map((link, index) => {
                 const Icon = link.icon;
                 return (
                   <Link
@@ -440,7 +509,51 @@ export function Navigation() {
                     }`}
                     style={{
                       transitionDelay: isOpen
-                        ? `${(index + 6) * 100}ms`
+                        ? `${(index + 4) * 100}ms`
+                        : "0ms",
+                    }}
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shrink-0">
+                      <Icon className="w-5 h-5 text-accent" />
+                    </div>
+                    <div className="flex flex-col overflow-hidden">
+                      <span className="text-sm font-black tracking-tight truncate">
+                        {link.name}
+                      </span>
+                      <span className="text-[10px] font-bold text-foreground/40 mt-0.5 truncate">
+                        {link.desc}
+                      </span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 카테고리 4: 글로벌 매크로 */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 ml-1">
+              <Compass className="w-3 h-3 text-accent/50" />
+              <h3 className="text-[10px] font-black text-text-muted/40 uppercase tracking-widest">
+                글로벌 매크로 지표
+              </h3>
+            </div>
+            <div className="grid grid-cols-1 gap-2">
+              {navLinks.slice(7).map((link, index) => {
+                const Icon = link.icon;
+                return (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className={`flex items-center gap-4 p-4 rounded-2xl bg-secondary/30 border border-border-subtle/50 transition-all duration-500 ${
+                      isOpen
+                        ? "translate-x-0 opacity-100"
+                        : "translate-x-8 opacity-0"
+                    }`}
+                    style={{
+                      transitionDelay: isOpen
+                        ? `${(index + 8) * 100}ms`
                         : "0ms",
                     }}
                   >

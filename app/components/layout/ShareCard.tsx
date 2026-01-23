@@ -384,13 +384,6 @@ export function ShareCard({
               이미지 저장
             </button>
           </div>
-
-          <div className="flex items-center gap-2 justify-center py-1">
-            <span className="text-[10px] text-text-muted">
-              팁: 모바일에서는 <b>바로 공유하기</b>, PC에서는 <b>이미지 복사</b>
-              가 가장 편합니다.
-            </span>
-          </div>
         </div>
       </div>
     </div>

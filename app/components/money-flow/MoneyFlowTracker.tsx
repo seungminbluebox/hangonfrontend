@@ -28,19 +28,18 @@ interface FlowItem {
 }
 
 interface MoneyFlowData {
-  flow_data: {
-    Risk: Record<string, FlowItem>;
-    Safe: Record<string, FlowItem>;
-    Sectors: Record<string, FlowItem>;
-  };
-  title: string;
+  flow_data: Record<string, Record<string, FlowItem>>;
   summary: string;
   analysis: string;
   strategy: string[];
   updated_at: string;
 }
 
-export function MoneyFlowTracker() {
+export function MoneyFlowTracker({
+  type = "domestic",
+}: {
+  type?: "domestic" | "us" | "safe";
+}) {
   const [data, setData] = useState<MoneyFlowData | null>(null);
   const [loading, setLoading] = useState(true);
   const [showFullAnalysis, setShowFullAnalysis] = useState(false);
@@ -49,13 +48,28 @@ export function MoneyFlowTracker() {
     type: "assets" | "sectors" | "report";
   }>({ isOpen: false, type: "report" });
 
+  const titleMap = {
+    domestic: "국내 증시 자금 흐름💸",
+    us: "미국 증시 자금 흐름💲",
+    safe: "안전자산 자금 흐름🪙",
+  };
+  const title = titleMap[type];
+
   useEffect(() => {
     async function fetchData() {
+      setLoading(true);
       try {
+        const typeMap = {
+          domestic: 1,
+          us: 2,
+          safe: 3,
+        };
+        const categoryId = typeMap[type];
+
         const { data: res, error } = await supabase
           .from("money_flow")
           .select("*")
-          .eq("id", 1)
+          .eq("id", categoryId)
           .single();
 
         if (res) {
@@ -68,7 +82,7 @@ export function MoneyFlowTracker() {
       }
     }
     fetchData();
-  }, []);
+  }, [type]);
 
   if (loading) {
     return (
@@ -90,13 +104,18 @@ export function MoneyFlowTracker() {
       {/* Header Analysis */}
       <div className="bg-gradient-to-br from-accent/10 via-background to-background border border-accent/20 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 shadow-sm">
         <div className="flex items-center justify-between mb-3 md:mb-4">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-accent/20 flex items-center justify-center">
+          <div className="flex items-center gap-3">
+            <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-accent/20 flex items-center justify-center shrink-0">
               <Compass className="w-3.5 h-3.5 md:w-4 md:h-4 text-accent" />
             </div>
-            <h2 className="text-xl md:text-2xl font-black italic tracking-tight">
-              {data.title}
-            </h2>
+            <div className="flex flex-col">
+              <h2 className="text-xl md:text-2xl font-black italic tracking-tight leading-tight">
+                {title}
+              </h2>
+              <span className="text-[9px] md:text-[10px] font-bold italic opacity-40">
+                {new Date().toLocaleDateString("ko-KR")} 기준
+              </span>
+            </div>
           </div>
           <button
             onClick={() => setShareConfig({ isOpen: true, type: "report" })}
@@ -136,94 +155,98 @@ export function MoneyFlowTracker() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 items-start">
         {/* Risk vs Safe Flow */}
-        <div className="bg-card/40 border border-border-subtle rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8">
-          <div className="flex items-center justify-between mb-6 md:mb-8">
+        <div className="bg-card/40 border border-border-subtle rounded-[2rem] md:rounded-[2.5rem] p-5 md:p-7">
+          <div className="flex items-center justify-between mb-4 md:mb-6">
             <div className="flex items-center gap-2">
               <ArrowRightLeft className="w-5 h-5 text-accent" />
               <h3 className="text-lg font-black italic">자산군별 자금 흐름</h3>
             </div>
-            <button
-              onClick={() => setShareConfig({ isOpen: true, type: "assets" })}
-              className="p-2 hover:bg-muted rounded-xl transition-all"
-              title="자산 흐름 공유"
-            >
-              <Share2 className="w-3.5 h-3.5 text-foreground/40" />
-            </button>
+            {type === "safe" && (
+              <button
+                onClick={() => setShareConfig({ isOpen: true, type: "assets" })}
+                className="p-2 hover:bg-muted rounded-xl transition-all"
+                title="자산 흐름 공유"
+              >
+                <Share2 className="w-3.5 h-3.5 text-foreground/40" />
+              </button>
+            )}
           </div>
 
-          <div className="space-y-6 md:space-y-8">
-            {/* Risk Assets */}
-            <div>
-              <div className="flex items-center gap-2 mb-3 md:mb-4">
-                <div className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
-                <span className="text-[10px] md:text-xs font-black uppercase tracking-wider text-foreground/60">
-                  위험 자산
-                </span>
-              </div>
-              <div className="grid grid-cols-2 gap-3 md:gap-4">
-                {Object.entries(data.flow_data.Risk).map(([name, item]) => (
-                  <AssetCard key={name} name={name} item={item} />
-                ))}
-              </div>
-            </div>
-
-            {/* Safe Assets */}
-            <div>
-              <div className="flex items-center gap-2 mb-3 md:mb-4">
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                <span className="text-[10px] md:text-xs font-black uppercase tracking-wider text-foreground/60">
-                  안전자산
-                </span>
-              </div>
-              <div className="grid grid-cols-2 gap-3 md:gap-4">
-                {Object.entries(data.flow_data.Safe).map(([name, item]) => (
-                  <AssetCard key={name} name={name} item={item} />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Sector Heatmap-ish Flow */}
-        <div className="bg-card/40 border border-border-subtle rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8">
-          <div className="flex items-center justify-between mb-6 md:mb-8">
-            <div className="flex items-center gap-2">
-              <Layers className="w-4 h-4 md:w-5 md:h-5 text-accent" />
-              <h3 className="text-base md:text-lg font-black italic">
-                국내 섹터별 돈의 쏠림
-              </h3>
-            </div>
-            <button
-              onClick={() => setShareConfig({ isOpen: true, type: "sectors" })}
-              className="p-2 hover:bg-muted rounded-xl transition-all"
-              title="섹터 쏠림 공유"
-            >
-              <Share2 className="w-3.5 h-3.5 text-foreground/40" />
-            </button>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2 md:gap-3">
-            {Object.entries(data.flow_data.Sectors).map(([name, item]) => (
-              <SectorCard key={name} name={name} item={item} />
-            ))}
-          </div>
-
-          <div className="mt-6 md:mt-8 p-4 bg-accent/5 rounded-2xl border border-accent/10">
-            <div className="flex items-center gap-2 mb-2">
-              <Activity className="w-3 h-3 md:w-3.5 md:h-3.5 text-accent" />
-              <span className="text-[10px] md:text-[11px] font-black text-accent uppercase tracking-wider">
-                측정 방식
-              </span>
-            </div>
-            <p className="text-[10px] md:text-[11px] font-medium text-foreground/50 leading-relaxed">
-              *상대 거래량(Rel Vol)이 1.0보다 크면 평소보다 많은 돈이 해당
-              섹터에 유입되고 있음을 의미합니다. 가격 상승과 높은 거래량이
-              동반될 때 진짜 '돈의 흐름'으로 판단합니다.
-            </p>
+          <div className="space-y-4 md:space-y-6">
+            {Object.entries(data.flow_data)
+              .filter(([key]) => key !== "Sectors")
+              .map(([category, items]) => (
+                <div key={category}>
+                  <div className="flex items-center gap-2 mb-3 md:mb-4">
+                    <div
+                      className={`w-1.5 h-1.5 rounded-full ${
+                        category === "Assets"
+                          ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
+                          : "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]"
+                      }`}
+                    />
+                    <span className="text-[10px] md:text-xs font-black uppercase tracking-wider text-foreground/60">
+                      {category === "Index"
+                        ? "지수 및 주요 지표"
+                        : category === "Assets"
+                          ? "안전자산 및 기타"
+                          : category}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 md:gap-4">
+                    {Object.entries(items).map(([name, item]) => (
+                      <AssetCard key={name} name={name} item={item} />
+                    ))}
+                  </div>
+                </div>
+              ))}
           </div>
         </div>
+
+        {/* Sector Heatmap-ish Flow (Only if Sectors exist) */}
+        {data.flow_data.Sectors && (
+          <div className="bg-card/40 border border-border-subtle rounded-[2rem] md:rounded-[2.5rem] p-5 md:p-7">
+            <div className="flex items-center justify-between mb-4 md:mb-6">
+              <div className="flex items-center gap-2">
+                <Layers className="w-4 h-4 md:w-5 md:h-5 text-accent" />
+                <h3 className="text-base md:text-lg font-black italic">
+                  {type === "domestic" ? "국내" : "미국"} 섹터별 돈의 쏠림
+                </h3>
+              </div>
+              <button
+                onClick={() =>
+                  setShareConfig({ isOpen: true, type: "sectors" })
+                }
+                className="p-2 hover:bg-muted rounded-xl transition-all"
+                title="섹터 쏠림 공유"
+              >
+                <Share2 className="w-3.5 h-3.5 text-foreground/40" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 md:gap-3">
+              {Object.entries(data.flow_data.Sectors).map(([name, item]) => (
+                <SectorCard key={name} name={name} item={item} />
+              ))}
+            </div>
+
+            <div className="mt-6 md:mt-8 p-4 bg-accent/5 rounded-2xl border border-accent/10">
+              <div className="flex items-center gap-2 mb-2">
+                <Activity className="w-3 h-3 md:w-3.5 md:h-3.5 text-accent" />
+                <span className="text-[10px] md:text-[11px] font-black text-accent uppercase tracking-wider">
+                  측정 방식
+                </span>
+              </div>
+              <p className="text-[10px] md:text-[11px] font-medium text-foreground/50 leading-relaxed">
+                *상대 거래량(Rel Vol)이 {type === "us" ? "1.5" : "1.0"}보다 크면
+                평소보다 많은 돈이 해당 섹터에 유입되고 있음을 의미합니다. 가격
+                상승과 높은 거래량이 동반될 때 진짜 '돈의 흐름'으로 판단합니다.
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Strategies */}
@@ -248,6 +271,7 @@ export function MoneyFlowTracker() {
         <MoneyFlowShareCard
           data={data}
           type={shareConfig.type}
+          marketType={type}
           onClose={() => setShareConfig({ ...shareConfig, isOpen: false })}
         />
       )}
