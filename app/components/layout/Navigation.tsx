@@ -16,6 +16,14 @@ import {
   Activity,
   BarChart3,
   ChevronDown,
+  Building2,
+  Library,
+  Flag,
+  DollarSign,
+  Banknote,
+  Globe,
+  Shuffle,
+  Waves,
 } from "lucide-react";
 
 export function Navigation() {
@@ -69,7 +77,7 @@ export function Navigation() {
     },
     // 국내 증시
     {
-      name: "K-공탐지수",
+      name: "공탐지수",
       href: "/kospi-fear-greed",
       icon: Gauge,
       desc: "KOSPI 시장의 심리 지수 추적",
@@ -107,10 +115,10 @@ export function Navigation() {
     },
     // 글로벌 매크로
     {
-      name: "안전자산 흐름",
+      name: "글로벌 투자심리",
       href: "/money-flow/safe",
       icon: Compass,
-      desc: "금, 달러 등 안전자산 추적",
+      desc: "현재 시장은, 안전자산vs위험자산? ",
     },
     {
       name: "환율분석 데스크",
@@ -121,7 +129,7 @@ export function Navigation() {
     {
       name: "한/미 금리 현황",
       href: "/interest-rate",
-      icon: Landmark,
+      icon: Flag,
       desc: "양국 금리 정보",
     },
   ];
@@ -242,7 +250,7 @@ export function Navigation() {
                         : "text-text-muted hover:text-foreground hover:bg-background/40"
                     }`}
                   >
-                    <TrendingUp className="w-4 h-4" />
+                    <DollarSign className="w-4 h-4" />
                     <span>미국 증시</span>
                     <ChevronDown
                       className={`w-3.5 h-3.5 transition-transform duration-300 ${
@@ -306,8 +314,8 @@ export function Navigation() {
                         : "text-text-muted hover:text-foreground hover:bg-background/40"
                     }`}
                   >
-                    <Compass className="w-4 h-4" />
-                    <span>글로벌 매크로</span>
+                    <Globe className="w-4 h-4" />
+                    <span>한미 공통</span>
                     <ChevronDown
                       className={`w-3.5 h-3.5 transition-transform duration-300 ${
                         activeDropdown === "macro" ? "rotate-180" : ""
@@ -535,7 +543,7 @@ export function Navigation() {
             <div className="flex items-center gap-2 ml-1">
               <Compass className="w-3 h-3 text-accent/50" />
               <h3 className="text-[10px] font-black text-text-muted/40 uppercase tracking-widest">
-                글로벌 매크로 지표
+                한미 공통
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">

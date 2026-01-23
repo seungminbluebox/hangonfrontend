@@ -12,6 +12,9 @@ import {
   ArrowRightLeft,
   ChevronRight,
   Share2,
+  Zap,
+  Shield,
+  ShieldAlert,
 } from "lucide-react";
 import { MoneyFlowShareCard } from "./MoneyFlowShareCard";
 
@@ -51,7 +54,7 @@ export function MoneyFlowTracker({
   const titleMap = {
     domestic: "국내 증시 자금 흐름💸",
     us: "미국 증시 자금 흐름💲",
-    safe: "안전자산 자금 흐름🪙",
+    safe: "글로벌 자금 선호도(Risk vs Safe) 🧭",
   };
   const title = titleMap[type];
 
@@ -155,6 +158,97 @@ export function MoneyFlowTracker({
         </div>
       </div>
 
+      {type === "safe" && data.flow_data.Risk && data.flow_data.Safe && (
+        <div className="bg-card/40 border border-border-subtle rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 flex flex-col gap-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Activity className="w-5 h-5 text-accent" />
+              <h3 className="text-lg font-black italic">글로벌 자금 움직임</h3>
+            </div>
+            <div className="flex items-center gap-1.5 opacity-30 italic">
+              <span className="text-[9px] md:text-[10px] font-black uppercase tracking-tight">
+                *거래량 기반
+              </span>
+            </div>
+          </div>
+
+          {(() => {
+            const riskVol = Object.values(data.flow_data.Risk).reduce(
+              (sum, item) => sum + item.rel_vol,
+              0,
+            );
+            const safeVol = Object.values(data.flow_data.Safe).reduce(
+              (sum, item) => sum + item.rel_vol,
+              0,
+            );
+            const totalVol = riskVol + safeVol;
+            const riskRatio = totalVol > 0 ? (riskVol / totalVol) * 100 : 50;
+            const safeRatio = 100 - riskRatio;
+
+            return (
+              <div className="space-y-6">
+                <div className="relative h-12 md:h-16 w-full bg-secondary/20 rounded-2xl md:rounded-[1.5rem] overflow-hidden flex">
+                  {/* Risk Bar */}
+                  <div
+                    className="h-full bg-gradient-to-r from-orange-600 to-orange-400 transition-all duration-1000 flex items-center justify-start pl-4 md:pl-6 gap-2"
+                    style={{ width: `${riskRatio}%` }}
+                  >
+                    <Zap className="w-4 h-4 md:w-5 md:h-5 text-white animate-pulse shrink-0" />
+                    <span className="text-sm md:text-lg font-black text-white italic">
+                      RISK
+                    </span>
+                  </div>
+                  {/* Safe Bar */}
+                  <div
+                    className="h-full bg-gradient-to-l from-blue-600 to-blue-400 transition-all duration-1000 flex items-center justify-end pr-4 md:pr-6 gap-2"
+                    style={{ width: `${safeRatio}%` }}
+                  >
+                    <span className="text-sm md:text-lg font-black text-white italic">
+                      SAFE
+                    </span>
+                    <Shield className="w-4 h-4 md:w-5 md:h-5 text-white animate-pulse shrink-0" />
+                  </div>
+
+                  {/* Tug-of-War Center Pointer */}
+                  <div className="absolute top-0 bottom-0 w-1 bg-white/40 left-1/2 -translate-x-1/2 z-10" />
+                </div>
+
+                <div className="flex justify-between items-center px-1">
+                  <div className="flex flex-col items-start">
+                    <span className="text-[10px] font-black text-orange-500 uppercase">
+                      위험자산 강도
+                    </span>
+                    <span className="text-2xl md:text-3xl font-black italic tracking-tighter text-orange-500">
+                      {Math.round(riskRatio)}%
+                    </span>
+                  </div>
+                  <div className="text-center bg-accent/10 px-4 py-2 rounded-xl flex flex-col">
+                    <span className="text-[10px] font-black opacity-40 uppercase">
+                      Sentiment
+                    </span>
+                    <span className="text-xs md:text-sm font-black text-accent">
+                      {riskRatio > 55
+                        ? "적극적 위험 선호"
+                        : riskRatio < 45
+                          ? "보수적 안전 선호"
+                          : "중립적 관망세"}
+                    </span>
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <span className="text-[10px] font-black text-blue-500 uppercase">
+                      안전자산 강도
+                    </span>
+                    <span className="text-2xl md:text-3xl font-black italic tracking-tighter text-blue-500">
+                      {Math.round(safeRatio)}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 items-start">
         {/* Risk vs Safe Flow */}
         <div className="bg-card/40 border border-border-subtle rounded-[2rem] md:rounded-[2.5rem] p-5 md:p-7">
@@ -174,17 +268,26 @@ export function MoneyFlowTracker({
             )}
           </div>
 
-          <div className="space-y-4 md:space-y-6">
+          <div
+            className={`grid gap-6 md:gap-8 ${Object.keys(data.flow_data).filter((k) => !["sectors", "mood", "score", "state"].includes(k.toLowerCase())).length > 1 ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1"}`}
+          >
             {Object.entries(data.flow_data)
-              .filter(([key]) => key !== "Sectors")
+              .filter(
+                ([key]) =>
+                  !["sectors", "mood", "score", "state"].includes(
+                    key.toLowerCase(),
+                  ),
+              )
               .map(([category, items]) => (
                 <div key={category}>
                   <div className="flex items-center gap-2 mb-3 md:mb-4">
                     <div
                       className={`w-1.5 h-1.5 rounded-full ${
-                        category === "Assets"
+                        category === "Assets" || category === "Safe"
                           ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
-                          : "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]"
+                          : category === "Risk"
+                            ? "bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.5)]"
+                            : "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]"
                       }`}
                     />
                     <span className="text-[10px] md:text-xs font-black uppercase tracking-wider text-foreground/60">
@@ -192,10 +295,16 @@ export function MoneyFlowTracker({
                         ? "지수 및 주요 지표"
                         : category === "Assets"
                           ? "안전자산 및 기타"
-                          : category}
+                          : category === "Risk"
+                            ? "위험 선호 (Risk-On)"
+                            : category === "Safe"
+                              ? "안전 선호 (Risk-Off)"
+                              : category}
                     </span>
                   </div>
-                  <div className="grid grid-cols-2 gap-3 md:gap-4">
+                  <div
+                    className={`grid gap-3 md:gap-4 ${Object.keys(data.flow_data).filter((k) => !["sectors", "mood", "score", "state"].includes(k.toLowerCase())).length > 1 ? "grid-cols-1" : "grid-cols-2"}`}
+                  >
                     {Object.entries(items).map(([name, item]) => (
                       <AssetCard key={name} name={name} item={item} />
                     ))}

@@ -55,21 +55,25 @@ export function MoneyFlowShareCard({
   const [shareTheme, setShareTheme] = useState<"light" | "dark">("light");
 
   const titleMap = {
-    domestic: "오늘의 국내 증시 자산 흐름🌊",
+    domestic: "오늘의 국내 증시 자산 흐름💸",
     us: "오늘의 미국 증시 자산 흐름💲",
-    safe: "오늘의 안전자산 흐름🪙",
+    safe: "글로벌 자금 심리 리포트(Risk vs Safe) 🧭",
   };
 
   const title = titleMap[marketType];
 
   const cardHeight =
     type === "assets"
-      ? 550
+      ? 450
       : type === "sectors"
         ? 500
-        : marketType === "domestic"
-          ? 530
-          : 580;
+        : marketType === "safe"
+          ? 480
+          : type === "report"
+            ? marketType === "domestic"
+              ? 500
+              : 550
+            : 470;
 
   useEffect(() => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -179,17 +183,69 @@ export function MoneyFlowShareCard({
               *vol: 상대 거래량
             </span>
           </div>
-          <div className="space-y-4">
+
+          {marketType === "safe" &&
+            data.flow_data.Risk &&
+            data.flow_data.Safe && (
+              <div className="mb-4 space-y-1.5 px-0.5">
+                {(() => {
+                  const riskVol = Object.values(data.flow_data.Risk).reduce(
+                    (sum, item) => sum + item.rel_vol,
+                    0,
+                  );
+                  const safeVol = Object.values(data.flow_data.Safe).reduce(
+                    (sum, item) => sum + item.rel_vol,
+                    0,
+                  );
+                  const total = riskVol + safeVol;
+                  const riskP = Math.round((riskVol / total) * 100);
+                  const safeP = 100 - riskP;
+                  return (
+                    <>
+                      <div className="flex justify-between items-end mb-1">
+                        <span className="text-[8px] font-black text-orange-500 italic uppercase">
+                          Risk-On {riskP}%
+                        </span>
+                        <span className="text-[8px] font-black text-blue-500 italic uppercase">
+                          {safeP}% Risk-Off
+                        </span>
+                      </div>
+                      <div className="h-3 w-full bg-secondary/20 rounded-full overflow-hidden flex border border-black/5 dark:border-white/10">
+                        <div
+                          className="h-full bg-orange-500"
+                          style={{ width: `${riskP}%` }}
+                        />
+                        <div
+                          className="h-full bg-blue-500"
+                          style={{ width: `${safeP}%` }}
+                        />
+                      </div>
+                    </>
+                  );
+                })()}
+              </div>
+            )}
+
+          <div
+            className={`grid gap-4 ${Object.keys(data.flow_data).filter((k) => !["sectors", "mood", "score", "state"].includes(k.toLowerCase())).length > 1 ? "grid-cols-2" : "grid-cols-1"}`}
+          >
             {Object.entries(data.flow_data)
-              .filter(([key]) => key !== "Sectors")
+              .filter(
+                ([key]) =>
+                  !["sectors", "mood", "score", "state"].includes(
+                    key.toLowerCase(),
+                  ),
+              )
               .map(([category, items]) => (
                 <div key={category} className="space-y-2">
                   <div className="flex items-center gap-2 px-1">
                     <div
                       className={`w-1.5 h-1.5 rounded-full ${
-                        category === "Assets"
+                        category === "Assets" || category === "Safe"
                           ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
-                          : "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]"
+                          : category === "Risk"
+                            ? "bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.5)]"
+                            : "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]"
                       }`}
                     />
                     <span className="text-[10px] font-black uppercase tracking-wider opacity-60">
@@ -197,10 +253,16 @@ export function MoneyFlowShareCard({
                         ? "지수 및 주요 지표"
                         : category === "Assets"
                           ? "안전자산 및 기타"
-                          : category}
+                          : category === "Risk"
+                            ? "위험 선호 (Risk-On)"
+                            : category === "Safe"
+                              ? "안전 선호 (Risk-Off)"
+                              : category}
                     </span>
                   </div>
-                  <div className="grid grid-cols-2 gap-2.5">
+                  <div
+                    className={`grid gap-2.5 ${Object.keys(data.flow_data).filter((k) => !["sectors", "mood", "score", "state"].includes(k.toLowerCase())).length > 1 ? "grid-cols-1" : "grid-cols-2"}`}
+                  >
                     {Object.entries(items).map(([name, item]) => (
                       <AssetCardMini
                         key={name}
@@ -274,30 +336,102 @@ export function MoneyFlowShareCard({
               </p>
             </div>
 
-            {/* Money Flow Section */}
-            <div className="bg-accent/5 rounded-[1.5rem] p-3.5 border border-accent/10">
-              <div className="flex justify-between items-center mb-3">
-                <div className="flex items-center gap-1.5">
-                  <ArrowRightLeft className="w-3 h-3 text-accent" />
-                  <span className="text-[10px] font-black italic text-accent uppercase tracking-tight">
-                    자금 흐름 현황
-                  </span>
-                </div>
-                <span className="text-[10px] font-bold opacity-30 italic">
-                  *vol: 상대 거래량
-                </span>
-              </div>
+            {/* Money Flow Section (Only for Safe Asset Sentiment) */}
+            {marketType === "safe" &&
+              data.flow_data.Risk &&
+              data.flow_data.Safe && (
+                <div className="bg-accent/5 rounded-[1.5rem] p-3.5 border border-accent/10">
+                  <div className="flex justify-between items-center mb-3">
+                    <div className="flex items-center gap-1.5">
+                      <ArrowRightLeft className="w-3 h-3 text-accent" />
+                      <span className="text-[10px] font-black italic text-accent uppercase tracking-tight">
+                        상대 거래량 기반 시장 심리
+                      </span>
+                    </div>
+                    <span className="text-[7px] font-bold opacity-30 italic">
+                      *vol: 20일 평균 대비 거래 강도
+                    </span>
+                  </div>
+                  <div className="space-y-1.5 px-0.5">
+                    {(() => {
+                      const riskVol = Object.values(data.flow_data.Risk).reduce(
+                        (sum, item) => sum + item.rel_vol,
+                        0,
+                      );
+                      const safeVol = Object.values(data.flow_data.Safe).reduce(
+                        (sum, item) => sum + item.rel_vol,
+                        0,
+                      );
+                      const total = riskVol + safeVol;
+                      const riskP = Math.round((riskVol / total) * 100);
+                      const safeP = 100 - riskP;
 
-              <div className="space-y-3">
+                      const cleanName = (name: string) =>
+                        name.split("(")[0].trim();
+
+                      const riskItems = Object.keys(data.flow_data.Risk)
+                        .map(cleanName)
+                        .join(", ");
+                      const safeItems = Object.keys(data.flow_data.Safe)
+                        .map(cleanName)
+                        .join(", ");
+
+                      return (
+                        <>
+                          <div className="flex justify-between items-end mb-1">
+                            <span className="text-[7px] font-black text-orange-500 italic uppercase">
+                              Risk {riskP}%
+                            </span>
+                            <span className="text-[7px] font-black text-blue-500 italic uppercase">
+                              {safeP}% Safe
+                            </span>
+                          </div>
+                          <div className="h-2 w-full bg-secondary/10 rounded-full overflow-hidden flex mb-2">
+                            <div
+                              className="h-full bg-orange-500"
+                              style={{ width: `${riskP}%` }}
+                            />
+                            <div
+                              className="h-full bg-blue-500"
+                              style={{ width: `${safeP}%` }}
+                            />
+                          </div>
+                          <div className="flex justify-between gap-4">
+                            <p className="text-[8px] font-bold text-orange-500/60 truncate flex-1 leading-tight">
+                              {riskItems}
+                            </p>
+                            <p className="text-[8px] font-bold text-blue-500/60 truncate flex-1 text-right leading-tight">
+                              {safeItems}
+                            </p>
+                          </div>
+                        </>
+                      );
+                    })()}
+                  </div>
+                </div>
+              )}
+
+            {/* 구성 종목 (Non-Safe Markets) */}
+            {marketType !== "safe" && (
+              <div className="space-y-4">
                 {Object.entries(data.flow_data)
-                  .filter(([key]) => key !== "Sectors")
+                  .filter(
+                    ([key]) =>
+                      !["mood", "score", "state", "sectors"].includes(
+                        key.toLowerCase(),
+                      ),
+                  )
                   .map(([category, items]) => (
-                    <div key={category} className="space-y-1.5">
-                      <div className="flex items-center gap-1.5 px-0.5">
-                        <span className="text-[8px] font-black uppercase tracking-wider opacity-40">
-                          {category === "Index"
-                            ? "Market Index"
-                            : "Asset Class"}
+                    <div key={category} className="space-y-2">
+                      <div className="flex items-center justify-between opacity-40">
+                        <div className="flex items-center gap-1.5">
+                          <div className="w-1 h-1 rounded-full bg-accent" />
+                          <span className="text-[8px] uppercase tracking-widest font-black">
+                            {category === "Index" ? "주요 지수" : category}
+                          </span>
+                        </div>
+                        <span className="text-[7px] font-bold italic">
+                          *vol: 상대 거래량 (1.0 기준)
                         </span>
                       </div>
                       <div className="grid grid-cols-2 gap-2">
@@ -313,7 +447,7 @@ export function MoneyFlowShareCard({
                     </div>
                   ))}
               </div>
-            </div>
+            )}
 
             {/* Analysis & Strategy in vertical stack */}
             <div className="flex flex-col gap-4 mt-1">
@@ -366,9 +500,9 @@ export function MoneyFlowShareCard({
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-6 flex flex-col items-center gap-6">
-          {/* Card Preview */}
-          <div className="relative group shrink-0">
+        <div className="px-4 bg-black/[0.02] dark:bg-white/[0.02] overflow-y-auto flex-1 flex flex-col items-center">
+          {/* Container for scaled preview */}
+          <div className="pt-8 pb-12 flex flex-col items-center scale-[0.65] xs:scale-[0.8] sm:scale-95 origin-top transition-all duration-300">
             <div
               ref={cardRef}
               className={`w-[360px] p-7 rounded-[35px] shadow-2xl relative overflow-hidden transition-colors duration-300 border flex flex-col justify-between ${
