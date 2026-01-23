@@ -12,6 +12,7 @@ export interface MarketData {
 const SYMBOLS = [
   { name: "KOSPI", symbol: "^KS11" },
   { name: "KOSDAQ", symbol: "^KQ11" },
+  { name: "코스피 200 선물", symbol: "^KS200" },
   { name: "S&P 500", symbol: "^GSPC" },
   { name: "NASDAQ", symbol: "^IXIC" },
   { name: "나스닥 선물", symbol: "NQ=F" },
@@ -24,7 +25,7 @@ const SYMBOLS = [
 
 async function fetchFromYahoo(symbol: string) {
   try {
-    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=5m&range=2d`;
+    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1m&range=1d`;
     const response = await fetch(url, {
       next: { revalidate: 10 }, // 10초 간격 캐싱
       headers: {

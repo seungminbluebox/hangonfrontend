@@ -85,8 +85,14 @@ export function Navigation() {
     {
       name: "국내 자금흐름",
       href: "/money-flow/domestic",
-      icon: Compass,
+      icon: Waves,
       desc: "한국 시장의 돈의 쏠림 분석",
+    },
+    {
+      name: "코스피 선물",
+      href: "/kospi-futures",
+      icon: Activity,
+      desc: "국내 시장의 선행지표",
     },
     // 미국 증시
     {
@@ -98,7 +104,7 @@ export function Navigation() {
     {
       name: "미국 자금흐름",
       href: "/money-flow/us",
-      icon: Compass,
+      icon: Waves,
       desc: "미국 섹터별 자금 유입 추적",
     },
     {
@@ -179,14 +185,16 @@ export function Navigation() {
                 >
                   <button
                     className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
-                      ["/kospi-fear-greed", "/money-flow/domestic"].includes(
-                        pathname,
-                      )
+                      [
+                        "/kospi-fear-greed",
+                        "/money-flow/domestic",
+                        "/kospi-futures",
+                      ].includes(pathname)
                         ? "text-accent"
                         : "text-text-muted hover:text-foreground hover:bg-background/40"
                     }`}
                   >
-                    <Landmark className="w-4 h-4" />
+                    <Flag className="w-4 h-4" />
                     <span>국내 증시</span>
                     <ChevronDown
                       className={`w-3.5 h-3.5 transition-transform duration-300 ${
@@ -204,7 +212,7 @@ export function Navigation() {
                     }`}
                   >
                     <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1 overflow-hidden">
-                      {navLinks.slice(1, 3).map((link) => {
+                      {navLinks.slice(1, 4).map((link) => {
                         const Icon = link.icon;
                         return (
                           <Link
@@ -268,7 +276,7 @@ export function Navigation() {
                     }`}
                   >
                     <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1">
-                      {navLinks.slice(3, 7).map((link) => {
+                      {navLinks.slice(4, 8).map((link) => {
                         const Icon = link.icon;
                         return (
                           <Link
@@ -332,7 +340,7 @@ export function Navigation() {
                     }`}
                   >
                     <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1">
-                      {navLinks.slice(7).map((link) => {
+                      {navLinks.slice(8).map((link) => {
                         const Icon = link.icon;
                         return (
                           <Link
@@ -453,13 +461,13 @@ export function Navigation() {
           {/* 카테고리 2: 국내 증시 */}
           <div className="space-y-3">
             <div className="flex items-center gap-2 ml-1">
-              <Landmark className="w-3 h-3 text-accent/50" />
+              <Flag className="w-3 h-3 text-accent/50" />
               <h3 className="text-[10px] font-black text-text-muted/40 uppercase tracking-widest">
                 국내 증시 Insight
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(1, 3).map((link, index) => {
+              {navLinks.slice(1, 4).map((link, index) => {
                 const Icon = link.icon;
                 return (
                   <Link
@@ -497,13 +505,13 @@ export function Navigation() {
           {/* 카테고리 3: 미국 증시 */}
           <div className="space-y-3">
             <div className="flex items-center gap-2 ml-1">
-              <TrendingUp className="w-3 h-3 text-accent/50" />
+              <DollarSign className="w-3 h-3 text-accent/50" />
               <h3 className="text-[10px] font-black text-text-muted/40 uppercase tracking-widest">
                 미국 증시 Trend
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(3, 7).map((link, index) => {
+              {navLinks.slice(4, 8).map((link, index) => {
                 const Icon = link.icon;
                 return (
                   <Link
@@ -517,7 +525,7 @@ export function Navigation() {
                     }`}
                     style={{
                       transitionDelay: isOpen
-                        ? `${(index + 4) * 100}ms`
+                        ? `${(index + 5) * 100}ms`
                         : "0ms",
                     }}
                   >
@@ -541,13 +549,13 @@ export function Navigation() {
           {/* 카테고리 4: 글로벌 매크로 */}
           <div className="space-y-3">
             <div className="flex items-center gap-2 ml-1">
-              <Compass className="w-3 h-3 text-accent/50" />
+              <Globe className="w-3 h-3 text-accent/50" />
               <h3 className="text-[10px] font-black text-text-muted/40 uppercase tracking-widest">
                 한미 공통
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(7).map((link, index) => {
+              {navLinks.slice(8).map((link, index) => {
                 const Icon = link.icon;
                 return (
                   <Link
@@ -561,7 +569,7 @@ export function Navigation() {
                     }`}
                     style={{
                       transitionDelay: isOpen
-                        ? `${(index + 8) * 100}ms`
+                        ? `${(index + 9) * 100}ms`
                         : "0ms",
                     }}
                   >
