@@ -32,7 +32,10 @@ export function InterestRateInfo({ initialData }: InterestRateInfoProps) {
   const [isChartShareModalOpen, setIsChartShareModalOpen] = useState(false);
   // 현재 날짜 정보
   const today = new Date();
-  const dateString = `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일`;
+  const dateString = today.toLocaleString("ko-KR", {
+    month: "numeric",
+    day: "numeric",
+  });
 
   const rates = {
     us: {
@@ -127,10 +130,10 @@ export function InterestRateInfo({ initialData }: InterestRateInfoProps) {
                 공유하기
               </span>
             </button>
-            <div className="flex items-center gap-2 px-4 py-2 bg-secondary/30 rounded-full border border-border-subtle w-fit backdrop-blur-sm">
+            <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 rounded-full border border-emerald-500/20 w-fit backdrop-blur-sm">
               <Clock className="w-3.5 h-3.5 text-emerald-500" />
-              <span className="text-[11px] font-black text-foreground/60 uppercase tracking-wider">
-                {dateString} (KST)
+              <span className="text-[11px] font-black text-emerald-500 uppercase tracking-wider">
+                {dateString} 업데이트됨
               </span>
             </div>
           </div>

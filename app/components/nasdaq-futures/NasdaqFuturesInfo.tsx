@@ -51,6 +51,12 @@ export function NasdaqFuturesInfo({
 }: NasdaqFuturesInfoProps) {
   const [data, setData] = React.useState(initialData);
   const [showShare, setShowShare] = React.useState(false);
+  const [lastCheckTime, setLastCheckTime] = React.useState<string>(
+    new Date().toLocaleString("ko-KR", {
+      month: "numeric",
+      day: "numeric",
+    }),
+  );
 
   // 10초마다 데이터 자동 갱신
   React.useEffect(() => {
@@ -64,6 +70,12 @@ export function NasdaqFuturesInfo({
           );
           if (nasdaqData) {
             setData(nasdaqData);
+            setLastCheckTime(
+              new Date().toLocaleString("ko-KR", {
+                month: "numeric",
+                day: "numeric",
+              }),
+            );
           }
         }
       } catch (error) {
@@ -87,18 +99,22 @@ export function NasdaqFuturesInfo({
                 <Activity className="w-5 h-5 text-accent" />
               </div>
               <div>
-                <h2 className="text-xl font-black italic tracking-tight leading-none mb-1">
+                <h2 className="text-xl font-black italic tracking-tight leading-none mb-1.5">
                   나스닥 100 선물
                 </h2>
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest">
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest leading-none">
                     Nasdaq 100 Futures (NQ=F)
                   </span>
-                  <div className="w-1 h-1 rounded-full bg-foreground/20" />
-                  <div className="flex items-center gap-1">
-                    <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-                    <span className="text-[10px] font-bold text-red-500 uppercase tracking-widest">
-                      Live
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1 bg-red-500/5 px-2 py-0.5 rounded-md border border-red-500/10 shrink-0">
+                      <div className="w-1 h-1 rounded-full bg-red-500 animate-pulse" />
+                      <span className="text-[9px] font-bold text-red-500 uppercase tracking-widest">
+                        Live
+                      </span>
+                    </div>
+                    <span className="text-[9px] font-bold text-foreground/30 uppercase tracking-widest">
+                      {lastCheckTime} 업데이트됨
                     </span>
                   </div>
                 </div>

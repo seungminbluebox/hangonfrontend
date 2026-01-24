@@ -115,8 +115,12 @@ export function MoneyFlowTracker({
               <h2 className="text-xl md:text-2xl font-black italic tracking-tight leading-tight">
                 {title}
               </h2>
-              <span className="text-[9px] md:text-[10px] font-bold italic opacity-40">
-                {new Date().toLocaleDateString("ko-KR")} 기준
+              <span className="text-[9px] md:text-[10px] font-bold text-foreground/30 uppercase tracking-widest mt-0.5">
+                {new Date().toLocaleString("ko-KR", {
+                  month: "numeric",
+                  day: "numeric",
+                })}{" "}
+                업데이트됨
               </span>
             </div>
           </div>

@@ -34,6 +34,12 @@ export function FearGreedIndex({
   const [data, setData] = useState<FearGreedData | null>(null);
   const [loading, setLoading] = useState(true);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [lastCheckTime, setLastCheckTime] = useState<string>(
+    new Date().toLocaleString("ko-KR", {
+      month: "numeric",
+      day: "numeric",
+    }),
+  );
 
   const targetId = type === "kospi" ? 2 : 1;
 
@@ -129,11 +135,16 @@ export function FearGreedIndex({
       <div className="flex items-center justify-between px-2">
         <div className="flex items-center gap-2">
           <Microscope className="w-5 h-5 text-accent" />
-          <h2 className="text-xl font-black tracking-tight italic">
-            <span className="text-accent">
-              {type === "kospi" ? "코스피" : ""} 공탐지수
-            </span>{" "}
-          </h2>
+          <div className="flex flex-col">
+            <h2 className="text-xl font-black tracking-tight italic">
+              <span className="text-accent">
+                {type === "kospi" ? "코스피" : ""} 공탐지수
+              </span>{" "}
+            </h2>
+            <span className="text-[10px] font-bold text-foreground/30 leading-none">
+              {lastCheckTime} 업데이트됨
+            </span>
+          </div>
         </div>
         <button
           onClick={() => setShowShareModal(true)}

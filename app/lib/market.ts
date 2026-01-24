@@ -25,7 +25,7 @@ const SYMBOLS = [
 
 async function fetchFromYahoo(symbol: string) {
   try {
-    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1m&range=1d`;
+    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1m&range=5d`;
     const response = await fetch(url, {
       next: { revalidate: 10 }, // 10초 간격 캐싱
       headers: {

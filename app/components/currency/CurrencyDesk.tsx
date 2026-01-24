@@ -57,6 +57,12 @@ export function CurrencyDesk({
   const [liveData, setLiveData] = useState<MarketData | undefined>(
     initialLiveData,
   );
+  const [lastCheckTime, setLastCheckTime] = useState<string>(
+    new Date().toLocaleString("ko-KR", {
+      month: "numeric",
+      day: "numeric",
+    }),
+  );
 
   // 10초마다 라이브 가격 데이터 갱신
   useEffect(() => {
@@ -70,6 +76,12 @@ export function CurrencyDesk({
           );
           if (usdData) {
             setLiveData(usdData);
+            setLastCheckTime(
+              new Date().toLocaleString("ko-KR", {
+                month: "numeric",
+                day: "numeric",
+              }),
+            );
           }
         }
       } catch (err) {
@@ -133,7 +145,7 @@ export function CurrencyDesk({
     <div className="w-full space-y-4 md:space-y-6">
       {/* Header & AI Report */}
       <div className="bg-gradient-to-br from-blue-600/10 via-background to-background border border-blue-500/20 rounded-[2rem] p-5 md:p-8 shadow-sm">
-        <div className="flex items-center justify-between mb-6 md:mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-8">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-blue-500/20 flex items-center justify-center shrink-0">
               <DollarSign className="w-5 h-5 md:w-6 md:h-6 text-blue-500" />
@@ -143,20 +155,25 @@ export function CurrencyDesk({
                 <h2 className="text-xl md:text-3xl font-black italic tracking-tight">
                   원/달러 환율 리포트
                 </h2>
-                <div className="flex items-center gap-1.5 px-2 py-0.5 bg-red-500/10 rounded-full">
+                <div className="flex items-center gap-1.5 px-2 py-0.5 bg-red-500/10 rounded-full shrink-0">
                   <div className="w-1 h-1 rounded-full bg-red-500 animate-pulse" />
                   <span className="text-[9px] font-black text-red-500 uppercase tracking-wider">
                     Live
                   </span>
                 </div>
               </div>
-              <p className="text-[10px] md:text-xs font-bold text-foreground/40 uppercase tracking-widest mt-0.5">
-                USD/KRW Analysis
-              </p>
+              <div className="flex items-center gap-2 mt-0.5">
+                <p className="text-[10px] md:text-xs font-bold text-foreground/40 uppercase tracking-widest">
+                  USD/KRW Analysis
+                </p>
+                <span className="text-[10px] font-bold text-foreground/30 border border-foreground/10 px-1.5 py-0.5 rounded">
+                  {lastCheckTime} 업데이트됨
+                </span>
+              </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 self-end sm:self-center">
             <button
               onClick={() => setShowShare(true)}
               className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-500 rounded-xl transition-all text-sm font-black group"

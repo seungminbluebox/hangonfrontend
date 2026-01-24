@@ -58,6 +58,12 @@ export function PutCallRatioTracker() {
   const [loading, setLoading] = useState(true);
   const [isAnalysisExpanded, setIsAnalysisExpanded] = useState(true);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [lastCheckTime, setLastCheckTime] = useState<string>(
+    new Date().toLocaleString("ko-KR", {
+      month: "numeric",
+      day: "numeric",
+    }),
+  );
 
   useEffect(() => {
     async function fetchData() {
@@ -164,11 +170,14 @@ export function PutCallRatioTracker() {
                 PUT/CALL RATIO{" "}
                 <span className="not-italic opacity-60 ml-1">풋콜 비율</span>
               </span>
-              {latestDate && (
-                <span className="text-[10px] font-bold text-foreground/20 ml-1">
-                  | {latestDate} 데이터
+              <div className="flex flex-col ml-1">
+                <span className="text-[10px] font-bold text-foreground/40">
+                  {lastCheckTime} 업데이트됨
                 </span>
-              )}
+                <span className="text-[9px] font-bold text-foreground/20 italic">
+                  * 1일 지연 데이터 (미 증시 마감 후 집계)
+                </span>
+              </div>
             </div>
             <div className="flex items-baseline gap-4">
               <h2 className="text-6xl md:text-8xl font-black italic tracking-tighter">
