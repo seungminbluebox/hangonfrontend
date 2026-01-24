@@ -462,8 +462,8 @@ export function Navigation() {
           <div className="space-y-3">
             <div className="flex items-center gap-2 ml-1">
               <Flag className="w-3 h-3 text-accent/50" />
-              <h3 className="text-[10px] font-black text-text-muted/40 uppercase tracking-widest">
-                국내 증시 Insight
+              <h3 className="text-[13px] font-black text-text-muted/40 uppercase tracking-widest">
+                국내 증시
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
@@ -506,8 +506,8 @@ export function Navigation() {
           <div className="space-y-3">
             <div className="flex items-center gap-2 ml-1">
               <DollarSign className="w-3 h-3 text-accent/50" />
-              <h3 className="text-[10px] font-black text-text-muted/40 uppercase tracking-widest">
-                미국 증시 Trend
+              <h3 className="text-[13px] font-black text-text-muted/40 uppercase tracking-widest">
+                미국 증시
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
@@ -550,7 +550,7 @@ export function Navigation() {
           <div className="space-y-3">
             <div className="flex items-center gap-2 ml-1">
               <Globe className="w-3 h-3 text-accent/50" />
-              <h3 className="text-[10px] font-black text-text-muted/40 uppercase tracking-widest">
+              <h3 className="text-[13px] font-black text-text-muted/40 uppercase tracking-widest">
                 한미 공통
               </h3>
             </div>
