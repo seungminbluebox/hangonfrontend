@@ -14,8 +14,7 @@ export default async function InterestRatePage() {
   const rates = await getInterestRates();
 
   return (
-    <main className="min-h-screen bg-background">
-      <Navigation />
+    <main className="min-h-screen bg-background text-foreground">
       <div className="max-w-4xl mx-auto px-4 sm:px-8 pt-6 md:pt-32 pb-20">
         <BackButton />
 

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function CurrencyDeskPage() {
-  const marketData = await getMarketData();
+  const marketData = await getMarketData(["원/달러 환율"], true);
   const usdData = marketData.find((m) => m.name === "원/달러 환율");
 
   const jsonLd = {
@@ -35,7 +35,6 @@ export default async function CurrencyDeskPage() {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <Navigation />
       <div className="max-w-6xl mx-auto px-4 sm:px-8 pt-6 md:pt-32 pb-20">
         <BackButton />
         <header className="mb-10 md:mb-16">

@@ -7,8 +7,6 @@ import { PutCallRatioTracker } from "@/app/components/put-call-ratio/PutCallRati
 export default function PutCallRatioPage() {
   return (
     <main className="min-h-screen bg-background text-foreground pb-32">
-      <Navigation />
-
       <div className="max-w-4xl mx-auto px-4 md:px-6 pt-6 md:pt-32 space-y-8 md:space-y-12">
         <BackButton />
 

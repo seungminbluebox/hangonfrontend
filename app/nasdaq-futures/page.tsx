@@ -11,13 +11,12 @@ export const metadata: Metadata = {
 };
 
 export default async function NasdaqFuturesPage() {
-  const marketData = await getMarketData();
+  const marketData = await getMarketData(["나스닥"], true);
   const nasdaqFutures = marketData.find((m) => m.name === "나스닥");
 
   if (!nasdaqFutures) {
     return (
       <main className="min-h-screen bg-background">
-        <Navigation />
         <div className="max-w-6xl mx-auto px-4 sm:px-8 pt-24 md:pt-32 pb-20">
           <BackButton />
           <p className="text-foreground/50 font-bold">
@@ -30,7 +29,6 @@ export default async function NasdaqFuturesPage() {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <Navigation />
       <div className="max-w-6xl mx-auto px-4 sm:px-8 pt-24 md:pt-32 pb-20">
         <BackButton />
 

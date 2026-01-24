@@ -64,16 +64,16 @@ export function CurrencyDesk({
     }),
   );
 
-  // 10초마다 라이브 가격 데이터 갱신
+  // 1분마다 라이브 가격 데이터 갱신
   useEffect(() => {
     const pollInterval = setInterval(async () => {
       try {
-        const response = await fetch("/api/market");
+        const response = await fetch(
+          `/api/market?symbols=${encodeURIComponent("원/달러 환율")}&full=true`,
+        );
         if (response.ok) {
           const marketData = await response.json();
-          const usdData = marketData.find(
-            (m: any) => m.name === "원/달러 환율",
-          );
+          const usdData = marketData[0];
           if (usdData) {
             setLiveData(usdData);
             setLastCheckTime(
@@ -87,7 +87,7 @@ export function CurrencyDesk({
       } catch (err) {
         console.error("Live data polling error:", err);
       }
-    }, 10000);
+    }, 60000);
 
     return () => clearInterval(pollInterval);
   }, []);

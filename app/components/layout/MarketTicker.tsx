@@ -18,11 +18,21 @@ export function MarketTicker({ data: initialData }: { data: MarketData[] }) {
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [liveData, setLiveData] = React.useState<MarketData[]>(initialData);
 
-  // Poll for live data every 10 seconds
+  // Poll for live data every 1 minute
   React.useEffect(() => {
     const pollInterval = setInterval(async () => {
       try {
-        const response = await fetch("/api/market");
+        const symbols = [
+          "KOSPI",
+          "S&P 500",
+          "나스닥",
+          "원/달러 환율",
+          "비트코인",
+          "금 가격",
+        ].join(",");
+        const response = await fetch(
+          `/api/market?symbols=${encodeURIComponent(symbols)}`,
+        );
         if (response.ok) {
           const newData = await response.json();
           if (Array.isArray(newData)) {
@@ -32,7 +42,7 @@ export function MarketTicker({ data: initialData }: { data: MarketData[] }) {
       } catch (error) {
         console.error("Failed to poll market data:", error);
       }
-    }, 10000);
+    }, 60000);
 
     return () => clearInterval(pollInterval);
   }, []);

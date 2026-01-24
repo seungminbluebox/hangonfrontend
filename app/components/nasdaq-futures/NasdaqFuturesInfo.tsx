@@ -58,14 +58,16 @@ export function NasdaqFuturesInfo({
     }),
   );
 
-  // 10초마다 데이터 자동 갱신
+  // 1분마다 데이터 자동 갱신
   React.useEffect(() => {
     const pollInterval = setInterval(async () => {
       try {
-        const response = await fetch("/api/market");
+        const response = await fetch(
+          `/api/market?symbols=${encodeURIComponent("나스닥")}&full=true`,
+        );
         if (response.ok) {
           const marketData = await response.json();
-          const nasdaqData = marketData.find((m: any) => m.name === "나스닥");
+          const nasdaqData = marketData[0];
           if (nasdaqData) {
             setData(nasdaqData);
             setLastCheckTime(
@@ -79,7 +81,7 @@ export function NasdaqFuturesInfo({
       } catch (error) {
         console.error("Polling error:", error);
       }
-    }, 10000);
+    }, 60000);
 
     return () => clearInterval(pollInterval);
   }, []);

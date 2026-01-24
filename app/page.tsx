@@ -64,14 +64,25 @@ export default async function Home({
   const startOfDay = `${targetDate}T00:00:00Z`;
   const endOfDay = `${targetDate}T23:59:59Z`;
 
-  const { data: news, error } = await supabase
-    .from("daily_news")
-    .select("*")
-    .filter("created_at", "gte", startOfDay)
-    .filter("created_at", "lte", endOfDay)
-    .order("created_at", { ascending: false });
+  // 데이터 페칭 병렬화 및 필요한 마켓 데이터만 요청
+  const [newsResponse, marketData] = await Promise.all([
+    supabase
+      .from("daily_news")
+      .select("*")
+      .filter("created_at", "gte", startOfDay)
+      .filter("created_at", "lte", endOfDay)
+      .order("created_at", { ascending: false }),
+    getMarketData([
+      "KOSPI",
+      "S&P 500",
+      "나스닥",
+      "원/달러 환율",
+      "비트코인",
+      "금 가격",
+    ]),
+  ]);
 
-  const marketData = await getMarketData();
+  const { data: news, error } = newsResponse;
 
   // [추가] 검색 엔진을 위한 구조화된 데이터 (JSON-LD) 생성
   const jsonLd = {

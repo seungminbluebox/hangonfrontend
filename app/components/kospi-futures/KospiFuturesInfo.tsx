@@ -56,16 +56,18 @@ export function KospiFuturesInfo({ data: initialData }: KospiFuturesInfoProps) {
     }),
   );
 
-  // 10초마다 데이터 자동 갱신
+  // 1분마다 데이터 자동 갱신
   React.useEffect(() => {
     const pollInterval = setInterval(async () => {
       try {
-        const response = await fetch("/api/market");
+        const response = await fetch(
+          `/api/market?symbols=${encodeURIComponent(
+            "코스피 200 선물",
+          )}&full=true`,
+        );
         if (response.ok) {
           const marketData = await response.json();
-          const kospiData = marketData.find(
-            (m: any) => m.name === "코스피 200 선물",
-          );
+          const kospiData = marketData[0];
           if (kospiData) {
             setData(kospiData);
             setLastCheckTime(
@@ -79,7 +81,7 @@ export function KospiFuturesInfo({ data: initialData }: KospiFuturesInfoProps) {
       } catch (error) {
         console.error("Polling error:", error);
       }
-    }, 10000);
+    }, 60000);
 
     return () => clearInterval(pollInterval);
   }, []);
