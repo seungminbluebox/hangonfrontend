@@ -14,12 +14,11 @@ const SYMBOLS = [
   { name: "KOSDAQ", symbol: "^KQ11" },
   { name: "코스피 200 선물", symbol: "^KS200" },
   { name: "S&P 500", symbol: "^GSPC" },
-  { name: "NASDAQ", symbol: "^IXIC" },
-  { name: "나스닥 선물", symbol: "NQ=F" },
+  { name: "나스닥", symbol: "NQ=F" },
   { name: "다우존스", symbol: "^DJI" },
   { name: "원/달러 환율", symbol: "USDKRW=X" },
   { name: "비트코인", symbol: "BTC-USD" },
-  { name: "금 가격(온스)", symbol: "GC=F" },
+  { name: "금 가격", symbol: "GC=F" },
   { name: "WTI 원유", symbol: "CL=F" },
 ];
 

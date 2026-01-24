@@ -65,9 +65,7 @@ export function NasdaqFuturesInfo({
         const response = await fetch("/api/market");
         if (response.ok) {
           const marketData = await response.json();
-          const nasdaqData = marketData.find(
-            (m: any) => m.name === "나스닥 선물",
-          );
+          const nasdaqData = marketData.find((m: any) => m.name === "나스닥");
           if (nasdaqData) {
             setData(nasdaqData);
             setLastCheckTime(

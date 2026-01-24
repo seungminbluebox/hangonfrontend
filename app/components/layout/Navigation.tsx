@@ -108,7 +108,7 @@ export function Navigation() {
       desc: "미국 섹터별 자금 유입 추적",
     },
     {
-      name: "나스닥 선물",
+      name: "나스닥",
       href: "/nasdaq-futures",
       icon: Activity,
       desc: "미국 시장의 선행지표",

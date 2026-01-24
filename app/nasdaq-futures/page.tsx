@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default async function NasdaqFuturesPage() {
   const marketData = await getMarketData();
-  const nasdaqFutures = marketData.find((m) => m.name === "나스닥 선물");
+  const nasdaqFutures = marketData.find((m) => m.name === "나스닥");
 
   if (!nasdaqFutures) {
     return (

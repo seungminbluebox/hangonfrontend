@@ -59,6 +59,18 @@ export function MarketTicker({ data: initialData }: { data: MarketData[] }) {
     return null;
   }
 
+  // 요청된 6가지 지표만 필터링
+  const filteredData = displayData.filter((item) =>
+    [
+      "KOSPI",
+      "S&P 500",
+      "나스닥",
+      "원/달러 환율",
+      "비트코인",
+      "금 가격",
+    ].includes(item.name),
+  );
+
   return (
     <div className="w-full bg-card/40 border border-border-subtle rounded-2xl overflow-hidden shadow-sm">
       {/* Summary Bar - Ticker Style when closed */}
@@ -81,7 +93,7 @@ export function MarketTicker({ data: initialData }: { data: MarketData[] }) {
               <div className="flex-1 overflow-hidden relative">
                 <div className="animate-marquee group-hover:[animation-play-state:paused] flex items-center gap-8 pr-8">
                   {/* 원활한 루프를 위해 데이터를 두 번 반복 */}
-                  {[...displayData, ...displayData].map((item, idx) => (
+                  {[...filteredData, ...filteredData].map((item, idx) => (
                     <div
                       key={`${item.name}-${idx}`}
                       className="flex items-center gap-1.5 whitespace-nowrap"
@@ -161,9 +173,9 @@ export function MarketTicker({ data: initialData }: { data: MarketData[] }) {
         <div className="p-4 pt-4">
           <div className="w-full overflow-x-auto no-scrollbar">
             <div className="flex gap-3 min-w-max pb-1">
-              {displayData.map((item) => {
+              {filteredData.map((item) => {
                 const getLink = (name: string) => {
-                  if (name === "나스닥 선물") return "/nasdaq-futures";
+                  if (name === "나스닥") return "/nasdaq-futures";
                   if (name === "원/달러 환율") return "/currency-desk";
                   if (name === "KOSPI") return "/kospi-fear-greed";
                   return null;
