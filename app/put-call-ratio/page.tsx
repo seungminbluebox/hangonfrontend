@@ -40,7 +40,7 @@ export default function PutCallRatioPage() {
 
         {/* Content Wrapper */}
         <div className="relative">
-          <PutCallRatioTracker />
+          <PutCallRatioTracker market="US" />
         </div>
 
         {/* Educational Content */}

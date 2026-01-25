@@ -52,7 +52,11 @@ interface PCRAnalysis {
   updated_at: string;
 }
 
-export function PutCallRatioTracker() {
+interface PutCallRatioTrackerProps {
+  market: "US" | "KR";
+}
+
+export function PutCallRatioTracker({ market }: PutCallRatioTrackerProps) {
   const [history, setHistory] = useState<PCRHistory[]>([]);
   const [analysis, setAnalysis] = useState<PCRAnalysis | null>(null);
   const [loading, setLoading] = useState(true);
@@ -67,27 +71,40 @@ export function PutCallRatioTracker() {
 
   useEffect(() => {
     async function fetchData() {
+      setLoading(true);
+      const historyTable = market === "US" ? "pcr_history" : "kr_pcr_history";
+      const analysisTable =
+        market === "US" ? "pcr_analysis" : "kr_pcr_analysis";
+
       try {
         // 1. 히스토리 데이터 (최근 60일)
         const { data: historyData, error: hError } = await supabase
-          .from("pcr_history")
+          .from(historyTable)
           .select("*")
           .order("date", { ascending: false })
           .limit(60);
 
         if (hError) throw hError;
-        // 최신순으로 가져온 데이터를 과거순으로 뒤집어서 차트에 표시
         setHistory(historyData ? [...historyData].reverse() : []);
 
         // 2. AI 분석 결과
         const { data: analysisData, error: aError } = await supabase
-          .from("pcr_analysis")
+          .from(analysisTable)
           .select("*")
           .eq("id", 1)
           .single();
 
         if (aError && aError.code !== "PGRST116") throw aError;
         setAnalysis(analysisData);
+
+        setLastCheckTime(
+          new Date().toLocaleString("ko-KR", {
+            month: "numeric",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+          }),
+        );
       } catch (err) {
         console.error("Error fetching PCR data:", err);
       } finally {
@@ -96,7 +113,7 @@ export function PutCallRatioTracker() {
     }
 
     fetchData();
-  }, []);
+  }, [market]);
 
   if (loading) {
     return (
@@ -119,11 +136,14 @@ export function PutCallRatioTracker() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between px-2">
-        <div className="flex items-center gap-2">
-          <TrendingUp className="w-5 h-5 text-accent" />
-          <h2 className="text-xl font-black tracking-tight italic">
-            시장 <span className="text-accent">풋/콜 분석</span>
-          </h2>
+        <div className="flex flex-col md:flex-row md:items-center gap-4">
+          <div className="flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-accent" />
+            <h2 className="text-xl font-black tracking-tight italic">
+              {market === "US" ? "미국" : "국내"} 시장{" "}
+              <span className="text-accent">풋/콜 분석</span>
+            </h2>
+          </div>
         </div>
         <button
           onClick={() => setShowShareModal(true)}
@@ -175,7 +195,9 @@ export function PutCallRatioTracker() {
                   {lastCheckTime} 업데이트됨
                 </span>
                 <span className="text-[9px] font-bold text-foreground/20 italic">
-                  * 1일 지연 데이터 (미 증시 마감 후 집계)
+                  {market === "US"
+                    ? "* 1일 지연 데이터 (미 증시 마감 후 집계)"
+                    : "* 일일 거래대금 합산 데이터 (KRX)"}
                 </span>
               </div>
             </div>

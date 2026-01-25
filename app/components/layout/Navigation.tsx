@@ -83,7 +83,7 @@ export function Navigation() {
       desc: "KOSPI 시장의 심리 지수 추적",
     },
     {
-      name: "국내 자금흐름",
+      name: "자금흐름",
       href: "/money-flow/domestic",
       icon: Waves,
       desc: "한국 시장의 돈의 쏠림 분석",
@@ -102,7 +102,7 @@ export function Navigation() {
       desc: "미국 시장의 탐욕과 공포",
     },
     {
-      name: "미국 자금흐름",
+      name: "자금흐름",
       href: "/money-flow/us",
       icon: Waves,
       desc: "미국 섹터별 자금 유입 추적",
@@ -119,24 +119,24 @@ export function Navigation() {
       icon: BarChart3,
       desc: "옵션 시장 투자 심리",
     },
-    // 글로벌 매크로
+    // 한미 공통
     {
-      name: "글로벌 투자심리",
-      href: "/money-flow/safe",
-      icon: Compass,
-      desc: "현재 시장은, 안전자산vs위험자산? ",
-    },
-    {
-      name: "환율분석 데스크",
+      name: "환율분석",
       href: "/currency-desk",
       icon: RefreshCcw,
       desc: "스마트한 환전 타이밍 중계",
     },
     {
-      name: "한/미 금리 현황",
+      name: "금리",
       href: "/interest-rate",
       icon: Flag,
       desc: "양국 금리 정보",
+    },
+    {
+      name: "글로벌 투자심리",
+      href: "/money-flow/safe",
+      icon: Compass,
+      desc: "현재 시장은, 안전자산vs위험자산? ",
     },
   ];
 
@@ -313,10 +313,9 @@ export function Navigation() {
                   <button
                     className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
                       [
-                        "/money-flow/safe",
                         "/currency-desk",
                         "/interest-rate",
-                        "/market-weather",
+                        "/money-flow/safe",
                       ].includes(pathname)
                         ? "text-accent"
                         : "text-text-muted hover:text-foreground hover:bg-background/40"
