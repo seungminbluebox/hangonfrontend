@@ -94,6 +94,13 @@ export function Navigation() {
       icon: Activity,
       desc: "국내 시장의 선행지표",
     },
+    {
+      name: "빛투 현황",
+      href: "/credit-balance",
+      icon: BarChart3,
+      desc: "개인 투자자의 신용융자 잔고 추적",
+    },
+
     // 미국 증시
     {
       name: "공탐지수",
@@ -188,6 +195,7 @@ export function Navigation() {
                       [
                         "/kospi-fear-greed",
                         "/money-flow/domestic",
+                        "/credit-balance",
                         "/kospi-futures",
                       ].includes(pathname)
                         ? "text-accent"
@@ -212,7 +220,7 @@ export function Navigation() {
                     }`}
                   >
                     <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1 overflow-hidden">
-                      {navLinks.slice(1, 4).map((link) => {
+                      {navLinks.slice(1, 5).map((link) => {
                         const Icon = link.icon;
                         return (
                           <Link
@@ -276,7 +284,7 @@ export function Navigation() {
                     }`}
                   >
                     <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1">
-                      {navLinks.slice(4, 8).map((link) => {
+                      {navLinks.slice(5, 9).map((link) => {
                         const Icon = link.icon;
                         return (
                           <Link
@@ -339,7 +347,7 @@ export function Navigation() {
                     }`}
                   >
                     <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1">
-                      {navLinks.slice(8).map((link) => {
+                      {navLinks.slice(9).map((link) => {
                         const Icon = link.icon;
                         return (
                           <Link
@@ -466,7 +474,7 @@ export function Navigation() {
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(1, 4).map((link, index) => {
+              {navLinks.slice(1, 5).map((link, index) => {
                 const Icon = link.icon;
                 return (
                   <Link
@@ -510,7 +518,7 @@ export function Navigation() {
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(4, 8).map((link, index) => {
+              {navLinks.slice(5, 9).map((link, index) => {
                 const Icon = link.icon;
                 return (
                   <Link
@@ -524,7 +532,7 @@ export function Navigation() {
                     }`}
                     style={{
                       transitionDelay: isOpen
-                        ? `${(index + 5) * 100}ms`
+                        ? `${(index + 6) * 100}ms`
                         : "0ms",
                     }}
                   >
@@ -554,7 +562,7 @@ export function Navigation() {
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(8).map((link, index) => {
+              {navLinks.slice(9).map((link, index) => {
                 const Icon = link.icon;
                 return (
                   <Link
@@ -568,7 +576,7 @@ export function Navigation() {
                     }`}
                     style={{
                       transitionDelay: isOpen
-                        ? `${(index + 9) * 100}ms`
+                        ? `${(index + 10) * 100}ms`
                         : "0ms",
                     }}
                   >
