@@ -136,9 +136,9 @@ export function MoneyFlowTracker({
           {data.summary}
         </p>
         <div className="relative">
-          <p
-            className={`text-sm md:text-[15px] leading-relaxed text-foreground/70 font-medium whitespace-pre-line border-t border-accent/10 pt-4 transition-all duration-300 ${
-              !showFullAnalysis ? "max-h-24 overflow-hidden" : "max-h-[1000px]"
+          <div
+            className={`text-sm md:text-[15px] leading-relaxed text-foreground/70 font-medium border-t border-accent/10 pt-4 transition-all duration-300 space-y-4 ${
+              !showFullAnalysis ? "max-h-24 overflow-hidden" : "max-h-[1500px]"
             }`}
             style={
               !showFullAnalysis
@@ -149,8 +149,19 @@ export function MoneyFlowTracker({
                 : {}
             }
           >
-            {data.analysis}
-          </p>
+            {data.analysis
+              .split(". ")
+              .filter((line) => line.trim().length > 0)
+              .map((line, index) => (
+                <p key={index} className="flex gap-2">
+                  <span className="text-accent shrink-0">•</span>
+                  <span>
+                    {line.trim()}
+                    {line.trim().endsWith(".") ? "" : "."}
+                  </span>
+                </p>
+              ))}
+          </div>
           {!showFullAnalysis && (
             <button
               onClick={() => setShowFullAnalysis(true)}

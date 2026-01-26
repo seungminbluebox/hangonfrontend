@@ -161,9 +161,7 @@ export function CreditBalanceShareCard({ data, onClose }: ShareCardProps) {
               {/* Main Title */}
               <div className="mb-6 shrink-0 relative z-10">
                 <h2 className="text-[20px] font-black italic tracking-tighter leading-tight">
-                  국장 예탁금대비
-                  <br />
-                  신용비율 추이
+                  국장 예탁금대비 신용비율 추이
                 </h2>
               </div>
 

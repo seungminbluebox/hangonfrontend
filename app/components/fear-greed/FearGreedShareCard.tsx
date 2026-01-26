@@ -309,7 +309,7 @@ export function FearGreedShareCard({
 
                 <div className="space-y-1.5 px-2 text-center">
                   <h3
-                    className={`text-[20px] font-black italic leading-tight tracking-tighter break-keep transition-colors ${
+                    className={`mb-2 text-[20px] font-black italic leading-tight tracking-tighter break-keep transition-colors ${
                       shareTheme === "light" ? "text-neutral-900" : "text-white"
                     }`}
                   >

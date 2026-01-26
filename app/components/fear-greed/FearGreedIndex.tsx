@@ -237,9 +237,23 @@ export function FearGreedIndex({
             <h3 className="text-xl font-black italic mb-4 leading-tight">
               {data.title}
             </h3>
-            <p className="text-[15px] leading-relaxed text-foreground/80 font-medium whitespace-pre-line">
-              {data.analysis}
-            </p>
+            <div className="space-y-4">
+              {data.analysis
+                .split(". ")
+                .filter((line) => line.trim().length > 0)
+                .map((line, index) => (
+                  <p
+                    key={index}
+                    className="text-[15px] leading-relaxed text-foreground/80 font-medium flex gap-2"
+                  >
+                    <span className="text-accent shrink-0">•</span>
+                    <span>
+                      {line.trim()}
+                      {line.trim().endsWith(".") ? "" : "."}
+                    </span>
+                  </p>
+                ))}
+            </div>
           </div>
 
           <div className="bg-accent/5 border border-accent/20 rounded-[2.5rem] p-8 shadow-sm">

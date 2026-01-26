@@ -355,9 +355,23 @@ export function CurrencyDesk({
                 대를 기록 중이에요. 이를 바탕으로 한 시장 흐름 분석입니다.
               </p>
             </div>
-            <p className="text-sm md:text-base leading-relaxed text-foreground/90 font-bold whitespace-pre-line">
-              {data.analysis}
-            </p>
+            <div className="space-y-4">
+              {data.analysis
+                .split(". ")
+                .filter((line) => line.trim().length > 0)
+                .map((line, index) => (
+                  <p
+                    key={index}
+                    className="text-sm md:text-base leading-relaxed text-foreground/90 font-bold flex gap-2"
+                  >
+                    <span className="text-blue-500 shrink-0">•</span>
+                    <span>
+                      {line.trim()}
+                      {line.trim().endsWith(".") ? "" : "."}
+                    </span>
+                  </p>
+                ))}
+            </div>
           </div>
         </div>
       </div>

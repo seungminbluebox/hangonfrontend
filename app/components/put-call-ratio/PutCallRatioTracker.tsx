@@ -457,19 +457,21 @@ export function PutCallRatioTracker({ market }: PutCallRatioTrackerProps) {
                 <div className="p-6 md:p-8 rounded-[2rem] bg-background/50 border border-border-subtle/50 relative overflow-hidden group">
                   <div className="absolute top-0 left-0 w-1 h-full bg-accent/20" />
                   <div className="space-y-4">
-                    {analysis.analysis.split("\n\n").map((paragraph, i) => (
-                      <p
-                        key={i}
-                        className="text-sm md:text-base text-foreground/80 font-medium leading-relaxed md:leading-loose"
-                      >
-                        {paragraph.split("\n").map((line, j) => (
-                          <React.Fragment key={j}>
-                            {line}
-                            {j < paragraph.split("\n").length - 1 && <br />}
-                          </React.Fragment>
-                        ))}
-                      </p>
-                    ))}
+                    {analysis.analysis
+                      .split(". ")
+                      .filter((line) => line.trim().length > 0)
+                      .map((line, index) => (
+                        <p
+                          key={index}
+                          className="text-sm md:text-base text-foreground/80 font-medium leading-relaxed md:leading-loose flex gap-2"
+                        >
+                          <span className="text-accent shrink-0">•</span>
+                          <span>
+                            {line.trim()}
+                            {line.trim().endsWith(".") ? "" : "."}
+                          </span>
+                        </p>
+                      ))}
                   </div>
                 </div>
               </div>

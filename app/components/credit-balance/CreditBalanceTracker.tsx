@@ -454,19 +454,16 @@ export function CreditBalanceTracker() {
                           </div>
                           <div className="space-y-4">
                             {analysis.analysis
-                              .split(/[.\n]/)
-                              .filter((line) => line.trim().length > 5)
+                              .split(". ")
+                              .filter((line) => line.trim().length > 0)
                               .map((line, i) => (
                                 <p
                                   key={i}
                                   className="text-[15px] md:text-[16px] text-foreground/90 font-bold leading-[1.9] tracking-tight relative pl-4"
                                 >
                                   <span className="absolute left-0 top-3 w-1 h-1 rounded-full bg-accent/40" />
-                                  {line
-                                    .trim()
-                                    .replace(/퍼센트/g, "%")
-                                    .replace(/\s*%\s*/g, "%")}
-                                  .
+                                  {line.trim()}
+                                  {line.trim().endsWith(".") ? "" : "."}
                                 </p>
                               ))}
                           </div>
