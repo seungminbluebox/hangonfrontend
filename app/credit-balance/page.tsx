@@ -10,22 +10,6 @@ export default function CreditBalancePage() {
       <div className="max-w-4xl mx-auto px-4 md:px-6 pt-6 md:pt-32 space-y-8 md:space-y-12">
         <BackButton />
 
-        {/* Page Header */}
-        <div className="space-y-6 text-center relative">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-accent/5 rounded-full blur-3xl -z-10" />
-
-          <div className="space-y-4">
-            <h1 className="text-4xl md:text-7xl font-black italic tracking-tighter leading-none">
-              <span className="text-foreground/20">국내 증시</span>
-              <br />
-              <span className="text-accent">신용잔고 분석</span>
-            </h1>
-            <p className="text-sm md:text-lg text-foreground/50 font-bold max-w-2xl mx-auto leading-relaxed px-4">
-              개미 투자자들의 '빚투' 규모, 신용융자 잔고 추적
-            </p>
-          </div>
-        </div>
-
         {/* Content Wrapper */}
         <div className="relative">
           <CreditBalanceTracker />

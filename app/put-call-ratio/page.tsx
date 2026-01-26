@@ -10,34 +10,6 @@ export default function PutCallRatioPage() {
       <div className="max-w-4xl mx-auto px-4 md:px-6 pt-6 md:pt-32 space-y-8 md:space-y-12">
         <BackButton />
 
-        {/* Page Header */}
-        <div className="space-y-6 text-center relative">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-accent/5 rounded-full blur-3xl -z-10" />
-
-          {/* <div className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-accent/5 border border-accent/10 text-accent mb-2">
-            <BarChart3 className="w-4 h-4" />
-            <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.2em]">
-              Market Sentiment Intelligence
-            </span>
-          </div> */}
-
-          <div className="space-y-4">
-            <h1 className="text-4xl md:text-7xl font-black italic tracking-tighter leading-none">
-              <span className="text-foreground/20">미국 증시</span>
-              <br />
-              <span className="text-accent">풋/콜 분석 리포트</span>
-            </h1>
-            <p className="text-sm md:text-lg text-foreground/50 font-bold max-w-2xl mx-auto leading-relaxed px-4">
-              미국 증시의 실시간 옵션 매매 실태를 분석하여
-              <br />
-              <span className="text-foreground/80">
-                시장의 저점 매수 기회와 고점 경고 신호
-              </span>
-              를 포착합니다.
-            </p>
-          </div>
-        </div>
-
         {/* Content Wrapper */}
         <div className="relative">
           <PutCallRatioTracker market="US" />

@@ -16,12 +16,6 @@ export default function FearGreedPage() {
       </div>
 
       <div className="pt-2 sm:pt-5">
-        <header className="mb-8">
-          <h1 className="text-4xl sm:text-5xl font-black tracking-tighter italic">
-            Fear <span className="text-accent">&</span> Greed
-          </h1>
-        </header>
-
         <FearGreedIndex />
 
         {/* 설명 섹션을 하단으로 이동 */}

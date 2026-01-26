@@ -15,12 +15,6 @@ export default function KospiFearGreedPage() {
       </div>
 
       <div className="pt-2 sm:pt-5">
-        <header className="mb-8">
-          <h1 className="text-4xl sm:text-5xl font-black tracking-tighter italic">
-            KOSPI <span className="text-accent">&</span> Mood
-          </h1>
-        </header>
-
         <FearGreedIndex type="kospi" />
 
         <div className="mt-5 pt-10 border-t border-border-subtle/50">

@@ -441,21 +441,39 @@ export function Navigation() {
                     key={link.name}
                     href={link.href}
                     onClick={() => setIsOpen(false)}
-                    className={`flex items-center gap-4 p-4 rounded-2xl bg-secondary/30 border border-border-subtle/50 transition-all duration-500 ${
+                    className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-500 ${
+                      pathname === link.href
+                        ? "bg-accent text-white border-accent shadow-lg shadow-accent/25"
+                        : "bg-secondary/30 border-border-subtle/50"
+                    } ${
                       isOpen
                         ? "translate-x-0 opacity-100"
                         : "translate-x-8 opacity-0"
                     }`}
                     style={{ transitionDelay: isOpen ? "100ms" : "0ms" }}
                   >
-                    <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shrink-0">
-                      <Icon className="w-5 h-5 text-accent" />
+                    <div
+                      className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                        pathname === link.href ? "bg-white/20" : "bg-accent/10"
+                      }`}
+                    >
+                      <Icon
+                        className={`w-5 h-5 ${
+                          pathname === link.href ? "text-white" : "text-accent"
+                        }`}
+                      />
                     </div>
                     <div className="flex flex-col overflow-hidden">
                       <span className="text-sm font-black tracking-tight truncate">
                         {link.name}
                       </span>
-                      <span className="text-[10px] font-bold text-foreground/40 mt-0.5 truncate">
+                      <span
+                        className={`text-[10px] font-bold mt-0.5 truncate ${
+                          pathname === link.href
+                            ? "text-white/60"
+                            : "text-foreground/40"
+                        }`}
+                      >
                         {link.desc}
                       </span>
                     </div>
@@ -481,7 +499,11 @@ export function Navigation() {
                     key={link.name}
                     href={link.href}
                     onClick={() => setIsOpen(false)}
-                    className={`flex items-center gap-4 p-4 rounded-2xl bg-secondary/30 border border-border-subtle/50 transition-all duration-500 ${
+                    className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-500 ${
+                      pathname === link.href
+                        ? "bg-accent text-white border-accent shadow-lg shadow-accent/25"
+                        : "bg-secondary/30 border-border-subtle/50"
+                    } ${
                       isOpen
                         ? "translate-x-0 opacity-100"
                         : "translate-x-8 opacity-0"
@@ -492,14 +514,28 @@ export function Navigation() {
                         : "0ms",
                     }}
                   >
-                    <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shrink-0">
-                      <Icon className="w-5 h-5 text-accent" />
+                    <div
+                      className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                        pathname === link.href ? "bg-white/20" : "bg-accent/10"
+                      }`}
+                    >
+                      <Icon
+                        className={`w-5 h-5 ${
+                          pathname === link.href ? "text-white" : "text-accent"
+                        }`}
+                      />
                     </div>
                     <div className="flex flex-col overflow-hidden">
                       <span className="text-sm font-black tracking-tight truncate">
                         {link.name}
                       </span>
-                      <span className="text-[10px] font-bold text-foreground/40 mt-0.5 truncate">
+                      <span
+                        className={`text-[10px] font-bold mt-0.5 truncate ${
+                          pathname === link.href
+                            ? "text-white/60"
+                            : "text-foreground/40"
+                        }`}
+                      >
                         {link.desc}
                       </span>
                     </div>
@@ -525,7 +561,11 @@ export function Navigation() {
                     key={link.name}
                     href={link.href}
                     onClick={() => setIsOpen(false)}
-                    className={`flex items-center gap-4 p-4 rounded-2xl bg-secondary/30 border border-border-subtle/50 transition-all duration-500 ${
+                    className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-500 ${
+                      pathname === link.href
+                        ? "bg-accent text-white border-accent shadow-lg shadow-accent/25"
+                        : "bg-secondary/30 border-border-subtle/50"
+                    } ${
                       isOpen
                         ? "translate-x-0 opacity-100"
                         : "translate-x-8 opacity-0"
@@ -536,14 +576,28 @@ export function Navigation() {
                         : "0ms",
                     }}
                   >
-                    <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shrink-0">
-                      <Icon className="w-5 h-5 text-accent" />
+                    <div
+                      className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                        pathname === link.href ? "bg-white/20" : "bg-accent/10"
+                      }`}
+                    >
+                      <Icon
+                        className={`w-5 h-5 ${
+                          pathname === link.href ? "text-white" : "text-accent"
+                        }`}
+                      />
                     </div>
                     <div className="flex flex-col overflow-hidden">
                       <span className="text-sm font-black tracking-tight truncate">
                         {link.name}
                       </span>
-                      <span className="text-[10px] font-bold text-foreground/40 mt-0.5 truncate">
+                      <span
+                        className={`text-[10px] font-bold mt-0.5 truncate ${
+                          pathname === link.href
+                            ? "text-white/60"
+                            : "text-foreground/40"
+                        }`}
+                      >
                         {link.desc}
                       </span>
                     </div>
@@ -569,7 +623,11 @@ export function Navigation() {
                     key={link.name}
                     href={link.href}
                     onClick={() => setIsOpen(false)}
-                    className={`flex items-center gap-4 p-4 rounded-2xl bg-secondary/30 border border-border-subtle/50 transition-all duration-500 ${
+                    className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-500 ${
+                      pathname === link.href
+                        ? "bg-accent text-white border-accent shadow-lg shadow-accent/25"
+                        : "bg-secondary/30 border-border-subtle/50"
+                    } ${
                       isOpen
                         ? "translate-x-0 opacity-100"
                         : "translate-x-8 opacity-0"
@@ -580,14 +638,28 @@ export function Navigation() {
                         : "0ms",
                     }}
                   >
-                    <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shrink-0">
-                      <Icon className="w-5 h-5 text-accent" />
+                    <div
+                      className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                        pathname === link.href ? "bg-white/20" : "bg-accent/10"
+                      }`}
+                    >
+                      <Icon
+                        className={`w-5 h-5 ${
+                          pathname === link.href ? "text-white" : "text-accent"
+                        }`}
+                      />
                     </div>
                     <div className="flex flex-col overflow-hidden">
                       <span className="text-sm font-black tracking-tight truncate">
                         {link.name}
                       </span>
-                      <span className="text-[10px] font-bold text-foreground/40 mt-0.5 truncate">
+                      <span
+                        className={`text-[10px] font-bold mt-0.5 truncate ${
+                          pathname === link.href
+                            ? "text-white/60"
+                            : "text-foreground/40"
+                        }`}
+                      >
                         {link.desc}
                       </span>
                     </div>
