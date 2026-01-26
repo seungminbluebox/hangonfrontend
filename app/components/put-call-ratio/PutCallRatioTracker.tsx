@@ -101,8 +101,6 @@ export function PutCallRatioTracker({ market }: PutCallRatioTrackerProps) {
           new Date().toLocaleString("ko-KR", {
             month: "numeric",
             day: "numeric",
-            hour: "numeric",
-            minute: "numeric",
           }),
         );
       } catch (err) {

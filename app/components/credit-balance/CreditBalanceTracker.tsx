@@ -94,8 +94,6 @@ export function CreditBalanceTracker() {
             date.toLocaleString("ko-KR", {
               month: "numeric",
               day: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
             }),
           );
         }
@@ -161,7 +159,7 @@ export function CreditBalanceTracker() {
               <span className="text-accent">국내 증시</span>신용잔고 분석
             </h2>
             <span className="text-[10px] font-bold text-foreground/30 leading-none">
-              D-2 영업일 기준 업데이트됨
+              영업일 D-2일 기준 최신 데이터 반영됨
             </span>
           </div>
         </div>
@@ -189,7 +187,11 @@ export function CreditBalanceTracker() {
                   예탁금 대비 신용 비율
                 </span>
                 <span className="text-[10px] text-text-muted font-bold">
-                  D-2 결제 데이터 기준
+                  {new Date().toLocaleDateString("ko-KR", {
+                    month: "long",
+                    day: "numeric",
+                  })}{" "}
+                  기준
                 </span>
               </div>
               <div className="text-center lg:text-left">

@@ -409,7 +409,7 @@ export function CurrencyDesk({
         <div className="mt-8 pt-4 border-t border-border-subtle flex items-center justify-between">
           <div className="flex items-center gap-1.5 text-[10px] font-bold text-foreground/30">
             <AlertCircle className="w-3.5 h-3.5" />
-            <span>*실시간 시세와 약 15~20분 차이가 있을 수 있습니다.</span>
+            <span>*실시간 시세와 약간의 차이가 있을 순 있습니다.</span>
           </div>
         </div>
       </div>
