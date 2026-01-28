@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
+import { InstallButton } from "./InstallButton";
 import {
   Menu,
   X,
@@ -74,6 +75,12 @@ export function Navigation() {
       href: "/",
       icon: Home,
       desc: "오늘 꼭 알아야 할 핵심 이슈",
+    },
+    {
+      name: "데일리 리포트",
+      href: "/news/daily-report",
+      icon: Library,
+      desc: "거시경제 맥락과 시장 분석 요약",
     },
     // 국내 증시
     {
@@ -184,6 +191,18 @@ export function Navigation() {
                   <span>뉴스홈</span>
                 </Link>
 
+                <Link
+                  href="/news/daily-report"
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${
+                    pathname === "/news/daily-report"
+                      ? "bg-background text-accent shadow-sm"
+                      : "text-text-muted hover:text-foreground hover:bg-background/40"
+                  }`}
+                >
+                  <Library className="w-4 h-4" />
+                  <span>마켓리포트</span>
+                </Link>
+
                 {/* 2. 국내 증시 (Dropdown) */}
                 <div
                   className="relative group h-full"
@@ -220,7 +239,7 @@ export function Navigation() {
                     }`}
                   >
                     <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1 overflow-hidden">
-                      {navLinks.slice(1, 5).map((link) => {
+                      {navLinks.slice(2, 6).map((link) => {
                         const Icon = link.icon;
                         return (
                           <Link
@@ -284,7 +303,7 @@ export function Navigation() {
                     }`}
                   >
                     <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1">
-                      {navLinks.slice(5, 9).map((link) => {
+                      {navLinks.slice(6, 10).map((link) => {
                         const Icon = link.icon;
                         return (
                           <Link
@@ -347,7 +366,7 @@ export function Navigation() {
                     }`}
                   >
                     <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1">
-                      {navLinks.slice(9).map((link) => {
+                      {navLinks.slice(10).map((link) => {
                         const Icon = link.icon;
                         return (
                           <Link
@@ -376,11 +395,15 @@ export function Navigation() {
                 </div>
               </div>
               <div className="hidden xl:block w-px h-6 bg-border-subtle/50" />
+              <div className="hidden lg:block">
+                <InstallButton />
+              </div>
               <ThemeToggle />
             </div>
 
             {/* Mobile Menu Button */}
-            <div className="flex lg:hidden items-center gap-3">
+            <div className="flex lg:hidden items-center gap-2">
+              <InstallButton />
               <ThemeToggle />
               <div className="relative">
                 <button
@@ -434,7 +457,7 @@ export function Navigation() {
               Main Dashboard
             </h3>
             <div className="grid grid-cols-1 gap-2">
-              {[navLinks[0]].map((link) => {
+              {navLinks.slice(0, 2).map((link) => {
                 const Icon = link.icon;
                 return (
                   <Link
@@ -492,7 +515,7 @@ export function Navigation() {
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(1, 5).map((link, index) => {
+              {navLinks.slice(2, 6).map((link, index) => {
                 const Icon = link.icon;
                 return (
                   <Link
@@ -510,7 +533,7 @@ export function Navigation() {
                     }`}
                     style={{
                       transitionDelay: isOpen
-                        ? `${(index + 2) * 100}ms`
+                        ? `${(index + 3) * 100}ms`
                         : "0ms",
                     }}
                   >
@@ -554,7 +577,7 @@ export function Navigation() {
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(5, 9).map((link, index) => {
+              {navLinks.slice(6, 10).map((link, index) => {
                 const Icon = link.icon;
                 return (
                   <Link
@@ -572,7 +595,7 @@ export function Navigation() {
                     }`}
                     style={{
                       transitionDelay: isOpen
-                        ? `${(index + 6) * 100}ms`
+                        ? `${(index + 7) * 100}ms`
                         : "0ms",
                     }}
                   >
@@ -616,7 +639,7 @@ export function Navigation() {
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(9).map((link, index) => {
+              {navLinks.slice(10).map((link, index) => {
                 const Icon = link.icon;
                 return (
                   <Link

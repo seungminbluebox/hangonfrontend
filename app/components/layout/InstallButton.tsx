@@ -80,11 +80,10 @@ export function InstallButton() {
   return (
     <button
       onClick={handleInstallClick}
-      className="px-5 py-2.5 rounded-2xl bg-accent text-white hover:bg-accent/90 transition-all duration-300 flex items-center gap-2 group shadow-[0_4px_12px_rgba(37,99,235,0.2)] active:scale-95"
+      className="p-2 rounded-xl bg-accent/10 text-accent border-2 border-accent/20 shadow-lg shadow-accent/20 hover:bg-accent hover:text-white transition-all duration-300 flex items-center justify-center group active:scale-95"
       title="앱 설치하기"
     >
-      <Download className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
-      <span className="text-[13px] font-black whitespace-nowrap">앱 설치</span>
+      <Download className="w-6 h-6 transition-transform" />
     </button>
   );
 }

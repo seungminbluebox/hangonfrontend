@@ -12,10 +12,10 @@ interface BackButtonProps {
 export function BackButton({
   href = "/",
   label = "Back to Dashboard",
-  className = "",
+  className = "mb-8",
 }: BackButtonProps) {
   return (
-    <div className={`mb-8 ${className}`}>
+    <div className={className}>
       <Link
         href={href}
         className="group inline-flex items-center gap-2 px-4 py-2 bg-secondary/30 rounded-full border border-border-subtle hover:bg-secondary/50 hover:border-border transition-all duration-300"

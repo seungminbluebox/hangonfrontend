@@ -1,10 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
-import { InstallButton } from "./components/layout/InstallButton";
 import { DateNavigation } from "./components/layout/DateNavigation";
 import { NewsDashboard } from "./components/news/NewsDashboard";
 import { MarketTicker } from "./components/layout/MarketTicker";
 import { getMarketData } from "./lib/market";
-import { TrendingUp, Globe, Calendar, Mail } from "lucide-react";
+import { TrendingUp, Globe, Calendar, Mail, Library } from "lucide-react";
 import { Metadata } from "next"; // 상단 import 추가
 import Link from "next/link";
 
@@ -134,31 +133,96 @@ export default async function Home({
 
   return (
     <main className="min-h-screen bg-background text-foreground max-w-6xl mx-auto px-4 sm:px-8 transition-colors duration-500">
-      <header className="pt-6 pb-6 sm:pt-20 sm:pb-10 flex flex-col items-center justify-center text-center space-y-4 sm:space-y-6">
-        <div className="space-y-1 sm:space-y-2">
-          <div className="flex items-center justify-center gap-2">
-            <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent" />
-            <span className="text-[9px] sm:text-[10px] font-black tracking-[0.3em] uppercase text-accent/80 dark:text-accent">
+      <header className="pt-8 pb-4 sm:pt-20 sm:pb-10 flex flex-col items-center">
+        {/* 브랜딩 영역 - 중앙 정렬로 시각적 무게중심 확보 */}
+        <div className="flex flex-col items-center mb-6 sm:mb-8">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <TrendingUp className="w-4 h-4 text-accent animate-pulse" />
+            <span className="text-[10px] font-black tracking-[0.3em] uppercase text-accent/80">
               Daily Insights
             </span>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-black tracking-tighter italic mb-0.5 sm:mb-1">
+          <h1 className="text-4xl sm:text-6xl font-black tracking-tighter italic">
             Hang on<span className="text-accent dark:text-accent">!</span>
           </h1>
-          <p className="text-text-muted text-[13px] sm:text-xl font-medium tracking-wide mt-2 sm:mt-3">
+          <p className="hidden sm:block text-text-muted text-xl font-medium tracking-wide mt-3">
             잠깐의 시간, 글로벌 경제 흐름을 꽉 잡다
           </p>
         </div>
 
-        <div className="w-full max-w-4xl mx-auto pt-2">
-          <MarketTicker data={marketData} />
-        </div>
+        {/* [개선] 모바일 전용 레이아웃 (세로형 배치) */}
+        <div className="w-full flex flex-col items-center gap-5 sm:hidden">
+          {/* 1. 마켓 상태 카드 */}
+          <div className="w-full">
+            <MarketTicker data={marketData} />
+          </div>
 
-        <div className="flex flex-col items-center gap-4 pt-1 sm:pt-2">
-          <InstallButton />
-          <div className="flex items-center gap-3 sm:gap-4">
+          {/* 2. 데일리 리포트 하이라이트 (슬림 가로형 배치) */}
+          <Link href="/news/daily-report" className="w-full group block">
+            <div className="relative overflow-hidden bg-accent rounded-[1.5rem] px-5 py-4 text-white shadow-lg shadow-accent/20 transition-all active:scale-[0.98]">
+              <div className="relative z-10 flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center shrink-0 shadow-inner">
+                    <Library className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[9px] font-black uppercase tracking-widest text-white/60 mb-0.5">
+                      Market Insight
+                    </span>
+                    <h2 className="text-[17px] font-black leading-tight tracking-tight">
+                      데일리 리포트 보러가기
+                    </h2>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1 px-3 py-1.5 bg-white/20 rounded-full text-[10px] font-black uppercase backdrop-blur-sm border border-white/10">
+                  <TrendingUp className="w-3 h-3" />
+                </div>
+              </div>
+              {/* 은은한 배경 효과 */}
+              <div className="absolute -right-4 -top-4 w-20 h-20 bg-white/10 rounded-full blur-2xl" />
+              <div className="absolute -left-4 -bottom-4 w-20 h-20 bg-white/10 rounded-full blur-2xl" />
+            </div>
+          </Link>
+
+          {/* 3. 날짜 조정 (뉴스 바로 위 - 헤더의 마지막 요소) */}
+          <div className="w-full pt-4 border-t border-border-subtle/30 flex justify-center">
             <DateNavigation currentDate={targetDate} />
           </div>
+        </div>
+
+        {/* 데스크탑 레이아웃 (안정적인 기존 레이아웃 유지 및 정돈) */}
+        <div className="hidden sm:flex flex-col items-center gap-6 mb-10 w-full max-w-4xl">
+          <MarketTicker data={marketData} />
+          <div className="flex items-center justify-center bg-secondary/10 p-2 px-6 rounded-3xl border border-border-subtle/20">
+            <DateNavigation currentDate={targetDate} />
+          </div>
+        </div>
+
+        {/* 데스크탑 데일리 리포트 배너 */}
+        <div className="hidden sm:block w-full max-w-4xl mx-auto px-4">
+          <Link href="/news/daily-report" className="group block">
+            <div className="relative overflow-hidden bg-gradient-to-br from-accent/90 to-accent rounded-2xl p-6 text-white shadow-xl shadow-accent/20 transition-all duration-300 group-hover:scale-[1.01] group-hover:shadow-2xl">
+              <div className="relative z-10 flex flex-row items-center justify-between gap-4">
+                <div className="space-y-1 text-left">
+                  <div className="flex items-center gap-1.5 text-white/80">
+                    <Library className="w-4 h-4" />
+                    <span className="text-[10px] font-bold uppercase tracking-wider">
+                      Market Analysis
+                    </span>
+                  </div>
+                  <h2 className="text-xl font-bold">
+                    오늘의 마켓 데일리 브리핑
+                  </h2>
+                  <p className="text-white/70 text-sm font-medium">
+                    거시경제 맥락으로 파악하는 시장 요약 보고서
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-xl text-sm font-bold group-hover:bg-white group-hover:text-accent transition-colors">
+                  리포트 읽기 <TrendingUp className="w-4 h-4" />
+                </div>
+              </div>
+            </div>
+          </Link>
         </div>
       </header>
 
