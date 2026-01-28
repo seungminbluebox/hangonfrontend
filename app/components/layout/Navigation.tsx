@@ -457,7 +457,7 @@ export function Navigation() {
               Main Dashboard
             </h3>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(0, 2).map((link) => {
+              {navLinks.slice(0, 2).map((link, index) => {
                 const Icon = link.icon;
                 return (
                   <Link
@@ -473,7 +473,9 @@ export function Navigation() {
                         ? "translate-x-0 opacity-100"
                         : "translate-x-8 opacity-0"
                     }`}
-                    style={{ transitionDelay: isOpen ? "100ms" : "0ms" }}
+                    style={{
+                      transitionDelay: isOpen ? `${index * 30}ms` : "0ms",
+                    }}
                   >
                     <div
                       className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
@@ -532,9 +534,7 @@ export function Navigation() {
                         : "translate-x-8 opacity-0"
                     }`}
                     style={{
-                      transitionDelay: isOpen
-                        ? `${(index + 3) * 100}ms`
-                        : "0ms",
+                      transitionDelay: isOpen ? `${(index + 2) * 30}ms` : "0ms",
                     }}
                   >
                     <div
@@ -594,9 +594,7 @@ export function Navigation() {
                         : "translate-x-8 opacity-0"
                     }`}
                     style={{
-                      transitionDelay: isOpen
-                        ? `${(index + 7) * 100}ms`
-                        : "0ms",
+                      transitionDelay: isOpen ? `${(index + 6) * 30}ms` : "0ms",
                     }}
                   >
                     <div
@@ -657,7 +655,7 @@ export function Navigation() {
                     }`}
                     style={{
                       transitionDelay: isOpen
-                        ? `${(index + 10) * 100}ms`
+                        ? `${(index + 10) * 30}ms`
                         : "0ms",
                     }}
                   >
