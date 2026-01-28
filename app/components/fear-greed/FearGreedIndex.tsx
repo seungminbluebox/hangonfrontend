@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
 import {
   Info,
   BrainCircuit,
@@ -11,11 +10,7 @@ import {
   Microscope,
 } from "lucide-react";
 import { FearGreedShareCard } from "./FearGreedShareCard";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-);
+import { supabase } from "../../../lib/supabase";
 
 interface FearGreedData {
   value: number;

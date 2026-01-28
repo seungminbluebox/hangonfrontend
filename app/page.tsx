@@ -7,13 +7,16 @@ import { TrendingUp, Globe, Calendar, Mail, Library } from "lucide-react";
 import { Metadata } from "next"; // 상단 import 추가
 import Link from "next/link";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-);
-
 type Props = {
   searchParams: Promise<{ date?: string }>;
+};
+
+// Supabase 클라이언트 생성 헬퍼
+const getSupabase = () => {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) return null;
+  return createClient(url, key);
 };
 
 // 동적 메타데이터 생성 함수 (SEO 핵심)
@@ -63,14 +66,18 @@ export default async function Home({
   const startOfDay = `${targetDate}T00:00:00Z`;
   const endOfDay = `${targetDate}T23:59:59Z`;
 
+  const supabase = getSupabase();
+
   // 데이터 페칭 병렬화 및 필요한 마켓 데이터만 요청
   const [newsResponse, marketData] = await Promise.all([
     supabase
-      .from("daily_news")
-      .select("*")
-      .filter("created_at", "gte", startOfDay)
-      .filter("created_at", "lte", endOfDay)
-      .order("created_at", { ascending: false }),
+      ? supabase
+          .from("daily_news")
+          .select("*")
+          .filter("created_at", "gte", startOfDay)
+          .filter("created_at", "lte", endOfDay)
+          .order("created_at", { ascending: false })
+      : Promise.resolve({ data: [], error: null }),
     getMarketData([
       "KOSPI",
       "S&P 500",
