@@ -23,7 +23,7 @@ self.addEventListener("push", (event) => {
     const options = {
       body: data.body || "새로운 소식이 도착했습니다!",
       icon: "/icon-192.png",
-      badge: "/icon-192.png",
+      badge: "/badge-72x72.png",
       data: {
         url: data.url || "/",
       },
