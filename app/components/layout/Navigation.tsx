@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
 import { InstallButton } from "./InstallButton";
+import { NotificationManager } from "./NotificationManager";
 import {
   Menu,
   X,
@@ -25,6 +26,7 @@ import {
   Globe,
   Shuffle,
   Waves,
+  Bell,
 } from "lucide-react";
 
 export function Navigation() {
@@ -398,6 +400,7 @@ export function Navigation() {
               <div className="hidden lg:block">
                 <InstallButton />
               </div>
+              <NotificationManager />
               <ThemeToggle />
             </div>
 
@@ -449,6 +452,30 @@ export function Navigation() {
               무엇이 궁금하신가요? 🤔
             </h2>
             <div className="h-1 w-12 bg-accent rounded-full"></div>
+          </div>
+
+          {/* 알림 구독 (모바일 전용 위치) */}
+          <div
+            className={`transition-all duration-500 delay-100 ${
+              isOpen ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0"
+            }`}
+          >
+            <div className="bg-secondary/40 border border-border-subtle rounded-2xl p-4 flex flex-col gap-2.5">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-background flex items-center justify-center shrink-0 border border-border-subtle">
+                  <Bell className="w-4 h-4 text-text-muted" />
+                </div>
+                <div>
+                  <h4 className="text-[13px] font-bold text-foreground">
+                    데일리 소식 받기
+                  </h4>
+                  <p className="text-[10px] text-text-muted leading-tight">
+                    리포트 업데이트 알림을 보내드려요
+                  </p>
+                </div>
+              </div>
+              <NotificationManager showText={true} compact={true} />
+            </div>
           </div>
 
           {/* 카테고리 1: 뉴스 */}
