@@ -1,4 +1,10 @@
 import { BackButton } from "../components/layout/BackButton";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "개인정보처리방침",
+  description: "Hang on! 서비스의 개인정보처리방침입니다.",
+};
 
 export default function PrivacyPage() {
   return (

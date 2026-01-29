@@ -5,7 +5,7 @@ import { BackButton } from "../components/layout/BackButton";
 import { getMarketData } from "../lib/market";
 
 export const metadata: Metadata = {
-  title: "원/달러 환율 리포트 | Hang on!",
+  title: "원/달러 환율 리포트",
   description:
     "실시간 달러 환율 현황 중계와 AI가 분석하는 스마트한 달러 투자 전략을 확인하세요.",
 };

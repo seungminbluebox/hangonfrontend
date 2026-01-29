@@ -3,12 +3,39 @@ import { Navigation } from "../../components/layout/Navigation";
 import { MoneyFlowTracker } from "../../components/money-flow/MoneyFlowTracker";
 import { Target } from "lucide-react";
 import { BackButton } from "../../components/layout/BackButton";
+import { Metadata } from "next";
 
-export default async function MoneyFlowDetailPage({
-  params,
-}: {
+type Props = {
   params: Promise<{ type: string }>;
-}) {
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { type } = await params;
+
+  const titles: Record<string, string> = {
+    domestic: "국내 시장 자금 흐름",
+    us: "미국 시장 자금 흐름",
+    safe: "안전자산 자금 흐름",
+  };
+
+  const descriptions: Record<string, string> = {
+    domestic:
+      "국내 주식 시장의 주요 섹터별 자금 유입 및 유출 현황을 분석합니다.",
+    us: "미국 증시의 주요 지수 및 섹터로의 자금 흐름을 실시간으로 확인하세요.",
+    safe: "금, 채권, 달러 등 안전자산으로의 자금 대피 현황을 파악하여 리스크에 대비하세요.",
+  };
+
+  const title = titles[type] || "시장 자금 흐름 분석";
+  const description =
+    descriptions[type] || "글로벌 자산 시장의 자금 이동 경로를 추적합니다.";
+
+  return {
+    title,
+    description,
+  };
+}
+
+export default async function MoneyFlowDetailPage({ params }: Props) {
   const { type } = await params;
 
   const typeMap: Record<string, "domestic" | "us" | "safe"> = {

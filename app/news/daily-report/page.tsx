@@ -1,17 +1,12 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 import { BackButton } from "../../components/layout/BackButton";
-import {
-  Loader2,
-  Calendar,
-  TrendingUp,
-  Info,
-  ExternalLink,
-} from "lucide-react";
+import { Calendar, TrendingUp, Info } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Link from "next/link";
+import { Metadata } from "next";
+
+export const dynamic = "force-dynamic";
 
 interface DailyReport {
   date: string;
@@ -20,34 +15,40 @@ interface DailyReport {
   summary: string;
 }
 
-export default function DailyReportPage() {
-  const [report, setReport] = useState<DailyReport | null>(null);
-  const [loading, setLoading] = useState(true);
+export async function generateMetadata(): Promise<Metadata> {
+  const { data: report } = await supabase
+    .from("daily_reports")
+    .select("*")
+    .order("date", { ascending: false })
+    .limit(1)
+    .maybeSingle();
 
-  useEffect(() => {
-    async function fetchReport() {
-      try {
-        const response = await fetch("/api/news/report");
-        if (response.ok) {
-          const data = await response.json();
-          setReport(data);
-        }
-      } catch (error) {
-        console.error("Failed to fetch report:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchReport();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="w-8 h-8 animate-spin text-accent" />
-      </div>
-    );
+  if (!report) {
+    return {
+      title: "데일리 경제 리포트",
+      description: "오늘의 글로벌 경제 핵심 요약을 확인하세요.",
+    };
   }
+
+  return {
+    title: report.title,
+    description: report.summary,
+    openGraph: {
+      title: report.title,
+      description: report.summary,
+      type: "article",
+      publishedTime: report.date,
+    },
+  };
+}
+
+export default async function DailyReportPage() {
+  const { data: report, error } = await supabase
+    .from("daily_reports")
+    .select("*")
+    .order("date", { ascending: false })
+    .limit(1)
+    .maybeSingle();
 
   if (!report) {
     return (
@@ -65,7 +66,7 @@ export default function DailyReportPage() {
   // 문장 단위로 분리하여 가독성을 높이는 헬퍼 함수
   const formattedContent = report.content
     .split("\n")
-    .map((line) => {
+    .map((line: string) => {
       if (
         line.trim().startsWith("-") ||
         line.trim().startsWith("*") ||
@@ -132,18 +133,18 @@ export default function DailyReportPage() {
             prose-li:text-foreground/80 prose-li:leading-7 md:prose-li:leading-8 prose-li:text-base md:prose-li:text-lg
             prose-hr:border-border-subtle/30 prose-hr:my-8 md:prose-hr:my-12
             prose-a:no-underline"
-            style={{ "--indent-size": indentSize } as React.CSSProperties}
+            style={{ "--indent-size": indentSize } as any}
           >
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
-                h1: ({ children }) => (
-                  <h1 className="text-2xl font-black mb-6 mt-10 border-b pb-4 border-border-subtle/50">
+                h2: ({ children }) => (
+                  <h2 className="text-xl md:text-2xl font-black mb-6 mt-10 border-b pb-4 border-border-subtle/50">
                     {children}
-                  </h1>
+                  </h2>
                 ),
-                p: ({ children }) => <p className="m-0">{children}</p>,
-                a: ({ node, children, href, ...props }) => {
+                p: ({ children }) => <p className="m-0 mb-4">{children}</p>,
+                a: ({ children, href }) => {
                   const isInternal = href?.startsWith("/");
                   if (isInternal) {
                     return (

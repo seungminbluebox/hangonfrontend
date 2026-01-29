@@ -3,6 +3,13 @@ import { Navigation } from "../components/layout/Navigation";
 import { BackButton } from "../components/layout/BackButton";
 import { BarChart3 } from "lucide-react";
 import { CreditBalanceTracker } from "@/app/components/credit-balance/CreditBalanceTracker";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "신용융자 잔고 추이",
+  description:
+    "국내 증시의 빚투 현황을 분석합니다. 신용융자 잔고의 증감 수치를 통해 시장의 과열과 공포를 읽어보세요.",
+};
 
 export default function CreditBalancePage() {
   return (

@@ -470,7 +470,7 @@ export function Navigation() {
                     데일리 소식 받기
                   </h4>
                   <p className="text-[10px] text-text-muted leading-tight">
-                    리포트 업데이트 알림을 보내드려요
+                    매일 아침, 하룻동안 있었던 소식을 정리해 알려드려요.
                   </p>
                 </div>
               </div>

@@ -5,7 +5,7 @@ import { BackButton } from "../components/layout/BackButton";
 import { getMarketData } from "../lib/market";
 
 export const metadata: Metadata = {
-  title: "코스피 200 선물 리포트 | Hang on!",
+  title: "코스피 200 선물 리포트",
   description:
     "국내 시장의 선행지표, 코스피 200 선물 실시간 흐름과 시장 통찰을 제공합니다.",
 };

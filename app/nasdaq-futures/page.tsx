@@ -5,7 +5,7 @@ import { BackButton } from "../components/layout/BackButton";
 import { getMarketData } from "../lib/market";
 
 export const metadata: Metadata = {
-  title: "나스닥 100 선물 리포트 | Hang on!",
+  title: "나스닥 100 선물 리포트",
   description:
     "글로벌 시장의 온도계, 나스닥 100 선물 실시간 흐름과 기초 지식을 전해드립니다.",
 };
