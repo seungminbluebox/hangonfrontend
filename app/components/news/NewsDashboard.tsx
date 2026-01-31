@@ -29,6 +29,7 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isDailyShareModalOpen, setIsDailyShareModalOpen] = useState(false);
   const detailRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // 뉴스 데이터(날짜)가 변경되면 선택된 아이디를 첫 번째 뉴스로 리셋
   useEffect(() => {
@@ -55,21 +56,22 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
     if (typeof window === "undefined") return;
 
     if (window.innerWidth < 1024) {
+      // 상세 영역 스크롤 최상단으로 (모바일 모달 내부)
       const el = detailRef.current;
       if (el) {
-        // 일부 모바일 브라우저에서 smooth 동작이 불안정한 경우 대비해서 scrollTop 직접 설정
         el.scrollTop = 0;
-        try {
-          el.scrollTo({ top: 0, behavior: "smooth" });
-        } catch {
-          // 지원하지 않는 브라우저는 silent fail
-        }
       }
 
+      // 전체 페이지 스크롤을 뉴스 섹션 상단으로 (페이지 최상단이 아닌 해당 컨셉 위치로)
       try {
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        if (containerRef.current) {
+          containerRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
       } catch {
-        // window 스크롤도 실패 시 무시
+        // scrollIntoView 실패 시 무시
       }
     }
   }, [selectedId]);
@@ -77,7 +79,10 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
   const selectedItem = news.find((item) => item.id === selectedId);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 items-start relative pb-12">
+    <div
+      ref={containerRef}
+      className="flex flex-col lg:flex-row gap-8 items-start relative pb-12 scroll-mt-20 md:scroll-mt-32"
+    >
       {/* Left: Search/List Area (Master) */}
       <div
         className={`w-full lg:flex-1 space-y-3 ${

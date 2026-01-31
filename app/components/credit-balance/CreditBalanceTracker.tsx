@@ -174,9 +174,9 @@ export function CreditBalanceTracker() {
             <BarChart3 className="w-64 h-64" />
           </div>
 
-          <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-6">
+          <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-4 md:gap-8">
             {/* Main Highlight: Ratio */}
-            <div className="flex flex-col items-center lg:items-start gap-3">
+            <div className="flex flex-col items-center lg:items-start gap-2 md:gap-3">
               <div className="flex items-center gap-2">
                 <span className="bg-accent text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg shadow-accent/20">
                   예탁금 대비 신용 비율
@@ -191,55 +191,55 @@ export function CreditBalanceTracker() {
               </div>
               <div className="text-center lg:text-left">
                 <div className="flex items-baseline justify-center lg:justify-start gap-1">
-                  <h2 className="text-7xl md:text-8xl font-black italic tracking-tighter leading-none">
+                  <h2 className="text-6xl md:text-8xl font-black italic tracking-tighter leading-none">
                     {ratio.toFixed(1)}
                   </h2>
-                  <span className="text-2xl md:text-3xl font-bold text-text-muted opacity-40 italic">
+                  <span className="text-xl md:text-3xl font-bold text-text-muted opacity-40 italic">
                     %
                   </span>
                 </div>
                 <div
                   className={clsx(
-                    "flex items-center justify-center lg:justify-start gap-2 mt-2 font-black italic text-xl md:text-2xl",
+                    "flex items-center justify-center lg:justify-start gap-2 mt-1 md:mt-2 font-black italic text-lg md:text-2xl",
                     getStatusColor(),
                   )}
                 >
-                  <Activity className="w-5 h-5 md:w-6 md:h-6" />
+                  <Activity className="w-4 h-4 md:w-6 md:h-6" />
                   {getStatusText()}
                 </div>
               </div>
             </div>
 
             {/* Sub Metrics Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full lg:w-auto lg:min-w-[400px]">
-              <div className="bg-white/5 border border-white/5 rounded-3xl p-5 flex flex-col gap-2">
-                <div className="flex items-center gap-2">
-                  <Wallet className="w-4 h-4 text-sky-400" />
-                  <span className="text-[10px] font-black text-text-muted uppercase tracking-widest">
+            <div className="grid grid-cols-2 gap-3 md:gap-4 w-full lg:w-auto lg:min-w-[400px]">
+              <div className="bg-white/5 border border-white/5 rounded-2xl md:rounded-3xl p-3 md:p-5 flex flex-col gap-1 md:gap-2">
+                <div className="flex items-center gap-1.5 md:gap-2">
+                  <Wallet className="w-3 md:w-4 h-3 md:h-4 text-sky-400" />
+                  <span className="text-[9px] md:text-[10px] font-black text-text-muted uppercase tracking-widest leading-none">
                     고객예탁금
                   </span>
                 </div>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-3xl font-black italic tracking-tighter">
+                  <span className="text-xl md:text-3xl font-black italic tracking-tighter">
                     {latestDepositTrillion.toFixed(1)}
                   </span>
-                  <span className="text-xs font-bold text-text-muted">
+                  <span className="text-[8px] md:text-xs font-bold text-text-muted">
                     조 원
                   </span>
                 </div>
               </div>
-              <div className="bg-white/5 border border-white/5 rounded-3xl p-5 flex flex-col gap-2">
-                <div className="flex items-center gap-2">
-                  <BarChart3 className="w-4 h-4 text-accent" />
-                  <span className="text-[10px] font-black text-text-muted uppercase tracking-widest">
+              <div className="bg-white/5 border border-white/5 rounded-2xl md:rounded-3xl p-3 md:p-5 flex flex-col gap-1 md:gap-2">
+                <div className="flex items-center gap-1.5 md:gap-2">
+                  <BarChart3 className="w-3 md:w-4 h-3 md:h-4 text-accent" />
+                  <span className="text-[9px] md:text-[10px] font-black text-text-muted uppercase tracking-widest leading-none">
                     신용융자 잔고
                   </span>
                 </div>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-3xl font-black italic tracking-tighter text-accent">
+                  <span className="text-xl md:text-3xl font-black italic tracking-tighter text-accent">
                     {latestCreditTrillion.toFixed(1)}
                   </span>
-                  <span className="text-xs font-bold text-text-muted">
+                  <span className="text-[8px] md:text-xs font-bold text-text-muted">
                     조 원
                   </span>
                 </div>

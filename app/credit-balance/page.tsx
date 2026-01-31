@@ -44,15 +44,17 @@ export default function CreditBalancePage() {
             ].map((item, i) => (
               <div
                 key={i}
-                className="p-8 rounded-[2rem] bg-card/10 border border-border-subtle flex flex-col items-center text-center space-y-4"
+                className="p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] bg-card/10 border border-border-subtle flex flex-row md:flex-col items-center md:text-center gap-4 md:space-y-4"
               >
-                <div className="text-4xl">{item.icon}</div>
-                <h4 className="text-sm font-black uppercase tracking-widest italic tracking-tighter">
-                  {item.title}
-                </h4>
-                <p className="text-xs font-bold text-foreground/40 leading-relaxed">
-                  {item.desc}
-                </p>
+                <div className="text-2xl md:text-4xl shrink-0">{item.icon}</div>
+                <div className="flex flex-col items-start md:items-center">
+                  <h4 className="text-[11px] md:text-sm font-black uppercase tracking-widest italic md:tracking-tighter">
+                    {item.title}
+                  </h4>
+                  <p className="text-[10px] md:text-xs font-bold text-foreground/40 leading-relaxed mt-1 md:mt-0">
+                    {item.desc}
+                  </p>
+                </div>
               </div>
             ))}
           </div>

@@ -168,46 +168,50 @@ export function InterestRateInfo({ initialData }: InterestRateInfoProps) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 gap-4 md:gap-6">
           {/* US Rate Card */}
-          <div className="group bg-gradient-to-br from-blue-600/5 to-transparent border border-blue-500/10 rounded-[2rem] p-6 md:p-8 hover:border-blue-500/20 transition-all duration-300">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center">
-                  <span className="text-xs font-bold text-blue-500">US</span>
+          <div className="group bg-gradient-to-br from-blue-600/5 to-transparent border border-blue-500/10 rounded-[1.5rem] md:rounded-[2rem] p-4 md:p-8 hover:border-blue-500/20 transition-all duration-300">
+            <div className="flex items-center justify-between mb-4 md:mb-6">
+              <div className="flex items-center gap-2 md:gap-3">
+                <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg md:rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0">
+                  <span className="text-[10px] md:text-xs font-bold text-blue-500">
+                    US
+                  </span>
                 </div>
-                <span className="text-sm font-black italic text-foreground/60">
+                <span className="text-[10px] md:text-sm font-black italic text-foreground/60 leading-tight">
                   {rates.us.name}
                 </span>
               </div>
             </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-5xl md:text-7xl font-black italic tracking-tighter text-blue-500">
+            <div className="flex items-baseline gap-1 md:gap-2">
+              <span className="text-3xl md:text-7xl font-black italic tracking-tighter text-blue-500">
                 {rates.us.value.toFixed(2)}
               </span>
-              <span className="text-2xl font-black italic text-blue-500/40">
+              <span className="text-lg md:text-2xl font-black italic text-blue-500/40">
                 %
               </span>
             </div>
           </div>
 
           {/* KR Rate Card */}
-          <div className="group bg-gradient-to-br from-emerald-600/5 to-transparent border border-emerald-500/10 rounded-[2rem] p-6 md:p-8 hover:border-emerald-500/20 transition-all duration-300">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center">
-                  <span className="text-xs font-bold text-emerald-500">KR</span>
+          <div className="group bg-gradient-to-br from-emerald-600/5 to-transparent border border-emerald-500/10 rounded-[1.5rem] md:rounded-[2rem] p-4 md:p-8 hover:border-emerald-500/20 transition-all duration-300">
+            <div className="flex items-center justify-between mb-4 md:mb-6">
+              <div className="flex items-center gap-2 md:gap-3">
+                <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg md:rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0">
+                  <span className="text-[10px] md:text-xs font-bold text-emerald-500">
+                    KR
+                  </span>
                 </div>
-                <span className="text-sm font-black italic text-foreground/60">
+                <span className="text-[10px] md:text-sm font-black italic text-foreground/60 leading-tight">
                   {rates.kr.name}
                 </span>
               </div>
             </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-5xl md:text-7xl font-black italic tracking-tighter text-emerald-500">
+            <div className="flex items-baseline gap-1 md:gap-2">
+              <span className="text-3xl md:text-7xl font-black italic tracking-tighter text-emerald-500">
                 {rates.kr.value.toFixed(2)}
               </span>
-              <span className="text-2xl font-black italic text-emerald-500/40">
+              <span className="text-lg md:text-2xl font-black italic text-emerald-500/40">
                 %
               </span>
             </div>

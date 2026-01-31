@@ -57,7 +57,7 @@ export function MoneyFlowShareCard({
   const titleMap = {
     domestic: "오늘의 국내 증시 자산 흐름💸",
     us: "오늘의 미국 증시 자산 흐름💲",
-    safe: "글로벌 자금 심리 리포트(Risk vs Safe) 🧭",
+    safe: "글로벌 자금 심리 리포트 🧭",
   };
 
   const title = titleMap[marketType];

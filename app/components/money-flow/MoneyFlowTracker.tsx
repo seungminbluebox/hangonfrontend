@@ -270,10 +270,11 @@ export function MoneyFlowTracker({
             {type === "safe" && (
               <button
                 onClick={() => setShareConfig({ isOpen: true, type: "assets" })}
-                className="p-2 hover:bg-muted rounded-xl transition-all"
-                title="자산 흐름 공유"
+                className="p-2 md:p-2.5 bg-accent/10 hover:bg-accent/20 rounded-xl md:rounded-2xl transition-all"
+                title="리포트 공유"
               >
-                <Share2 className="w-3.5 h-3.5 text-foreground/40" />
+                {" "}
+                <Share2 className="w-4 h-4 md:w-5 md:h-5 text-accent" />{" "}
               </button>
             )}
           </div>
@@ -313,7 +314,7 @@ export function MoneyFlowTracker({
                     </span>
                   </div>
                   <div
-                    className={`grid gap-3 md:gap-4 ${Object.keys(data.flow_data).filter((k) => !["sectors", "mood", "score", "state"].includes(k.toLowerCase())).length > 1 ? "grid-cols-1" : "grid-cols-2"}`}
+                    className={`grid gap-2 md:gap-4 ${Object.keys(data.flow_data).filter((k) => !["sectors", "mood", "score", "state"].includes(k.toLowerCase())).length > 1 ? "grid-cols-3 sm:grid-cols-1" : "grid-cols-3 sm:grid-cols-2"}`}
                   >
                     {Object.entries(items).map(([name, item]) => (
                       <AssetCard key={name} name={name} item={item} />
@@ -401,25 +402,25 @@ export function MoneyFlowTracker({
 function AssetCard({ name, item }: { name: string; item: FlowItem }) {
   const isPositive = item.change >= 0;
   return (
-    <div className="bg-background/40 border border-border-subtle/50 rounded-xl md:rounded-2xl p-3 md:p-4 transition-all hover:border-accent/30 group text-left">
-      <div className="flex justify-between items-start mb-1 md:mb-2">
-        <span className="text-xs md:text-sm font-black text-foreground/70 group-hover:text-foreground transition-colors overflow-hidden text-ellipsis whitespace-nowrap">
+    <div className="bg-background/40 border border-border-subtle/50 rounded-lg md:rounded-2xl px-2 py-3 md:p-4 transition-all hover:border-accent/30 group text-left">
+      <div className="flex justify-between items-start mb-1 md:mb-2 gap-1">
+        <span className="text-[10px] md:text-sm font-black text-foreground/70 group-hover:text-foreground transition-colors overflow-hidden text-ellipsis whitespace-nowrap">
           {name}
         </span>
         {isPositive ? (
-          <ArrowUpRight className="w-3 md:w-3.5 h-3 md:h-3.5 text-emerald-500" />
+          <ArrowUpRight className="w-3 md:w-3.5 h-3 md:h-3.5 text-emerald-500 shrink-0" />
         ) : (
-          <ArrowDownRight className="w-3 md:w-3.5 h-3 md:h-3.5 text-red-500" />
+          <ArrowDownRight className="w-3 md:text-3.5 h-3 md:h-3.5 text-red-500 shrink-0" />
         )}
       </div>
       <div className="flex flex-col md:flex-row md:items-baseline md:gap-2">
         <span
-          className={`text-base md:text-lg font-black tracking-tighter ${isPositive ? "text-emerald-500" : "text-red-500"}`}
+          className={`text-xs md:text-lg font-black tracking-tighter ${isPositive ? "text-emerald-500" : "text-red-500"}`}
         >
           {isPositive ? "+" : ""}
           {item.change}%
         </span>
-        <span className="text-[9px] md:text-[10px] font-bold text-foreground/30 tabular-nums lowercase">
+        <span className="text-[8px] md:text-[10px] font-bold text-foreground/30 tabular-nums lowercase">
           vol {item.rel_vol}x
         </span>
       </div>

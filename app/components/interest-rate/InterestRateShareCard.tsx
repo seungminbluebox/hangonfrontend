@@ -193,8 +193,8 @@ export function InterestRateShareCard({
                     className={`p-5 rounded-3xl border flex flex-col gap-3 ${shareTheme === "light" ? "bg-white border-blue-500/10 shadow-sm" : "bg-white/5 border-blue-500/10"}`}
                   >
                     <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                        <span className="text-[8px] font-black text-blue-500">
+                      <div className="px-2 h-6 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                        <span className="text-[11px] font-black text-blue-500">
                           USA
                         </span>
                       </div>
@@ -214,8 +214,8 @@ export function InterestRateShareCard({
                     className={`p-5 rounded-3xl border flex flex-col gap-3 ${shareTheme === "light" ? "bg-white border-emerald-500/10 shadow-sm" : "bg-white/5 border-emerald-500/10"}`}
                   >
                     <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                        <span className="text-[8px] font-black text-emerald-500">
+                      <div className="px-2 h-6 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                        <span className="text-[11px] font-black text-emerald-500">
                           KOR
                         </span>
                       </div>

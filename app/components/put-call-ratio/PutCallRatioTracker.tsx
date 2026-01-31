@@ -180,7 +180,7 @@ export function PutCallRatioTracker({ market }: PutCallRatioTrackerProps) {
                 )}
               />
               <span className="text-[10px] md:text-sm font-black italic tracking-tight text-accent uppercase bg-accent/10 px-3 py-1 rounded-full border border-accent/20">
-                PUT/CALL RATIO{" "}
+                PCR{" "}
                 <span className="not-italic opacity-60 ml-1">풋콜 비율</span>
               </span>
               <div className="flex flex-col ml-1">
