@@ -16,7 +16,7 @@ import {
   ShieldAlert,
 } from "lucide-react";
 import { MoneyFlowShareCard } from "./MoneyFlowShareCard";
-import { supabase } from "../../../lib/supabase";
+import { supabase } from "@/lib/supabase";
 
 interface FlowItem {
   symbol: string;

@@ -7,6 +7,8 @@ import { TrendingUp, Globe, Calendar, Mail, Library } from "lucide-react";
 import { Metadata } from "next"; // 상단 import 추가
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 type Props = {
   searchParams: Promise<{ date?: string }>;
 };
@@ -30,7 +32,7 @@ export async function generateMetadata({
       type: "website",
       images: [
         {
-          url: "https://hangon.co.kr/og-image.png",
+          url: "https://hangon.co.kr/icon-512.png",
           width: 1200,
           height: 630,
           alt: "Hang on! Dashboard Preview",

@@ -10,7 +10,7 @@ import {
   Microscope,
 } from "lucide-react";
 import { FearGreedShareCard } from "./FearGreedShareCard";
-import { supabase } from "../../../lib/supabase";
+import { supabase } from "@/lib/supabase";
 
 interface FearGreedData {
   value: number;

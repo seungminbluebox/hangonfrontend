@@ -36,7 +36,7 @@ import {
 } from "lucide-react";
 import { clsx } from "clsx";
 import { CreditBalanceShareCard } from "./CreditBalanceShareCard";
-import { supabase } from "../../../lib/supabase";
+import { supabase } from "@/lib/supabase";
 
 interface CreditHistory {
   date: string;

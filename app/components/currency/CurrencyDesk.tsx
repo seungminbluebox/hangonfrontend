@@ -25,7 +25,7 @@ import {
 } from "recharts";
 import { MarketData } from "../../lib/market";
 import { CurrencyShareCard } from "./CurrencyShareCard";
-import { supabase } from "../../../lib/supabase";
+import { supabase } from "@/lib/supabase";
 
 interface CurrencyItem {
   price: number;
