@@ -460,17 +460,17 @@ export function Navigation() {
               isOpen ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0"
             }`}
           >
-            <div className="bg-secondary/40 border border-border-subtle rounded-2xl p-4 flex flex-col gap-2.5">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-background flex items-center justify-center shrink-0 border border-border-subtle">
-                  <Bell className="w-4 h-4 text-text-muted" />
+            <div className="bg-secondary/20 backdrop-blur-md border border-border-subtle/50 rounded-[1.25rem] p-3.5 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3 overflow-hidden ml-0.5">
+                <div className="w-9 h-9 rounded-xl bg-accent/10 flex items-center justify-center shrink-0 border border-accent/10">
+                  <Bell className="w-4.5 h-4.5 text-accent" />
                 </div>
-                <div>
-                  <h4 className="text-[13px] font-bold text-foreground">
-                    데일리 소식 받기
+                <div className="flex flex-col min-w-0">
+                  <h4 className="text-[13px] font-black text-foreground truncate">
+                    실시간 알림
                   </h4>
-                  <p className="text-[10px] text-text-muted leading-tight">
-                    매일 아침, 하룻동안 있었던 소식을 정리해 알려드려요.
+                  <p className="text-[10px] text-text-muted/60 font-medium truncate">
+                    뉴스 및 지표 업데이트
                   </p>
                 </div>
               </div>

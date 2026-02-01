@@ -81,7 +81,9 @@ export function NotificationManager({
 
       setSubscription(sub);
       setPermission("granted");
-      alert("알림 구독이 완료되었습니다! 🚀");
+      alert(
+        "실시간 마켓 업데이트 구독이 완료되었습니다! 🚀\n\n뉴스, 공포지수, 환율, 자금흐름 등 앞으로 업데이트되는 모든 시장 지표를 즉시 보내드릴게요.",
+      );
     } catch (error) {
       console.error("Failed to subscribe:", error);
       alert("알림 구독에 실패했습니다.");
@@ -117,14 +119,14 @@ export function NotificationManager({
     return (
       <div className="flex flex-col gap-2 p-4 bg-secondary/30 rounded-2xl border border-dashed border-border-subtle">
         <p className="text-[11px] font-bold text-text-muted leading-relaxed">
-          💡 알림 기능을 이용하시려면 앱 설치가 필요합니다.
+          💡 시장 지표 알림을 받으려면 앱 설치가 필요합니다.
         </p>
         <div className="flex flex-col gap-1.5 pl-1">
           <p className="text-[10px] text-text-muted/70">
-            • <b>안드로이드:</b> 하단/상단의 &apos;설치&apos; 버튼 클릭
+            • <b>뉴스와 지표업데이트를 실시간으로</b> 한 번에 받아보세요.
           </p>
           <p className="text-[10px] text-text-muted/70">
-            • <b>아이폰(iOS):</b> &apos;홈 화면에 추가&apos; 후 앱으로 실행
+            • 홈 화면에 추가하면 강력한 푸시 기능을 사용할 수 있습니다.
           </p>
         </div>
       </div>
@@ -159,7 +161,7 @@ export function NotificationManager({
               }
             />
           )}
-          {showText && <span>알림 끄기</span>}
+          {showText && <span>알림 해제</span>}
         </button>
       ) : (
         <button
@@ -172,7 +174,7 @@ export function NotificationManager({
                 : "px-4 py-2.5 text-sm font-bold"
               : "p-2"
           }`}
-          title="소식 받기"
+          title="모든 지표 알림 받기"
         >
           {isSubscribing ? (
             <Loader2
@@ -187,7 +189,7 @@ export function NotificationManager({
               }
             />
           )}
-          {showText && <span>소식 받기</span>}
+          {showText && <span>알림 받기</span>}
         </button>
       )}
     </div>
