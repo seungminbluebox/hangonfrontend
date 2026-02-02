@@ -17,6 +17,8 @@ interface ShareCardProps {
   category: string;
   summary: string;
   date: string;
+  imageUrl?: string;
+  type?: "default" | "breaking";
   onClose: () => void;
 }
 
@@ -25,6 +27,8 @@ export function ShareCard({
   category,
   summary,
   date,
+  imageUrl,
+  type = "default",
   onClose,
 }: ShareCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -209,41 +213,69 @@ export function ShareCard({
 
               <div className="flex items-center justify-between relative z-10 transition-colors">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-6 bg-accent rounded-full" />
-                  <span
-                    className={`text-[11px] font-black tracking-[0.2em] uppercase transition-colors ${
-                      shareTheme === "light"
-                        ? "text-slate-500"
-                        : "text-slate-400"
-                    }`}
-                  >
-                    {category} BRIEF
-                  </span>
+                  {type === "breaking" ? (
+                    <div className="w-fit px-2 py-0.5 bg-red-600 text-white text-[10px] font-black uppercase tracking-widest rounded-sm">
+                      속보 • Breaking
+                    </div>
+                  ) : (
+                    <>
+                      <div className="w-2 h-6 bg-accent rounded-full" />
+                      <span
+                        className={`text-[11px] font-black tracking-[0.2em] uppercase transition-colors ${
+                          shareTheme === "light"
+                            ? "text-slate-500"
+                            : "text-slate-400"
+                        }`}
+                      >
+                        {category} BRIEF
+                      </span>
+                    </>
+                  )}
                 </div>
                 <span
                   className={`text-[11px] font-bold font-mono tracking-tighter transition-colors ${
                     shareTheme === "light" ? "text-slate-500" : "text-slate-400"
                   }`}
                 >
-                  {new Date(date)
-                    .toLocaleDateString("ko-KR", {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                    })
-                    .replace(/\. /g, ".")
-                    .replace(/\.$/, "")}
+                  {type === "breaking"
+                    ? new Date(date).toLocaleDateString("en-US", {
+                        month: "2-digit",
+                        day: "2-digit",
+                      })
+                    : new Date(date)
+                        .toLocaleDateString("ko-KR", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                        })
+                        .replace(/\. /g, ".")
+                        .replace(/\.$/, "")}
                 </span>
               </div>
 
               <div className="relative z-10 flex flex-col gap-6">
-                <h2
-                  className={`text-2xl font-black leading-[1.3] tracking-tight break-keep transition-colors ${
-                    shareTheme === "light" ? "text-slate-800" : "text-slate-100"
-                  }`}
-                >
-                  {title}
-                </h2>
+                <div className="flex flex-col gap-2">
+                  <h2
+                    className={`text-2xl font-black leading-[1.3] tracking-tight break-keep transition-colors ${
+                      shareTheme === "light"
+                        ? "text-slate-800"
+                        : "text-slate-100"
+                    }`}
+                  >
+                    {title}
+                  </h2>
+                </div>
+
+                {imageUrl && (
+                  <div className="relative w-full h-32 rounded-2xl overflow-hidden -mt-2 border border-black/5">
+                    <img
+                      src={imageUrl}
+                      alt=""
+                      className="w-full h-full object-cover"
+                      crossOrigin="anonymous"
+                    />
+                  </div>
+                )}
 
                 <div className="space-y-4">
                   {summary
@@ -271,42 +303,58 @@ export function ShareCard({
                   shareTheme === "light"
                     ? "border-slate-100"
                     : "border-slate-800"
-                }`}
+                } ${type === "breaking" ? "justify-center" : ""}`}
               >
-                <div className="flex flex-col gap-0.5">
-                  <span
-                    className={`text-[9px] font-bold uppercase tracking-widest transition-colors ${
-                      shareTheme === "light"
-                        ? "text-slate-500"
-                        : "text-slate-400"
-                    }`}
-                  >
-                    Economic Insight
-                  </span>
-                  <span className="text-lg font-black text-accent tracking-tighter italic">
-                    HANG ON!
-                  </span>
-                </div>
-                <div className="flex flex-col items-end gap-1">
-                  <span
-                    className={`text-[8px] font-bold uppercase tracking-tight transition-colors ${
-                      shareTheme === "light"
-                        ? "text-slate-500"
-                        : "text-slate-400"
-                    }`}
-                  >
-                    더 많은 정보는?
-                  </span>
-                  <span
-                    className={`text-[10px] font-bold transition-colors ${
-                      shareTheme === "light"
-                        ? "text-slate-500"
-                        : "text-slate-400"
-                    }`}
-                  >
-                    www.hangon.co.kr
-                  </span>
-                </div>
+                {type === "breaking" ? (
+                  <div className="flex flex-col items-center gap-1 w-full pt-2">
+                    <p
+                      className={`text-[13px] font-black tracking-tighter opacity-30 ${
+                        shareTheme === "light"
+                          ? "text-neutral-900"
+                          : "text-white"
+                      }`}
+                    >
+                      www.hangon.co.kr
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex flex-col gap-0.5">
+                      <span
+                        className={`text-[9px] font-bold uppercase tracking-widest transition-colors ${
+                          shareTheme === "light"
+                            ? "text-slate-500"
+                            : "text-slate-400"
+                        }`}
+                      >
+                        Economic Insight
+                      </span>
+                      <span className="text-lg font-black text-accent tracking-tighter italic">
+                        HANG ON!
+                      </span>
+                    </div>
+                    <div className="flex flex-col items-end gap-1">
+                      <span
+                        className={`text-[8px] font-bold uppercase tracking-tight transition-colors ${
+                          shareTheme === "light"
+                            ? "text-slate-500"
+                            : "text-slate-400"
+                        }`}
+                      >
+                        더 많은 정보는?
+                      </span>
+                      <span
+                        className={`text-[10px] font-bold transition-colors ${
+                          shareTheme === "light"
+                            ? "text-slate-500"
+                            : "text-slate-400"
+                        }`}
+                      >
+                        www.hangon.co.kr
+                      </span>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

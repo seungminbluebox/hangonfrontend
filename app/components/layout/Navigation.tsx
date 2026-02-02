@@ -10,6 +10,7 @@ import {
   Menu,
   X,
   TrendingUp,
+  Zap,
   Gauge,
   Home,
   Compass,
@@ -27,6 +28,7 @@ import {
   Shuffle,
   Waves,
   Bell,
+  LayoutDashboard,
 } from "lucide-react";
 
 export function Navigation() {
@@ -83,6 +85,12 @@ export function Navigation() {
       href: "/news/daily-report",
       icon: Library,
       desc: "거시경제 맥락과 시장 분석 요약",
+    },
+    {
+      name: "실시간 속보",
+      href: "/live",
+      icon: Zap,
+      desc: "24시간 멈추지 않는 마켓 시그널",
     },
     // 국내 증시
     {
@@ -180,30 +188,64 @@ export function Navigation() {
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-4 xl:gap-8">
               <div className="flex items-center gap-1.5 bg-secondary/30 p-1 rounded-2xl border border-border-subtle/50">
-                {/* 1. 홈 (Standalone) */}
-                <Link
-                  href="/"
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${
-                    pathname === "/"
-                      ? "bg-background text-accent shadow-sm"
-                      : "text-text-muted hover:text-foreground hover:bg-background/40"
-                  }`}
+                {/* 1. 주요 소식 (Dropdown) */}
+                <div
+                  className="relative group h-full"
+                  onMouseEnter={() => setActiveDropdown("news")}
+                  onMouseLeave={() => setActiveDropdown(null)}
                 >
-                  <Home className="w-4 h-4" />
-                  <span>뉴스홈</span>
-                </Link>
+                  <button
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
+                      ["/", "/news/daily-report", "/live"].includes(pathname)
+                        ? "text-accent"
+                        : "text-text-muted hover:text-foreground hover:bg-background/40"
+                    }`}
+                  >
+                    <LayoutDashboard className="w-4 h-4" />
+                    <span>주요 소식</span>
+                    <ChevronDown
+                      className={`w-3.5 h-3.5 transition-transform duration-300 ${
+                        activeDropdown === "news" ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
 
-                <Link
-                  href="/news/daily-report"
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${
-                    pathname === "/news/daily-report"
-                      ? "bg-background text-accent shadow-sm"
-                      : "text-text-muted hover:text-foreground hover:bg-background/40"
-                  }`}
-                >
-                  <Library className="w-4 h-4" />
-                  <span>마켓리포트</span>
-                </Link>
+                  {/* Dropdown Menu */}
+                  <div
+                    className={`absolute top-full left-0 pt-2 w-64 transition-all duration-300 z-50 ${
+                      activeDropdown === "news"
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 translate-y-2 pointer-events-none"
+                    }`}
+                  >
+                    <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1 overflow-hidden">
+                      {navLinks.slice(0, 3).map((link) => {
+                        const Icon = link.icon;
+                        return (
+                          <Link
+                            key={link.name}
+                            href={link.href}
+                            className={`flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-bold transition-all ${
+                              pathname === link.href
+                                ? "bg-accent/10 text-accent"
+                                : "hover:bg-secondary/50 text-text-muted hover:text-foreground"
+                            }`}
+                          >
+                            <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
+                              <Icon className="w-4 h-4 text-accent" />
+                            </div>
+                            <div className="flex flex-col overflow-hidden">
+                              <span className="truncate">{link.name}</span>
+                              <span className="text-[10px] opacity-40 font-medium truncate mt-0.5">
+                                {link.desc}
+                              </span>
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
 
                 {/* 2. 국내 증시 (Dropdown) */}
                 <div
@@ -241,7 +283,7 @@ export function Navigation() {
                     }`}
                   >
                     <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1 overflow-hidden">
-                      {navLinks.slice(2, 6).map((link) => {
+                      {navLinks.slice(3, 7).map((link) => {
                         const Icon = link.icon;
                         return (
                           <Link
@@ -305,7 +347,7 @@ export function Navigation() {
                     }`}
                   >
                     <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1">
-                      {navLinks.slice(6, 10).map((link) => {
+                      {navLinks.slice(7, 11).map((link) => {
                         const Icon = link.icon;
                         return (
                           <Link
@@ -368,7 +410,7 @@ export function Navigation() {
                     }`}
                   >
                     <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1">
-                      {navLinks.slice(10).map((link) => {
+                      {navLinks.slice(11).map((link) => {
                         const Icon = link.icon;
                         return (
                           <Link
@@ -484,7 +526,7 @@ export function Navigation() {
               Main Dashboard
             </h3>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(0, 2).map((link, index) => {
+              {navLinks.slice(0, 3).map((link, index) => {
                 const Icon = link.icon;
                 return (
                   <Link
@@ -544,7 +586,7 @@ export function Navigation() {
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(2, 6).map((link, index) => {
+              {navLinks.slice(3, 7).map((link, index) => {
                 const Icon = link.icon;
                 return (
                   <Link
@@ -561,7 +603,7 @@ export function Navigation() {
                         : "translate-x-8 opacity-0"
                     }`}
                     style={{
-                      transitionDelay: isOpen ? `${(index + 2) * 30}ms` : "0ms",
+                      transitionDelay: isOpen ? `${(index + 3) * 30}ms` : "0ms",
                     }}
                   >
                     <div
@@ -604,7 +646,7 @@ export function Navigation() {
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(6, 10).map((link, index) => {
+              {navLinks.slice(7, 11).map((link, index) => {
                 const Icon = link.icon;
                 return (
                   <Link
@@ -621,7 +663,7 @@ export function Navigation() {
                         : "translate-x-8 opacity-0"
                     }`}
                     style={{
-                      transitionDelay: isOpen ? `${(index + 6) * 30}ms` : "0ms",
+                      transitionDelay: isOpen ? `${(index + 7) * 30}ms` : "0ms",
                     }}
                   >
                     <div
@@ -664,7 +706,7 @@ export function Navigation() {
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(10).map((link, index) => {
+              {navLinks.slice(11).map((link, index) => {
                 const Icon = link.icon;
                 return (
                   <Link
@@ -682,7 +724,7 @@ export function Navigation() {
                     }`}
                     style={{
                       transitionDelay: isOpen
-                        ? `${(index + 10) * 30}ms`
+                        ? `${(index + 11) * 30}ms`
                         : "0ms",
                     }}
                   >
