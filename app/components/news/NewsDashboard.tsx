@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import {
   ExternalLink,
   Info,
@@ -21,28 +21,62 @@ interface NewsItem {
   summary: string;
   links: { title: string; url: string }[];
   created_at: string;
+  news_reactions?: {
+    good_count: number;
+    bad_count: number;
+    neutral_count: number;
+  }[];
 }
 
 export function NewsDashboard({ news }: { news: NewsItem[] }) {
   const [selectedId, setSelectedId] = useState<string | null>(
     news.length > 0 ? news[0].id : null,
   );
+  // 각 뉴스별 실제 참여자 수를 별도 상태로 관리하여 반응형 업데이트 지원
+  const [realReactionCounts, setRealReactionCounts] = useState<
+    Record<string, { good: number; bad: number; neutral: number }>
+  >({});
+
   const [isMobileDetailOpen, setIsMobileDetailOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isDailyShareModalOpen, setIsDailyShareModalOpen] = useState(false);
   const detailRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // 뉴스 데이터(날짜)가 변경되면 선택된 아이디를 첫 번째 뉴스로 리셋
+  // 초기 데이터 로드 시 참여자 수 상태 초기화
   useEffect(() => {
+    const initialCounts: Record<
+      string,
+      { good: number; bad: number; neutral: number }
+    > = {};
+    news.forEach((item) => {
+      // Supabase join 결과는 배열로 들어옴
+      const reactions = item.news_reactions?.[0];
+      initialCounts[item.id] = {
+        good: reactions?.good_count || 0,
+        bad: reactions?.bad_count || 0,
+        neutral: reactions?.neutral_count || 0,
+      };
+    });
+    setRealReactionCounts(initialCounts);
+
     if (news.length > 0) {
       setSelectedId(news[0].id);
     } else {
       setSelectedId(null);
     }
-    // 상세 페이지가 열려있다면 닫아줌 (모바일 대응)
     setIsMobileDetailOpen(false);
   }, [news]);
+
+  const handleReactionUpdate = useCallback(
+    (id: string, counts: { good: number; bad: number; neutral: number }) => {
+      setRealReactionCounts((prev) => ({
+        ...prev,
+        [id]: counts,
+      }));
+    },
+    [],
+  );
 
   const handleSelect = (id: string) => {
     setSelectedId(id);
@@ -137,6 +171,9 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
                         item.keyword,
                         item.summary,
                         item.created_at,
+                        realReactionCounts[item.id]?.good || 0,
+                        realReactionCounts[item.id]?.bad || 0,
+                        realReactionCounts[item.id]?.neutral || 0,
                       )}
                       +
                     </span>
@@ -293,6 +330,9 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
                     keyword={selectedItem.keyword}
                     summary={selectedItem.summary}
                     createdAt={selectedItem.created_at}
+                    onReactionChange={(counts) =>
+                      handleReactionUpdate(selectedItem.id, counts)
+                    }
                   />
                 </div>
               </div>

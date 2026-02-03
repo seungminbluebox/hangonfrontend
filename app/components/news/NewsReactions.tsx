@@ -136,13 +136,17 @@ export const getTotalFakeCount = (
   keyword?: string,
   summary?: string,
   createdAt?: string,
+  realGood: number = 0,
+  realBad: number = 0,
+  realNeutral: number = 0,
 ): number => {
   const sentiment = detectSentiment(keyword || "", summary || "");
-  return (
+  const fakeSum =
     getFakeCount(id, "good", sentiment, createdAt) +
     getFakeCount(id, "bad", sentiment, createdAt) +
-    getFakeCount(id, "neutral", sentiment, createdAt)
-  );
+    getFakeCount(id, "neutral", sentiment, createdAt);
+
+  return fakeSum + realGood + realBad + realNeutral;
 };
 
 interface ReactionData {
@@ -156,6 +160,11 @@ interface NewsReactionsProps {
   keyword?: string;
   summary?: string;
   createdAt?: string;
+  onReactionChange?: (counts: {
+    good: number;
+    bad: number;
+    neutral: number;
+  }) => void;
 }
 
 export function NewsReactions({
@@ -163,6 +172,7 @@ export function NewsReactions({
   keyword,
   summary,
   createdAt,
+  onReactionChange,
 }: NewsReactionsProps) {
   const [counts, setCounts] = useState<ReactionData>({
     good: 0,
@@ -205,19 +215,26 @@ export function NewsReactions({
       const sentiment = detectSentiment(keyword || "", summary || "");
 
       // 4. 가짜 데이터와 합치기
-      setCounts({
+      const finalCounts = {
         good:
           getFakeCount(newsId, "good", sentiment, createdAt) + realCounts.good,
         bad: getFakeCount(newsId, "bad", sentiment, createdAt) + realCounts.bad,
         neutral:
           getFakeCount(newsId, "neutral", sentiment, createdAt) +
           realCounts.neutral,
-      });
+      };
+
+      setCounts(finalCounts);
       setIsLoaded(true);
+
+      // 상위 컴포넌트에 실제 DB 카운트 전달 (가짜 제외한 순수 DB 값)
+      if (onReactionChange) {
+        onReactionChange(realCounts);
+      }
     }
 
     fetchReactions();
-  }, [newsId, keyword, summary, createdAt]);
+  }, [newsId, keyword, summary, createdAt, onReactionChange]);
 
   const handleReact = async (type: ReactionType) => {
     if (!isLoaded || userReaction === type) return;
@@ -249,6 +266,12 @@ export function NewsReactions({
         .eq("news_id", newsId)
         .single();
 
+      const realCounts = {
+        good: currentData?.good_count || 0,
+        bad: currentData?.bad_count || 0,
+        neutral: currentData?.neutral_count || 0,
+      };
+
       const updates: any = {
         news_id: newsId,
         updated_at: new Date().toISOString(),
@@ -257,12 +280,17 @@ export function NewsReactions({
       // 2. 기존 반응이 있었다면 해당 컬럼 -1
       if (oldReaction) {
         const oldCol = `${oldReaction}_count`;
-        updates[oldCol] = Math.max(0, (currentData?.[oldCol] || 1) - 1);
+        updates[oldCol] = Math.max(
+          0,
+          (realCounts[oldReaction as keyof typeof realCounts] || 1) - 1,
+        );
+        realCounts[oldReaction as keyof typeof realCounts] = updates[oldCol];
       }
 
       // 3. 새로운 반응 컬럼 +1
       const newCol = `${type}_count`;
-      updates[newCol] = (currentData?.[newCol] || 0) + 1;
+      updates[newCol] = (realCounts[type as keyof typeof realCounts] || 0) + 1;
+      realCounts[type as keyof typeof realCounts] = updates[newCol];
 
       // 4. 다른 컬럼들도 초기값 유지 (insert 대비)
       if (!currentData) {
@@ -272,6 +300,11 @@ export function NewsReactions({
       }
 
       await supabase.from("news_reactions").upsert(updates);
+
+      // 상위 컴포넌트에 업데이트된 실제 카운트 전달
+      if (onReactionChange) {
+        onReactionChange(realCounts);
+      }
     } catch (err) {
       console.error("Failed to update reaction:", err);
     }
