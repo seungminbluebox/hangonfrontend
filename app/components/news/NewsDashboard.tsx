@@ -132,7 +132,13 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
                   <div className="flex items-center gap-1.5 ml-1 px-1.5 py-0.5 rounded-full bg-foreground/5 dark:bg-white/5 border border-border-subtle/30">
                     <Users className="w-2.5 h-2.5 text-text-muted" />
                     <span className="text-[9px] font-bold text-text-muted tabular-nums">
-                      {getTotalFakeCount(item.id, item.keyword, item.summary)}+
+                      {getTotalFakeCount(
+                        item.id,
+                        item.keyword,
+                        item.summary,
+                        item.created_at,
+                      )}
+                      +
                     </span>
                   </div>
                 </div>
@@ -286,6 +292,7 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
                     newsId={selectedItem.id}
                     keyword={selectedItem.keyword}
                     summary={selectedItem.summary}
+                    createdAt={selectedItem.created_at}
                   />
                 </div>
               </div>

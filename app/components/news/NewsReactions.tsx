@@ -66,11 +66,27 @@ const detectSentiment = (keyword: string, summary: string): ReactionType => {
   return "neutral";
 };
 
+// 24시간 동안 선형적으로 증가하는 가중치 계산
+const getTimeWeight = (createdAt?: string): number => {
+  if (!createdAt) return 1;
+
+  const createdTime = new Date(createdAt).getTime();
+  const currentTime = new Date().getTime();
+  const elapsedMs = currentTime - createdTime;
+  const growthMs = 24 * 60 * 60 * 1000; // 24시간
+
+  if (elapsedMs <= 0) return 0;
+  if (elapsedMs >= growthMs) return 1;
+
+  return elapsedMs / growthMs;
+};
+
 // 결정론적 가짜 숫자 생성 (편향 적용)
 export const getFakeCount = (
   id: string,
   type: ReactionType,
   sentiment?: ReactionType,
+  createdAt?: string,
 ): number => {
   // 1. 고유 씨드 생성
   let hash = 0;
@@ -84,45 +100,48 @@ export const getFakeCount = (
   // 2. 가중 뉴스 여부 판단 (일부 뉴스는 아주 압도적인 반응을 보이게 함)
   const isExtreme = baseRandom % 10 < 3; // 30% 확률로 극단적인 뉴스
 
+  let baseFakeCount = 0;
+
   // 3. 감정에 따른 범위 설정
   if (sentiment === "good") {
     if (type === "good") {
-      return (
-        (isExtreme ? 180 + (baseRandom % 121) : 60 + (baseRandom % 61)) * 10
-      ); // 극단적이면 1800~3000, 아니면 600~1200
+      baseFakeCount =
+        (isExtreme ? 180 + (baseRandom % 121) : 60 + (baseRandom % 61)) * 10; // 극단적이면 1800~3000, 아니면 600~1200
+    } else if (type === "bad") {
+      baseFakeCount = (2 + (baseRandom % 8)) * 10; // 호재 뉴스에 악재는 20~100개로 아주 적게
+    } else {
+      baseFakeCount = (10 + (baseRandom % 21)) * 10; // 중립은 100~300
     }
+  } else if (sentiment === "bad") {
     if (type === "bad") {
-      return (2 + (baseRandom % 8)) * 10; // 호재 뉴스에 악재는 20~100개로 아주 적게
+      baseFakeCount =
+        (isExtreme ? 180 + (baseRandom % 121) : 60 + (baseRandom % 61)) * 10; // 극단적이면 1800~3000, 아니면 600~1200
+    } else if (type === "good") {
+      baseFakeCount = (2 + (baseRandom % 8)) * 10; // 악재 뉴스에 호재는 20~100개로 아주 적게
+    } else {
+      baseFakeCount = (10 + (baseRandom % 21)) * 10; // 중립은 100~300
     }
-    return (10 + (baseRandom % 21)) * 10; // 중립은 100~300
+  } else {
+    // 중립 뉴스는 숫자가 자잘하게 흩어지게
+    baseFakeCount = (15 + (baseRandom % 36)) * 10; // 150~500
   }
 
-  if (sentiment === "bad") {
-    if (type === "bad") {
-      return (
-        (isExtreme ? 180 + (baseRandom % 121) : 60 + (baseRandom % 61)) * 10
-      ); // 극단적이면 1800~3000, 아니면 600~1200
-    }
-    if (type === "good") {
-      return (2 + (baseRandom % 8)) * 10; // 악재 뉴스에 호재는 20~100개로 아주 적게
-    }
-    return (10 + (baseRandom % 21)) * 10; // 중립은 100~300
-  }
-
-  // 중립 뉴스는 숫자가 자잘하게 흩어지게
-  return (15 + (baseRandom % 36)) * 10; // 150~500
+  // 4. 시간에 따른 선형 증가 적용
+  const weight = getTimeWeight(createdAt);
+  return Math.floor(baseFakeCount * weight);
 };
 
 export const getTotalFakeCount = (
   id: string,
   keyword?: string,
   summary?: string,
+  createdAt?: string,
 ): number => {
   const sentiment = detectSentiment(keyword || "", summary || "");
   return (
-    getFakeCount(id, "good", sentiment) +
-    getFakeCount(id, "bad", sentiment) +
-    getFakeCount(id, "neutral", sentiment)
+    getFakeCount(id, "good", sentiment, createdAt) +
+    getFakeCount(id, "bad", sentiment, createdAt) +
+    getFakeCount(id, "neutral", sentiment, createdAt)
   );
 };
 
@@ -132,10 +151,18 @@ interface ReactionData {
   neutral: number;
 }
 
+interface NewsReactionsProps {
+  newsId: string;
+  keyword?: string;
+  summary?: string;
+  createdAt?: string;
+}
+
 export function NewsReactions({
   newsId,
   keyword,
   summary,
+  createdAt,
 }: NewsReactionsProps) {
   const [counts, setCounts] = useState<ReactionData>({
     good: 0,
@@ -179,16 +206,18 @@ export function NewsReactions({
 
       // 4. 가짜 데이터와 합치기
       setCounts({
-        good: getFakeCount(newsId, "good", sentiment) + realCounts.good,
-        bad: getFakeCount(newsId, "bad", sentiment) + realCounts.bad,
+        good:
+          getFakeCount(newsId, "good", sentiment, createdAt) + realCounts.good,
+        bad: getFakeCount(newsId, "bad", sentiment, createdAt) + realCounts.bad,
         neutral:
-          getFakeCount(newsId, "neutral", sentiment) + realCounts.neutral,
+          getFakeCount(newsId, "neutral", sentiment, createdAt) +
+          realCounts.neutral,
       });
       setIsLoaded(true);
     }
 
     fetchReactions();
-  }, [newsId, keyword, summary]);
+  }, [newsId, keyword, summary, createdAt]);
 
   const handleReact = async (type: ReactionType) => {
     if (!isLoaded || userReaction === type) return;
