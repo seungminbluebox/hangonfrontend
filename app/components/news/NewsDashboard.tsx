@@ -12,6 +12,7 @@ import {
 import { ShareCard } from "../layout/ShareCard";
 import { DailyShareCard } from "./DailyShareCard";
 import { NewsReactions, getTotalFakeCount } from "./NewsReactions";
+import { RollingNumber } from "./RollingNumber";
 import { Users } from "lucide-react";
 
 interface NewsItem {
@@ -42,6 +43,13 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
   const [isDailyShareModalOpen, setIsDailyShareModalOpen] = useState(false);
   const detailRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [lastTick, setLastTick] = useState(Date.now());
+
+  // 1분마다 리렌더링 트리거 (선형 증가 숫자 반영)
+  useEffect(() => {
+    const timer = setInterval(() => setLastTick(Date.now()), 60000);
+    return () => clearInterval(timer);
+  }, []);
 
   // 초기 데이터 로드 시 참여자 수 상태 초기화
   useEffect(() => {
@@ -165,17 +173,19 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
                   })()}
                   <div className="flex items-center gap-1.5 ml-1 px-1.5 py-0.5 rounded-full bg-foreground/5 dark:bg-white/5 border border-border-subtle/30">
                     <Users className="w-2.5 h-2.5 text-text-muted" />
-                    <span className="text-[9px] font-bold text-text-muted tabular-nums">
-                      {getTotalFakeCount(
-                        item.id,
-                        item.keyword,
-                        item.summary,
-                        item.created_at,
-                        realReactionCounts[item.id]?.good || 0,
-                        realReactionCounts[item.id]?.bad || 0,
-                        realReactionCounts[item.id]?.neutral || 0,
-                      )}
-                      +
+                    <span className="text-[9px] font-bold text-text-muted tabular-nums flex items-center">
+                      <RollingNumber
+                        value={getTotalFakeCount(
+                          item.id,
+                          item.keyword,
+                          item.summary,
+                          item.created_at,
+                          realReactionCounts[item.id]?.good || 0,
+                          realReactionCounts[item.id]?.bad || 0,
+                          realReactionCounts[item.id]?.neutral || 0,
+                        )}
+                      />
+                      <span className="ml-0.5">명 참여</span>
                     </span>
                   </div>
                 </div>

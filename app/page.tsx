@@ -64,7 +64,7 @@ export default async function Home({
   const [newsResponse, marketData] = await Promise.all([
     supabase
       .from("daily_news")
-      .select("*, news_reactions(good_count, bad_count, neutral_count)")
+      .select("*") // 상세 JOIN은 하단에서 별도 처리 (안정성 확보)
       .filter("created_at", "gte", startOfDay)
       .filter("created_at", "lte", endOfDay)
       .order("created_at", { ascending: false }),
@@ -78,7 +78,23 @@ export default async function Home({
     ]),
   ]);
 
-  const { data: news, error } = newsResponse;
+  let { data: news, error } = newsResponse;
+
+  // [추가] 각 뉴스 아이템별 실제 반응 데이터를 안전하게 병합
+  if (news && news.length > 0) {
+    const newsIds = news.map((n) => n.id);
+    const { data: reactions } = await supabase
+      .from("news_reactions")
+      .select("*")
+      .in("news_id", newsIds);
+
+    if (reactions) {
+      news = news.map((item) => ({
+        ...item,
+        news_reactions: reactions.filter((r) => r.news_id === item.id),
+      }));
+    }
+  }
 
   // [추가] 검색 엔진을 위한 구조화된 데이터 (JSON-LD) 생성
   const jsonLd = {
@@ -111,7 +127,8 @@ export default async function Home({
     },
   };
 
-  if (error)
+  if (error) {
+    console.error("Supabase news fetch error:", error);
     return (
       <div className="flex flex-col items-center justify-center min-h-screen p-10 text-center">
         <p className="text-red-500 font-medium mb-2">Error</p>
@@ -120,6 +137,7 @@ export default async function Home({
         </p>
       </div>
     );
+  }
 
   const displayDate = new Date(targetDate).toLocaleDateString("ko-KR", {
     year: "numeric",

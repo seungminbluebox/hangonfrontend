@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { TrendingUp, TrendingDown, HelpCircle } from "lucide-react";
+import { RollingNumber } from "./RollingNumber";
 
 interface NewsReactionsProps {
   newsId: string;
@@ -88,47 +89,71 @@ export const getFakeCount = (
   sentiment?: ReactionType,
   createdAt?: string,
 ): number => {
-  // 1. 고유 씨드 생성
+  // 1. 고유 씨드 생성 (v4 업데이트 - 수치 다양화 및 10단위 절대 방지)
   let hash = 0;
-  const seed = id + type;
+  const salts: Record<ReactionType, string> = {
+    good: "gv4_good_99",
+    bad: "bv4_bad_44",
+    neutral: "nv4_neutral_22",
+  };
+  const seed = id + (salts[type] || type);
   for (let i = 0; i < seed.length; i++) {
     hash = (hash << 5) - hash + seed.charCodeAt(i);
     hash |= 0;
   }
   const baseRandom = Math.abs(hash);
 
-  // 2. 가중 뉴스 여부 판단 (일부 뉴스는 아주 압도적인 반응을 보이게 함)
-  const isExtreme = baseRandom % 10 < 3; // 30% 확률로 극단적인 뉴스
+  // 2. 가중 뉴스 여부 판단
+  const isExtreme = baseRandom % 100 < 25;
 
   let baseFakeCount = 0;
 
   // 3. 감정에 따른 범위 설정
   if (sentiment === "good") {
     if (type === "good") {
-      baseFakeCount =
-        (isExtreme ? 180 + (baseRandom % 121) : 60 + (baseRandom % 61)) * 10; // 극단적이면 1800~3000, 아니면 600~1200
+      baseFakeCount = isExtreme
+        ? 1521 + (baseRandom % 1347)
+        : 543 + (baseRandom % 629);
     } else if (type === "bad") {
-      baseFakeCount = (2 + (baseRandom % 8)) * 10; // 호재 뉴스에 악재는 20~100개로 아주 적게
+      baseFakeCount = 17 + (baseRandom % 74);
     } else {
-      baseFakeCount = (10 + (baseRandom % 21)) * 10; // 중립은 100~300
+      baseFakeCount = 89 + (baseRandom % 187);
     }
   } else if (sentiment === "bad") {
     if (type === "bad") {
-      baseFakeCount =
-        (isExtreme ? 180 + (baseRandom % 121) : 60 + (baseRandom % 61)) * 10; // 극단적이면 1800~3000, 아니면 600~1200
+      baseFakeCount = isExtreme
+        ? 1489 + (baseRandom % 1412)
+        : 527 + (baseRandom % 648);
     } else if (type === "good") {
-      baseFakeCount = (2 + (baseRandom % 8)) * 10; // 악재 뉴스에 호재는 20~100개로 아주 적게
+      baseFakeCount = 14 + (baseRandom % 83);
     } else {
-      baseFakeCount = (10 + (baseRandom % 21)) * 10; // 중립은 100~300
+      baseFakeCount = 92 + (baseRandom % 194);
     }
   } else {
-    // 중립 뉴스는 숫자가 자잘하게 흩어지게
-    baseFakeCount = (15 + (baseRandom % 36)) * 10; // 150~500
+    baseFakeCount = 143 + (baseRandom % 378);
   }
 
   // 4. 시간에 따른 선형 증가 적용
   const weight = getTimeWeight(createdAt);
-  return Math.floor(baseFakeCount * weight);
+  const weightedCount = baseFakeCount * weight;
+
+  // 5. 최종 보정: 일의 자리가 0이 되는 것을 원천 차단
+  let result = Math.floor(weightedCount);
+
+  if (result > 0 && weight > 0.1) {
+    // 해시 기반으로 1~9 사이의 결정론적 값을 생성
+    const noise = (baseRandom % 9) + 1;
+
+    // 10의 배수라면 무조건 noise를 더해 0을 회피
+    if (result % 10 === 0) {
+      result += noise;
+    } else if (baseRandom % 3 === 0) {
+      // 33% 확률로 1~2 정도를 더해 일의 자리 숫자를 더 다양화
+      result += (baseRandom % 2) + 1;
+    }
+  }
+
+  return result;
 };
 
 export const getTotalFakeCount = (
@@ -141,12 +166,19 @@ export const getTotalFakeCount = (
   realNeutral: number = 0,
 ): number => {
   const sentiment = detectSentiment(keyword || "", summary || "");
-  const fakeSum =
-    getFakeCount(id, "good", sentiment, createdAt) +
-    getFakeCount(id, "bad", sentiment, createdAt) +
-    getFakeCount(id, "neutral", sentiment, createdAt);
+  const g = getFakeCount(id, "good", sentiment, createdAt) + realGood;
+  const b = getFakeCount(id, "bad", sentiment, createdAt) + realBad;
+  const n = getFakeCount(id, "neutral", sentiment, createdAt) + realNeutral;
 
-  return fakeSum + realGood + realBad + realNeutral;
+  let total = g + b + n;
+
+  // 합계 수치도 10단위일 경우 강제로 보정 (UI 자연스러움)
+  if (total > 0 && total % 10 === 0) {
+    const salt = id.length > 0 ? id.charCodeAt(id.length - 1) : 7;
+    total += (salt % 9) + 1;
+  }
+
+  return total;
 };
 
 interface ReactionData {
@@ -182,6 +214,15 @@ export function NewsReactions({
   const [userReaction, setUserReaction] = useState<ReactionType | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [clickEffect, setClickEffect] = useState<ReactionType | null>(null);
+  const [lastTick, setLastTick] = useState(Date.now());
+
+  // 1분마다 강제 리렌더링을 위한 타이머
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setLastTick(Date.now());
+    }, 60000); // 60초마다 업데이트
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     // 뉴스 ID가 바뀔 때마다 상태 초기화
@@ -234,7 +275,7 @@ export function NewsReactions({
     }
 
     fetchReactions();
-  }, [newsId, keyword, summary, createdAt, onReactionChange]);
+  }, [newsId, keyword, summary, createdAt, lastTick]); // lastTick 추가로 자동 갱신 트리거
 
   const handleReact = async (type: ReactionType) => {
     if (!isLoaded || userReaction === type) return;
@@ -299,7 +340,11 @@ export function NewsReactions({
         if (!updates.neutral_count) updates.neutral_count = 0;
       }
 
-      await supabase.from("news_reactions").upsert(updates);
+      const { error: upsertError } = await supabase
+        .from("news_reactions")
+        .upsert(updates);
+
+      if (upsertError) throw upsertError;
 
       // 상위 컴포넌트에 업데이트된 실제 카운트 전달
       if (onReactionChange) {
@@ -307,6 +352,7 @@ export function NewsReactions({
       }
     } catch (err) {
       console.error("Failed to update reaction:", err);
+      // 에러 발생 시 상태 롤백 로직 (생략하거나 간단히 구현 가능)
     }
   };
 
@@ -389,7 +435,7 @@ export function NewsReactions({
                 <span
                   className={`text-[13px] font-black tabular-nums transition-all duration-300 ${isSelected ? "text-current" : "text-foreground/80"}`}
                 >
-                  {isLoaded ? counts[r.type] : ".."}
+                  {isLoaded ? <RollingNumber value={counts[r.type]} /> : ".."}
                 </span>
               </div>
             </button>
