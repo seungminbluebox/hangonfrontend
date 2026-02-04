@@ -10,6 +10,8 @@ interface DailyReport {
   title: string;
   content: string;
   summary: string;
+  audio_script?: string;
+  audio_content?: string;
 }
 
 export async function generateMetadata(): Promise<Metadata> {

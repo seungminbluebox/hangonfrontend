@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   TrendingUp,
   Info,
@@ -9,6 +9,9 @@ import {
   ChevronDown,
   ChevronUp,
   X,
+  Play,
+  Pause,
+  Volume2,
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -20,10 +23,57 @@ interface DailyReport {
   title: string;
   content: string;
   summary: string;
+  audio_script?: string;
+  audio_content?: string;
 }
 
 export function ReportViewer({ report }: { report: DailyReport }) {
   const [showSummary, setShowSummary] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(true);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    // 5초 후에 툴팁 자동으로 사라짐
+    const timer = setTimeout(() => setShowTooltip(false), 80000);
+    return () => {
+      clearTimeout(timer);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
+  const handleToggleAudio = async () => {
+    setShowTooltip(false);
+    if (isPlaying) {
+      audioRef.current?.pause();
+      setIsPlaying(false);
+      return;
+    }
+
+    if (audioRef.current) {
+      audioRef.current.play();
+      setIsPlaying(true);
+      return;
+    }
+
+    // 이미 DB에 저장된 오디오가 있는 경우 사용
+    if (report.audio_content) {
+      const audioUrl = `data:audio/mp3;base64,${report.audio_content}`;
+      const audio = new Audio(audioUrl);
+      audio.onended = () => setIsPlaying(false);
+      audioRef.current = audio;
+      audio.play();
+      setIsPlaying(true);
+      return;
+    }
+
+    alert(
+      "이 리포트는 음성 재생을 지원하지 않습니다. (최신 리포트부터 지원됩니다)",
+    );
+  };
 
   // 날짜 포맷팅 (YYYY-MM-DD -> YYYY년 MM월 DD일)
   const formatDate = (dateStr: string) => {
@@ -54,22 +104,60 @@ export function ReportViewer({ report }: { report: DailyReport }) {
       {/* 상단 네비게이션 및 요약 버튼 */}
       <div className="mb-6 md:mb-10 flex items-center justify-between gap-4">
         <BackButton className="mb-0" />
-        <button
-          onClick={() => setShowSummary(!showSummary)}
-          className="flex items-center gap-2.5 px-5 py-2.5 bg-accent text-white rounded-full font-black text-xs md:text-sm shadow-[0_10px_20px_-5px_rgba(var(--accent-rgb),0.3)] hover:scale-105 hover:shadow-[0_15px_25px_-5px_rgba(var(--accent-rgb),0.4)] transition-all active:scale-95 group"
-        >
-          {showSummary ? (
-            <X size={18} />
-          ) : (
-            <div className="relative">
-              <FileText
-                size={18}
-                className="group-hover:rotate-12 transition-transform"
-              />
-            </div>
-          )}
-          <span>{showSummary ? "닫기" : "요약"}</span>
-        </button>
+        <div className="flex items-center gap-2">
+          {/* Audio Button with Tooltip */}
+          <div className="relative">
+            {showTooltip && !isPlaying && report.audio_content && (
+              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 animate-bounce z-10">
+                <div className="bg-accent text-white text-[10px] md:text-xs py-1.5 px-3 rounded-xl whitespace-nowrap shadow-lg relative">
+                  바쁜 일상엔 핵심만 짚은 리포트를 들어보세요! 🎧
+                  {/* Tooltip Arrow - centered */}
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 -mb-1 w-2 h-2 bg-accent rotate-45" />
+                </div>
+              </div>
+            )}
+
+            <button
+              onClick={handleToggleAudio}
+              className={`flex flex-col md:flex-row items-center gap-1 md:gap-2.5 px-6 md:px-10 py-2.5 min-w-[72px] md:min-w-0 rounded-2xl md:rounded-full font-black text-[10px] md:text-sm transition-all active:scale-95 group shadow-[0_10px_20px_-5px_rgba(0,0,0,0.1)] hover:scale-105 ${
+                isPlaying
+                  ? "bg-red-500 text-white shadow-red-500/20"
+                  : "bg-background border border-border-subtle/50 text-foreground"
+              } ${!isPlaying && report.audio_content ? "ring-2 ring-accent/20 animate-pulse" : ""}`}
+            >
+              {isPlaying ? (
+                <Pause size={18} fill="currentColor" />
+              ) : (
+                <Volume2
+                  size={16}
+                  className="md:w-[18px] md:h-[18px] group-hover:scale-110 transition-transform"
+                />
+              )}
+              <span className="whitespace-nowrap">
+                {isPlaying ? "중지" : "듣기"}
+              </span>
+            </button>
+          </div>
+
+          <button
+            onClick={() => setShowSummary(!showSummary)}
+            className="flex flex-col md:flex-row items-center gap-1 md:gap-2.5 px-6 md:px-10 py-2.5 min-w-[72px] md:min-w-0 bg-accent text-white rounded-2xl md:rounded-full font-black text-[10px] md:text-sm shadow-[0_10px_20px_-5px_rgba(var(--accent-rgb),0.3)] hover:scale-105 hover:shadow-[0_15px_25px_-5px_rgba(var(--accent-rgb),0.4)] transition-all active:scale-95 group"
+          >
+            {showSummary ? (
+              <X size={18} />
+            ) : (
+              <div className="relative">
+                <FileText
+                  size={16}
+                  className="md:w-[18px] md:h-[18px] group-hover:rotate-12 transition-transform"
+                />
+              </div>
+            )}
+            <span className="whitespace-nowrap">
+              {showSummary ? "닫기" : "요약"}
+            </span>
+          </button>
+        </div>
       </div>
 
       {/* 요약 패널 (Show/Hide) */}
@@ -146,9 +234,11 @@ export function ReportViewer({ report }: { report: DailyReport }) {
           <div
             className="prose prose-slate dark:prose-invert max-w-none 
             prose-p:text-foreground/80 prose-p:leading-7 md:prose-p:leading-8 prose-p:text-base md:prose-p:text-lg
-            prose-p:mt-0 prose-p:mb-6
+            prose-p:mt-0 prose-p:mb-0
             prose-headings:text-foreground prose-headings:font-black
-            prose-h2:text-xl md:prose-h2:text-2xl prose-h2:mt-12 md:prose-h2:mt-20 prose-h2:mb-6 md:prose-h2:mb-8 prose-h2:border-b prose-h2:pb-4 prose-h2:border-border-subtle/50
+            prose-h1:text-3xl md:prose-h1:text-5xl prose-h1:mb-2 prose-h1:mt-20 prose-h1:border-b prose-h1:border-border-subtle/50
+            [&_h1:first-of-type]:mt-0
+            prose-h2:text-xl md:prose-h2:text-2xl prose-h2:border-b prose-h2:border-border-subtle/50
             prose-h3:text-lg md:prose-h3:text-xl prose-h3:mt-8 md:prose-h3:mt-12 prose-h3:mb-4 prose-h3:text-accent
             prose-strong:text-foreground prose-strong:font-bold prose-strong:bg-accent/5 prose-strong:px-1 prose-strong:rounded
             prose-li:text-foreground/80 prose-li:leading-7 md:prose-li:leading-8 prose-li:text-base md:prose-li:text-lg
@@ -160,11 +250,11 @@ export function ReportViewer({ report }: { report: DailyReport }) {
               remarkPlugins={[remarkGfm]}
               components={{
                 h2: ({ children }) => (
-                  <h2 className="text-xl md:text-2xl font-black mb-6 mt-10 border-b pb-4 border-border-subtle/50">
+                  <h2 className="text-xl md:text-2xl font-black mb-2 mt-4 border-b pb-0 border-border-subtle/50">
                     {children}
                   </h2>
                 ),
-                p: ({ children }) => <p className="m-0 mb-6">{children}</p>,
+                p: ({ children }) => <p className="m-0 mb-0">{children}</p>,
                 a: ({ children, href }) => {
                   const isInternal = href?.startsWith("/");
                   if (isInternal) {
@@ -197,10 +287,7 @@ export function ReportViewer({ report }: { report: DailyReport }) {
       </article>
 
       <footer className="mt-16 py-10 border-t border-border-subtle/30 text-center">
-        <p className="text-sm text-text-muted leading-relaxed italic opacity-70">
-          본 리포트는 AI 시장 분석 보고서로 투자 결과에 대한 법적 책임은
-          없습니다.
-        </p>
+        hangon. All rights reserved.
       </footer>
     </main>
   );
