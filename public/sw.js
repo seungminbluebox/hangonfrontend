@@ -28,8 +28,6 @@ self.addEventListener("push", (event) => {
         url: data.url || "/",
       },
       vibrate: [100, 50, 100],
-      tag: "hangon-daily-news",
-      renotify: true,
       requireInteraction: true,
     };
 
