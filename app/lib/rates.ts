@@ -50,7 +50,10 @@ async function fetchKORate(): Promise<{
         date: item.TIME,
         value: parseFloat(item.DATA_VALUE),
       }))
+      .filter((item: any) => !isNaN(item.value))
       .sort((a: any, b: any) => a.date.localeCompare(b.date));
+
+    if (history.length === 0) return { current: 3.25, history: [] };
 
     return {
       current: history[history.length - 1].value,
@@ -93,7 +96,11 @@ async function fetchUSRate(): Promise<{
         date: item.date.replace(/-/g, "").slice(0, 6),
         value: parseFloat(item.value),
       }))
+      .filter((item: any) => !isNaN(item.value))
       .sort((a: any, b: any) => a.date.localeCompare(b.date));
+
+    // 유효한 데이터가 하나도 없을 경우 폴백
+    if (history.length === 0) return { current: 4.5, history: [] };
 
     return {
       current: history[history.length - 1].value,

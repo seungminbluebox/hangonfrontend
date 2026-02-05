@@ -140,15 +140,15 @@ export function CurrencyDesk({
     <div className="w-full space-y-4 md:space-y-6">
       {/* Header & AI Report */}
       <div className="bg-gradient-to-br from-blue-600/10 via-background to-background border border-blue-500/20 rounded-[2rem] p-5 md:p-8 shadow-sm">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-8">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-blue-500/20 flex items-center justify-center shrink-0">
+        <div className="flex items-start justify-between gap-4 mb-6 md:mb-8">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-blue-500/20 flex items-center justify-center shrink-0 mt-1 sm:mt-0">
               <DollarSign className="w-5 h-5 md:w-6 md:h-6 text-blue-500" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                 <h2 className="text-xl md:text-3xl font-black italic tracking-tight">
-                  원/달러 환율 리포트
+                  원/달러 환율
                 </h2>
                 <div className="flex items-center gap-1.5 px-2 py-0.5 bg-red-500/10 rounded-full shrink-0">
                   <div className="w-1 h-1 rounded-full bg-red-500 animate-pulse" />
@@ -157,31 +157,21 @@ export function CurrencyDesk({
                   </span>
                 </div>
               </div>
-              <div className="flex items-center gap-2 mt-0.5">
-                <p className="text-[10px] md:text-xs font-bold text-foreground/40 uppercase tracking-widest">
-                  USD/KRW Analysis
-                </p>
-                <span className="text-[10px] font-bold text-foreground/30 border border-foreground/10 px-1.5 py-0.5 rounded">
-                  {lastCheckTime} 업데이트됨
-                </span>
-              </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 self-end sm:self-center">
-            <button
-              onClick={() => setShowShare(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-500 rounded-xl transition-all text-sm font-black group"
-            >
-              <Share2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
-              공유
-            </button>
-          </div>
+          <button
+            onClick={() => setShowShare(true)}
+            className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-500 rounded-xl transition-all text-xs md:text-sm font-black group shrink-0 mt-1"
+          >
+            <Share2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
+            <span>공유</span>
+          </button>
         </div>
 
         {/* Main Highlight Card */}
         {(liveData || (data && data.currency_data["USD/KRW"])) && (
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 bg-white/5 border border-white/10 rounded-3xl p-2 py-0 md:p-8 items-center">
             <div className="md:col-span-5 flex flex-col gap-1">
               <div className="flex items-center gap-2 mb-1">
                 <div className="px-2 py-0.5 bg-blue-500 text-white text-[10px] font-black rounded-md uppercase tracking-wider">
@@ -244,6 +234,7 @@ export function CurrencyDesk({
                       ? liveData.history
                       : data?.currency_data["USD/KRW"].history
                   }
+                  margin={{ top: 5, right: 0, left: 0, bottom: 0 }}
                 >
                   <defs>
                     <linearGradient
@@ -305,6 +296,7 @@ export function CurrencyDesk({
                     domain={["dataMin - 5", "dataMax + 5"]}
                     axisLine={false}
                     tickLine={false}
+                    width={40}
                     tickFormatter={(value) =>
                       Math.floor(value).toLocaleString()
                     }
@@ -338,7 +330,7 @@ export function CurrencyDesk({
         {/* AI Analysis Section */}
         <div className="space-y-4">
           <div className="flex items-center gap-2"></div>
-          <div className="relative p-5 md:p-6 rounded-2xl bg-white/5 border border-white/5 backdrop-blur-sm">
+          <div className="relative p-5 pt-0 md:p-6 rounded-2xl bg-white/5 border border-white/5 backdrop-blur-sm">
             <div className="mb-4 pb-4 border-b border-white/5">
               <p className="text-sm md:text-base font-bold text-foreground/60 leading-relaxed flex items-center flex-wrap gap-1">
                 현재 원/달러 환율은

@@ -18,6 +18,7 @@ export function BackButton({
     <div className={className}>
       <Link
         href={href}
+        onClick={() => window.scrollTo({ top: 0, behavior: "instant" })}
         className="group inline-flex items-center gap-2 px-4 py-2 bg-secondary/30 rounded-full border border-border-subtle hover:bg-secondary/50 hover:border-border transition-all duration-300"
       >
         <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />

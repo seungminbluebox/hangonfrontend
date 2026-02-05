@@ -255,7 +255,10 @@ export function InterestRateInfo({ initialData }: InterestRateInfoProps) {
           </div>
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={combinedHistory}>
+              <LineChart
+                data={combinedHistory}
+                margin={{ top: 10, right: 0, left: 0, bottom: 0 }}
+              >
                 <CartesianGrid
                   strokeDasharray="3 3"
                   vertical={false}
@@ -280,6 +283,7 @@ export function InterestRateInfo({ initialData }: InterestRateInfoProps) {
                 <YAxis
                   axisLine={false}
                   tickLine={false}
+                  width={35}
                   tick={{
                     fontSize: 10,
                     fontWeight: "bold",

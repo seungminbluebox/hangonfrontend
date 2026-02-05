@@ -167,7 +167,10 @@ export function InterestRateChartShareCard({
                   className={`h-[150px] w-full rounded-2xl p-5 ${shareTheme === "light" ? "bg-white/50 border border-neutral-100" : "bg-white/5 border border-white/5"}`}
                 >
                   <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={recentData}>
+                    <LineChart
+                      data={recentData}
+                      margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
+                    >
                       <XAxis dataKey="date" hide />
                       <YAxis hide domain={["dataMin - 0.5", "dataMax + 0.5"]} />
                       <Line

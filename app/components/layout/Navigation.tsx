@@ -38,6 +38,11 @@ export function Navigation() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const pathname = usePathname();
 
+  const handleLinkClick = () => {
+    setIsOpen(false);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -176,7 +181,11 @@ export function Navigation() {
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 group">
+            <Link
+              href="/"
+              className="flex items-center gap-2 group"
+              onClick={handleLinkClick}
+            >
               <div className="w-8 h-8 bg-accent rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition-transform shadow-lg shadow-accent/20">
                 <TrendingUp className="w-5 h-5 text-white" />
               </div>
@@ -225,6 +234,7 @@ export function Navigation() {
                           <Link
                             key={link.name}
                             href={link.href}
+                            onClick={handleLinkClick}
                             className={`flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-bold transition-all ${
                               pathname === link.href
                                 ? "bg-accent/10 text-accent"
@@ -261,7 +271,7 @@ export function Navigation() {
                         "/credit-balance",
                         "/kospi-futures",
                       ].includes(pathname)
-                        ? "text-accent"
+                        ? "text-domestic"
                         : "text-text-muted hover:text-foreground hover:bg-background/40"
                     }`}
                   >
@@ -289,14 +299,15 @@ export function Navigation() {
                           <Link
                             key={link.name}
                             href={link.href}
+                            onClick={handleLinkClick}
                             className={`flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-bold transition-all ${
                               pathname === link.href
-                                ? "bg-accent/10 text-accent"
+                                ? "bg-domestic/10 text-domestic"
                                 : "hover:bg-secondary/50 text-text-muted hover:text-foreground"
                             }`}
                           >
-                            <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
-                              <Icon className="w-4 h-4 text-accent" />
+                            <div className="w-8 h-8 rounded-lg bg-domestic/10 flex items-center justify-center shrink-0">
+                              <Icon className="w-4 h-4 text-domestic" />
                             </div>
                             <div className="flex flex-col overflow-hidden">
                               <span className="truncate">{link.name}</span>
@@ -325,7 +336,7 @@ export function Navigation() {
                         "/nasdaq-futures",
                         "/put-call-ratio",
                       ].includes(pathname)
-                        ? "text-accent"
+                        ? "text-us"
                         : "text-text-muted hover:text-foreground hover:bg-background/40"
                     }`}
                   >
@@ -353,14 +364,15 @@ export function Navigation() {
                           <Link
                             key={link.name}
                             href={link.href}
+                            onClick={handleLinkClick}
                             className={`flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-bold transition-all ${
                               pathname === link.href
-                                ? "bg-accent/10 text-accent"
+                                ? "bg-us/10 text-us"
                                 : "hover:bg-secondary/50 text-text-muted hover:text-foreground"
                             }`}
                           >
-                            <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
-                              <Icon className="w-4 h-4 text-accent" />
+                            <div className="w-8 h-8 rounded-lg bg-us/10 flex items-center justify-center shrink-0">
+                              <Icon className="w-4 h-4 text-us" />
                             </div>
                             <div className="flex flex-col overflow-hidden">
                               <span className="truncate">{link.name}</span>
@@ -388,7 +400,7 @@ export function Navigation() {
                         "/interest-rate",
                         "/money-flow/safe",
                       ].includes(pathname)
-                        ? "text-accent"
+                        ? "text-common"
                         : "text-text-muted hover:text-foreground hover:bg-background/40"
                     }`}
                   >
@@ -416,14 +428,15 @@ export function Navigation() {
                           <Link
                             key={link.name}
                             href={link.href}
+                            onClick={handleLinkClick}
                             className={`flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-bold transition-all ${
                               pathname === link.href
-                                ? "bg-accent/10 text-accent"
+                                ? "bg-common/10 text-common"
                                 : "hover:bg-secondary/50 text-text-muted hover:text-foreground"
                             }`}
                           >
-                            <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
-                              <Icon className="w-4 h-4 text-accent" />
+                            <div className="w-8 h-8 rounded-lg bg-common/10 flex items-center justify-center shrink-0">
+                              <Icon className="w-4 h-4 text-common" />
                             </div>
                             <div className="flex flex-col overflow-hidden">
                               <span className="truncate">{link.name}</span>
@@ -532,7 +545,7 @@ export function Navigation() {
                   <Link
                     key={link.name}
                     href={link.href}
-                    onClick={() => setIsOpen(false)}
+                    onClick={handleLinkClick}
                     className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-500 ${
                       pathname === link.href
                         ? "bg-accent text-white border-accent shadow-lg shadow-accent/25"
@@ -580,7 +593,7 @@ export function Navigation() {
           {/* 카테고리 2: 국내 증시 */}
           <div className="space-y-3">
             <div className="flex items-center gap-2 ml-1">
-              <Flag className="w-3 h-3 text-accent/50" />
+              <Flag className="w-3 h-3 text-domestic/50" />
               <h3 className="text-[13px] font-black text-text-muted/40 uppercase tracking-widest">
                 국내 증시
               </h3>
@@ -592,10 +605,10 @@ export function Navigation() {
                   <Link
                     key={link.name}
                     href={link.href}
-                    onClick={() => setIsOpen(false)}
+                    onClick={handleLinkClick}
                     className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-500 ${
                       pathname === link.href
-                        ? "bg-accent text-white border-accent shadow-lg shadow-accent/25"
+                        ? "bg-domestic text-white border-domestic shadow-lg shadow-domestic/25"
                         : "bg-secondary/30 border-border-subtle/50"
                     } ${
                       isOpen
@@ -608,12 +621,16 @@ export function Navigation() {
                   >
                     <div
                       className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                        pathname === link.href ? "bg-white/20" : "bg-accent/10"
+                        pathname === link.href
+                          ? "bg-white/20"
+                          : "bg-domestic/10"
                       }`}
                     >
                       <Icon
                         className={`w-5 h-5 ${
-                          pathname === link.href ? "text-white" : "text-accent"
+                          pathname === link.href
+                            ? "text-white"
+                            : "text-domestic"
                         }`}
                       />
                     </div>
@@ -640,7 +657,7 @@ export function Navigation() {
           {/* 카테고리 3: 미국 증시 */}
           <div className="space-y-3">
             <div className="flex items-center gap-2 ml-1">
-              <DollarSign className="w-3 h-3 text-accent/50" />
+              <DollarSign className="w-3 h-3 text-us/50" />
               <h3 className="text-[13px] font-black text-text-muted/40 uppercase tracking-widest">
                 미국 증시
               </h3>
@@ -652,10 +669,10 @@ export function Navigation() {
                   <Link
                     key={link.name}
                     href={link.href}
-                    onClick={() => setIsOpen(false)}
+                    onClick={handleLinkClick}
                     className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-500 ${
                       pathname === link.href
-                        ? "bg-accent text-white border-accent shadow-lg shadow-accent/25"
+                        ? "bg-us text-white border-us shadow-lg shadow-us/25"
                         : "bg-secondary/30 border-border-subtle/50"
                     } ${
                       isOpen
@@ -668,12 +685,12 @@ export function Navigation() {
                   >
                     <div
                       className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                        pathname === link.href ? "bg-white/20" : "bg-accent/10"
+                        pathname === link.href ? "bg-white/20" : "bg-us/10"
                       }`}
                     >
                       <Icon
                         className={`w-5 h-5 ${
-                          pathname === link.href ? "text-white" : "text-accent"
+                          pathname === link.href ? "text-white" : "text-us"
                         }`}
                       />
                     </div>
@@ -700,7 +717,7 @@ export function Navigation() {
           {/* 카테고리 4: 글로벌 매크로 */}
           <div className="space-y-3">
             <div className="flex items-center gap-2 ml-1">
-              <Globe className="w-3 h-3 text-accent/50" />
+              <Globe className="w-3 h-3 text-common/50" />
               <h3 className="text-[13px] font-black text-text-muted/40 uppercase tracking-widest">
                 한미 공통
               </h3>
@@ -712,10 +729,10 @@ export function Navigation() {
                   <Link
                     key={link.name}
                     href={link.href}
-                    onClick={() => setIsOpen(false)}
+                    onClick={handleLinkClick}
                     className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-500 ${
                       pathname === link.href
-                        ? "bg-accent text-white border-accent shadow-lg shadow-accent/25"
+                        ? "bg-common text-white border-common shadow-lg shadow-common/25"
                         : "bg-secondary/30 border-border-subtle/50"
                     } ${
                       isOpen
@@ -730,12 +747,12 @@ export function Navigation() {
                   >
                     <div
                       className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                        pathname === link.href ? "bg-white/20" : "bg-accent/10"
+                        pathname === link.href ? "bg-white/20" : "bg-common/10"
                       }`}
                     >
                       <Icon
                         className={`w-5 h-5 ${
-                          pathname === link.href ? "text-white" : "text-accent"
+                          pathname === link.href ? "text-white" : "text-common"
                         }`}
                       />
                     </div>

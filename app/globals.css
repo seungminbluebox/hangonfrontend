@@ -10,6 +10,9 @@
   --border-subtle: #e2e8f0;
   --text-muted: #64748b;
   --accent: #2563eb;
+  --domestic: #4f46e5;
+  --us: #0284c7;
+  --common: #0d9488;
 }
 
 /* 2. 다크 모드 클래스 (.dark)가 활성화될 때만 적용 */
@@ -20,6 +23,9 @@
   --border-subtle: #2d2d30;
   --text-muted: #94a3b8;
   --accent: #3b82f6;
+  --domestic: #818cf8;
+  --us: #38bdf8;
+  --common: #2dd4bf;
 }
 
 @theme inline {
@@ -29,6 +35,9 @@
   --color-border-subtle: var(--border-subtle);
   --color-text-muted: var(--text-muted);
   --color-accent: var(--accent);
+  --color-domestic: var(--domestic);
+  --color-us: var(--us);
+  --color-common: var(--common);
 
   --font-sans: var(--font-inter), var(--font-noto-kr), ui-sans-serif, system-ui;
   --font-serif: var(--font-playfair), ui-serif, Georgia;

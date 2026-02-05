@@ -179,10 +179,12 @@ export function PutCallRatioTracker({ market }: PutCallRatioTrackerProps) {
                       : "bg-foreground/20",
                 )}
               />
-              <span className="text-[10px] md:text-sm font-black italic tracking-tight text-accent uppercase bg-accent/10 px-3 py-1 rounded-full border border-accent/20">
-                PCR{" "}
-                <span className="not-italic opacity-60 ml-1">풋콜 비율</span>
-              </span>
+              <div className="flex flex-col items-center justify-center text-[10px] md:text-xs font-black italic tracking-tighter text-accent uppercase bg-accent/10 px-2.5 py-1 rounded-xl border border-accent/20 leading-none">
+                <span>PCR</span>
+                <span className="not-italic opacity-60 text-[10px] md:text-[11px] mt-1 whitespace-nowrap">
+                  풋콜 비율
+                </span>
+              </div>
               <div className="flex flex-col ml-1">
                 <span className="text-[10px] font-bold text-foreground/40">
                   {lastCheckTime} 업데이트됨
@@ -194,13 +196,13 @@ export function PutCallRatioTracker({ market }: PutCallRatioTrackerProps) {
                 </span>
               </div>
             </div>
-            <div className="flex items-baseline gap-4">
+            <div className="flex items-center gap-4">
               <h2 className="text-6xl md:text-8xl font-black italic tracking-tighter">
                 {latestVal?.toFixed(2)}
               </h2>
               <div
                 className={clsx(
-                  "px-4 py-2 rounded-2xl text-[10px] md:text-xs font-black uppercase tracking-tighter mb-2 md:mb-4",
+                  "px-4 py-2 rounded-2xl text-[10px] md:text-xs font-black uppercase tracking-tighter",
                   isExtremeFear
                     ? "bg-red-500 text-white animate-pulse"
                     : isExtremeGreed

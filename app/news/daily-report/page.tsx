@@ -2,8 +2,21 @@ import { supabase } from "@/lib/supabase";
 import { BackButton } from "../../components/layout/BackButton";
 import { Metadata } from "next";
 import { ReportViewer } from "./ReportViewer";
+import { cache } from "react";
 
-export const dynamic = "force-dynamic";
+// 데이터 페칭 함수를 캐싱하여 metadata생성과 페이지 렌더링 시 중복 호출 방지
+const getLatestReport = cache(async () => {
+  const { data: report } = await supabase
+    .from("daily_reports")
+    .select("*")
+    .order("date", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  return report;
+});
+
+// 완전 동적 렌더링 대신 1시간마다 재검증하도록 설정 (성능 향상)
+export const revalidate = 3600;
 
 interface DailyReport {
   date: string;
@@ -15,12 +28,7 @@ interface DailyReport {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { data: report } = await supabase
-    .from("daily_reports")
-    .select("*")
-    .order("date", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+  const report = await getLatestReport();
 
   if (!report) {
     return {
@@ -42,12 +50,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function DailyReportPage() {
-  const { data: report } = await supabase
-    .from("daily_reports")
-    .select("*")
-    .order("date", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+  const report = await getLatestReport();
 
   if (!report) {
     return (

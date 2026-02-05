@@ -21,6 +21,7 @@ export function DateNavigation({ currentDate }: { currentDate: string }) {
     params.set("date", newDate);
     startTransition(() => {
       router.push(`?${params.toString()}`);
+      window.scrollTo({ top: 0, behavior: "instant" });
     });
   };
 
@@ -34,6 +35,7 @@ export function DateNavigation({ currentDate }: { currentDate: string }) {
   const resetDate = () => {
     startTransition(() => {
       router.push("/");
+      window.scrollTo({ top: 0, behavior: "instant" });
     });
   };
 

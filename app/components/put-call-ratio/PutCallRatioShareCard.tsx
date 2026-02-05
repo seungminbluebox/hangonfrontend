@@ -205,10 +205,7 @@ export function PutCallRatioShareCard({
                 <div className="flex flex-col items-center">
                   <div className="mb-1 text-center">
                     <p className="text-[18px] font-black italic tracking-widest text-accent leading-none">
-                      PUT/CALL RATIO{" "}
-                      <span className="not-italic opacity-80 text-[14px]">
-                        풋콜 비율
-                      </span>
+                      미국 증시 풋/콜 비율 (PCR)
                     </p>
                   </div>
                   <div className="flex items-baseline gap-2">
