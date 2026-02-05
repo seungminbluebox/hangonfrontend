@@ -69,15 +69,22 @@ export function NotificationManager({
         applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
       });
 
-      // Supabase에 저장
-      const { error } = await supabase.from("push_subscriptions").insert([
-        {
-          subscription: sub.toJSON(),
-          user_agent: navigator.userAgent,
-        },
-      ]);
+      // Supabase에 중복 확인 후 저장
+      const { data: existing } = await supabase
+        .from("push_subscriptions")
+        .select("id")
+        .eq("subscription->>endpoint", sub.endpoint)
+        .maybeSingle();
 
-      if (error) throw error;
+      if (!existing) {
+        const { error } = await supabase.from("push_subscriptions").insert([
+          {
+            subscription: sub.toJSON(),
+            user_agent: navigator.userAgent,
+          },
+        ]);
+        if (error) throw error;
+      }
 
       setSubscription(sub);
       setPermission("granted");
