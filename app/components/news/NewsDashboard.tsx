@@ -33,6 +33,7 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
   const [selectedId, setSelectedId] = useState<string | null>(
     news.length > 0 ? news[0].id : null,
   );
+  const [isManualSelect, setIsManualSelect] = useState(false);
   // 각 뉴스별 실제 참여자 수를 별도 상태로 관리하여 반응형 업데이트 지원
   const [realReactionCounts, setRealReactionCounts] = useState<
     Record<string, { good: number; bad: number; neutral: number }>
@@ -87,6 +88,7 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
   );
 
   const handleSelect = (id: string) => {
+    setIsManualSelect(true);
     setSelectedId(id);
     if (typeof window !== "undefined" && window.innerWidth < 1024) {
       setIsMobileDetailOpen(true);
@@ -95,7 +97,7 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
 
   // 모바일에서 다른 소식을 선택할 때마다 상세 영역을 상단으로 스크롤
   useEffect(() => {
-    if (!selectedId) return;
+    if (!selectedId || !isManualSelect) return;
 
     if (typeof window === "undefined") return;
 
@@ -118,7 +120,9 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
         // scrollIntoView 실패 시 무시
       }
     }
-  }, [selectedId]);
+    // 스크롤 수행 후 수동 선택 상태 초기화
+    setIsManualSelect(false);
+  }, [selectedId, isManualSelect]);
 
   const selectedItem = news.find((item) => item.id === selectedId);
 

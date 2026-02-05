@@ -78,7 +78,7 @@ export function InstallPWA() {
   const handleInstallClick = async () => {
     if (!deferredPrompt) {
       alert(
-        "브라우저의 '점 세 개' 메뉴에서 '앱 설치' 또는 '홈 화면에 추가'를 선택해 주세요!"
+        "브라우저의 '점 세 개' 메뉴에서 '앱 설치' 또는 '홈 화면에 추가'를 선택해 주세요!",
       );
       return;
     }
@@ -99,7 +99,7 @@ export function InstallPWA() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] w-[90%] max-w-sm animate-in fade-in slide-in-from-bottom-5">
+    <div className="fixed bottom-24 lg:bottom-6 left-1/2 -translate-x-1/2 z-[100] w-[90%] max-w-sm animate-in fade-in slide-in-from-bottom-5">
       <div className="bg-card/95 backdrop-blur-xl border border-border-subtle p-4 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.4)] flex items-center justify-between gap-4 relative">
         <button
           onClick={handleClose}

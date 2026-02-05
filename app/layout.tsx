@@ -151,8 +151,7 @@ export default function RootLayout({
       <body className="font-sans antialiased text-[15px] tracking-tight">
         <Providers>
           <Navigation />
-          <div className="pt-16 md:pt-0">{children}</div>
-          <InstallPWA />
+          <div className="pt-28 pb-20 md:pt-0 md:pb-0">{children}</div>
         </Providers>
         <GoogleAnalytics gaId="G-GGHNG01WQ9" />
       </body>

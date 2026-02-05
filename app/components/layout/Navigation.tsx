@@ -35,6 +35,9 @@ export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showMenuHint, setShowMenuHint] = useState(false);
+  const [isStandalone, setIsStandalone] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
+  const [showTips, setShowTips] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const pathname = usePathname();
 
@@ -51,7 +54,30 @@ export function Navigation() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // 첫 방문 시 메뉴 힌트 표시
+  // PWA 및 팁 표시 로직
+  useEffect(() => {
+    const isPWA =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      (navigator as any).standalone ||
+      document.referrer.includes("android-app://");
+    setIsStandalone(isPWA);
+
+    // iOS 감지
+    const checkIOS =
+      /iPhone|iPad|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+    setIsIOS(checkIOS);
+
+    // 팁은 2초 뒤에 표시
+    const timer = setTimeout(() => {
+      setShowTips(true);
+      // 8초 뒤에 자동으로 숨김
+      setTimeout(() => setShowTips(false), 8000);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // 첫 방문 시 메뉴 힌트 표시 (기존 로직 유지)
   useEffect(() => {
     const hasSeenMenuHint = localStorage.getItem("hasSeenMenuHint");
     if (!hasSeenMenuHint) {
@@ -84,18 +110,21 @@ export function Navigation() {
       href: "/",
       icon: Home,
       desc: "오늘 꼭 알아야 할 핵심 이슈",
+      category: "main",
     },
     {
       name: "데일리 리포트",
       href: "/news/daily-report",
       icon: Library,
       desc: "거시경제 맥락과 시장 분석 요약",
+      category: "main",
     },
     {
       name: "실시간 속보",
       href: "/live",
       icon: Zap,
       desc: "24시간 멈추지 않는 마켓 시그널",
+      category: "main",
     },
     // 국내 증시
     {
@@ -103,24 +132,28 @@ export function Navigation() {
       href: "/kospi-fear-greed",
       icon: Gauge,
       desc: "KOSPI 시장의 심리 지수 추적",
+      category: "domestic",
     },
     {
       name: "자금흐름",
       href: "/money-flow/domestic",
       icon: Waves,
       desc: "한국 시장의 돈의 쏠림 분석",
+      category: "domestic",
     },
     {
       name: "코스피 선물",
       href: "/kospi-futures",
       icon: Activity,
       desc: "국내 시장의 선행지표",
+      category: "domestic",
     },
     {
       name: "빛투 현황",
       href: "/credit-balance",
       icon: BarChart3,
       desc: "개인 투자자의 신용융자 잔고 추적",
+      category: "domestic",
     },
 
     // 미국 증시
@@ -129,24 +162,28 @@ export function Navigation() {
       href: "/fear-greed",
       icon: Gauge,
       desc: "미국 시장의 탐욕과 공포",
+      category: "us",
     },
     {
       name: "자금흐름",
       href: "/money-flow/us",
       icon: Waves,
       desc: "미국 섹터별 자금 유입 추적",
+      category: "us",
     },
     {
       name: "나스닥 선물",
       href: "/nasdaq-futures",
       icon: Activity,
       desc: "미국 시장의 선행지표",
+      category: "us",
     },
     {
       name: "풋/콜 옵션",
       href: "/put-call-ratio",
       icon: BarChart3,
       desc: "옵션 시장 투자 심리",
+      category: "us",
     },
     // 한미 공통
     {
@@ -154,20 +191,34 @@ export function Navigation() {
       href: "/currency-desk",
       icon: RefreshCcw,
       desc: "스마트한 환전 타이밍 중계",
+      category: "global",
     },
     {
       name: "금리",
       href: "/interest-rate",
       icon: Flag,
       desc: "양국 금리 정보",
+      category: "global",
     },
     {
       name: "글로벌 투자심리",
       href: "/money-flow/safe",
       icon: Compass,
       desc: "현재 시장은, 안전자산vs위험자산? ",
+      category: "global",
     },
   ];
+
+  const currentCategory =
+    navLinks.find((link) => link.href === pathname)?.category || "main";
+  const subLinks = navLinks.filter((link) => link.category === currentCategory);
+
+  const categoryNames: Record<string, string> = {
+    main: "메인",
+    domestic: "국내",
+    us: "미국",
+    global: "글로벌",
+  };
 
   return (
     <>
@@ -459,34 +510,200 @@ export function Navigation() {
               <ThemeToggle />
             </div>
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Menu Actions (Top) */}
             <div className="flex lg:hidden items-center gap-2">
-              <InstallButton />
-              <ThemeToggle />
               <div className="relative">
-                <button
-                  onClick={() => setIsOpen(!isOpen)}
-                  className={`p-2 rounded-xl bg-accent/10 text-accent border-2 border-accent/20 shadow-lg shadow-accent/20 hover:bg-accent hover:text-white transition-all duration-300 ${
-                    showMenuHint ? "animate-pulse" : ""
-                  }`}
-                >
-                  {isOpen ? (
-                    <X className="w-6 h-6" />
-                  ) : (
-                    <Menu className="w-6 h-6" />
-                  )}
-                </button>
-                {showMenuHint && !isOpen && (
-                  <div className="absolute -bottom-12 right-0 bg-accent text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-lg animate-bounce whitespace-nowrap">
-                    메뉴 보기 👆
-                    <div className="absolute -top-1 right-4 w-2 h-2 bg-accent rotate-45"></div>
+                <InstallButton />
+                {!isStandalone && showTips && (
+                  <div className="absolute top-full mt-3 right-0 z-50 animate-in fade-in slide-in-from-top-2 duration-700">
+                    <div className="bg-accent text-white text-[10px] py-2 px-3 rounded-xl whitespace-nowrap shadow-[0_10px_25px_rgba(37,99,235,0.4)] relative font-black tracking-tight animate-bounce-subtle">
+                      {isIOS
+                        ? "앱 설치 : 공유 버튼 누르고 '홈 화면에 추가' 클릭! 📱"
+                        : "앱으로 설치하고 더 편하게 보세요! 📱"}
+                      <div className="absolute bottom-full right-3.5 -mb-1 w-2 h-2 bg-accent rotate-45"></div>
+                    </div>
                   </div>
                 )}
               </div>
+              <div className="relative">
+                <NotificationManager />
+                {isStandalone && showTips && (
+                  <div className="absolute top-full mt-3 right-0 z-50 animate-in fade-in slide-in-from-top-2 duration-700">
+                    <div className="bg-accent text-white text-[10px] py-2 px-3 rounded-xl whitespace-nowrap shadow-[0_10px_25px_rgba(37,99,235,0.4)] relative font-black tracking-tight animate-bounce-subtle">
+                      중요한 경제 소식, 실시간 알림 받기! 🔔
+                      <div className="absolute bottom-full right-3.5 -mb-1 w-2 h-2 bg-accent rotate-45"></div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <ThemeToggle />
             </div>
           </div>
         </div>
       </nav>
+
+      {/* Mobile Sub-Navigation (Top horizontal scroll) */}
+      <div
+        className={`lg:hidden fixed ${
+          scrolled ? "top-[52px]" : "top-[72px]"
+        } left-0 right-0 z-[50] bg-background/80 backdrop-blur-xl border-b border-border-subtle transition-all duration-300`}
+      >
+        <div className="flex items-center no-scrollbar overflow-x-auto h-[48px]">
+          {/* Category Badge */}
+          <div className="sticky left-0 flex items-center h-full pl-4 pr-3 bg-background/80 backdrop-blur-xl z-10 shrink-0 after:content-[''] after:absolute after:right-0 after:top-1/4 after:h-1/2 after:w-px after:bg-border-subtle">
+            <span className="text-[10px] font-black text-accent uppercase tracking-widest bg-accent/10 px-2 py-0.5 rounded-md">
+              {categoryNames[currentCategory]}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 px-3">
+            {subLinks.map((link) => {
+              const isActive = pathname === link.href;
+              const Icon = link.icon;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={handleLinkClick}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full whitespace-nowrap text-[11px] font-black transition-all ${
+                    isActive
+                      ? "bg-foreground text-background shadow-lg shadow-foreground/5"
+                      : "bg-secondary/40 text-text-muted hover:text-foreground hover:bg-secondary/60"
+                  }`}
+                >
+                  <Icon
+                    className={`w-3.5 h-3.5 ${isActive ? "stroke-[2.5px]" : "stroke-2"}`}
+                  />
+                  {link.name}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Bottom Navigation */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[60] bg-background/90 backdrop-blur-xl border-t border-border-subtle px-4 py-2 pb-6 shadow-[0_-10px_30px_rgba(0,0,0,0.05)] dark:shadow-[0_-10px_30px_rgba(0,0,0,0.3)]">
+        <div className="grid grid-cols-5 items-center max-w-sm mx-auto">
+          {[
+            {
+              name: "국내",
+              href: "/kospi-fear-greed",
+              icon: Flag,
+              cat: "domestic",
+            },
+            {
+              name: "미국",
+              href: "/fear-greed",
+              icon: DollarSign,
+              cat: "us",
+            },
+            { name: "홈", href: "/", icon: Home, cat: "main" },
+            {
+              name: "글로벌",
+              href: "/currency-desk",
+              icon: Globe,
+              cat: "global",
+            },
+          ].map((item) => {
+            const Icon = item.icon;
+            const isActive = currentCategory === item.cat;
+
+            // 중앙 홈 버튼 디자인 (--O--)
+            if (item.cat === "main") {
+              return (
+                <div
+                  key={item.name}
+                  className="relative flex flex-col items-center"
+                >
+                  <div className="absolute top-1/2 left-0 right-0 flex items-center justify-between px-1 pointer-events-none opacity-20">
+                    <div className="h-[2px] w-3 bg-foreground rounded-full" />
+                    <div className="h-[2px] w-3 bg-foreground rounded-full" />
+                  </div>
+                  <Link
+                    href={item.href}
+                    onClick={handleLinkClick}
+                    className={`relative z-10 flex flex-col items-center gap-1 transition-all active:scale-90 ${
+                      isActive ? "text-accent" : "text-text-muted"
+                    }`}
+                  >
+                    <div
+                      className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${
+                        isActive
+                          ? "bg-accent shadow-[0_4px_12px_rgba(25,99,235,0.3)] text-white scale-110"
+                          : "bg-secondary/80 border border-border-subtle"
+                      }`}
+                    >
+                      <Icon
+                        className={`w-6 h-6 ${isActive ? "stroke-[2.5px]" : "stroke-2"}`}
+                      />
+                    </div>
+                    <span
+                      className={`text-[9px] font-black ${isActive ? "opacity-100" : "opacity-40"}`}
+                    >
+                      {item.name}
+                    </span>
+                  </Link>
+                </div>
+              );
+            }
+
+            // 일반 버튼
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                onClick={handleLinkClick}
+                className={`flex flex-col items-center gap-1 transition-all active:scale-95 ${
+                  isActive
+                    ? "text-accent"
+                    : "text-text-muted hover:text-foreground"
+                }`}
+              >
+                <div
+                  className={`p-2 rounded-xl transition-all duration-300 ${
+                    isActive ? "bg-accent/10" : "group-hover:bg-secondary/50"
+                  }`}
+                >
+                  <Icon
+                    className={`w-5 h-5 ${isActive ? "stroke-[2.5px]" : "stroke-2"}`}
+                  />
+                </div>
+                <span
+                  className={`text-[10px] font-black tracking-tight ${isActive ? "opacity-100" : "opacity-60"}`}
+                >
+                  {item.name}
+                </span>
+              </Link>
+            );
+          })}
+
+          {/* 메뉴 토글 버튼 */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className={`flex flex-col items-center gap-1 transition-all active:scale-95 ${
+              isOpen ? "text-accent" : "text-text-muted hover:text-foreground"
+            }`}
+          >
+            <div
+              className={`p-2 rounded-xl transition-all duration-300 ${
+                isOpen ? "bg-accent/10" : "group-hover:bg-secondary/50"
+              }`}
+            >
+              {isOpen ? (
+                <X className="w-5 h-5 stroke-[2.5px]" />
+              ) : (
+                <Menu className="w-5 h-5 stroke-2" />
+              )}
+            </div>
+            <span
+              className={`text-[10px] font-black tracking-tight ${isOpen ? "opacity-100" : "opacity-60"}`}
+            >
+              메뉴
+            </span>
+          </button>
+        </div>
+      </div>
 
       {/* Mobile Navigation Overlay */}
       <div

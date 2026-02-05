@@ -102,62 +102,8 @@ export function ReportViewer({ report }: { report: DailyReport }) {
   return (
     <main className="max-w-4xl mx-auto px-4 sm:px-6 py-4 md:py-20 relative">
       {/* 상단 네비게이션 및 요약 버튼 */}
-      <div className="mb-6 md:mb-10 flex items-center justify-between gap-4">
+      <div className="mb-6 md:mb-10">
         <BackButton className="mb-0" />
-        <div className="flex items-center gap-2">
-          {/* Audio Button with Tooltip */}
-          <div className="relative">
-            {showTooltip && !isPlaying && report.audio_content && (
-              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 animate-bounce z-10">
-                <div className="bg-accent text-white text-[10px] md:text-xs py-1.5 px-3 rounded-xl whitespace-nowrap shadow-lg relative">
-                  바쁜 일상엔 핵심만 짚은 리포트를 들어보세요! 🎧
-                  {/* Tooltip Arrow - centered */}
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 -mb-1 w-2 h-2 bg-accent rotate-45" />
-                </div>
-              </div>
-            )}
-
-            <button
-              onClick={handleToggleAudio}
-              className={`flex flex-col md:flex-row items-center gap-1 md:gap-2.5 px-6 md:px-10 py-2.5 min-w-[72px] md:min-w-0 rounded-2xl md:rounded-full font-black text-[10px] md:text-sm transition-all active:scale-95 group shadow-[0_10px_20px_-5px_rgba(0,0,0,0.1)] hover:scale-105 ${
-                isPlaying
-                  ? "bg-red-500 text-white shadow-red-500/20"
-                  : "bg-background border border-border-subtle/50 text-foreground"
-              } ${!isPlaying && report.audio_content ? "ring-2 ring-accent/20 animate-pulse" : ""}`}
-            >
-              {isPlaying ? (
-                <Pause size={18} fill="currentColor" />
-              ) : (
-                <Volume2
-                  size={16}
-                  className="md:w-[18px] md:h-[18px] group-hover:scale-110 transition-transform"
-                />
-              )}
-              <span className="whitespace-nowrap">
-                {isPlaying ? "중지" : "듣기"}
-              </span>
-            </button>
-          </div>
-
-          <button
-            onClick={() => setShowSummary(!showSummary)}
-            className="flex flex-col md:flex-row items-center gap-1 md:gap-2.5 px-6 md:px-10 py-2.5 min-w-[72px] md:min-w-0 bg-accent text-white rounded-2xl md:rounded-full font-black text-[10px] md:text-sm shadow-[0_10px_20px_-5px_rgba(var(--accent-rgb),0.3)] hover:scale-105 hover:shadow-[0_15px_25px_-5px_rgba(var(--accent-rgb),0.4)] transition-all active:scale-95 group"
-          >
-            {showSummary ? (
-              <X size={18} />
-            ) : (
-              <div className="relative">
-                <FileText
-                  size={16}
-                  className="md:w-[18px] md:h-[18px] group-hover:rotate-12 transition-transform"
-                />
-              </div>
-            )}
-            <span className="whitespace-nowrap">
-              {showSummary ? "닫기" : "요약"}
-            </span>
-          </button>
-        </div>
       </div>
 
       {/* 요약 패널 (Show/Hide) */}
@@ -217,18 +163,72 @@ export function ReportViewer({ report }: { report: DailyReport }) {
         <div className="hidden md:block absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full -mr-32 -mt-32 blur-3xl" />
 
         <div className="relative px-0 py-2 md:p-14">
-          {/* 요청하신 날짜 제목 */}
-          <div className="flex flex-col gap-2 mb-10 md:mb-16">
-            <div className="flex items-center gap-2 text-accent font-black text-xs uppercase tracking-widest">
-              <Calendar size={14} />
-              <span>Report Archive</span>
+          {/* 요청하신 날짜 제목 및 액션 버튼 */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 md:mb-20">
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-2 text-accent font-black text-xs uppercase tracking-widest">
+                <Calendar size={14} />
+                <span>Report Archive</span>
+              </div>
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tighter">
+                {formatDate(report.date)}의 <br className="sm:hidden" />
+                <span className="text-accent underline decoration-accent/10 underline-offset-[12px] decoration-4">
+                  데일리 리포트
+                </span>
+              </h1>
             </div>
-            <h1 className="text-3xl md:text-5xl font-black leading-tight tracking-tighter">
-              {formatDate(report.date)}의 <br className="sm:hidden" />
-              <span className="text-accent underline decoration-accent/20 underline-offset-8">
-                데일리 리포트
-              </span>
-            </h1>
+
+            <div className="flex items-center gap-2 md:gap-3">
+              {/* Audio Button with Tooltip */}
+              <div className="relative flex-1 md:flex-none">
+                {showTooltip && !isPlaying && report.audio_content && (
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 animate-bounce z-10">
+                    <div className="bg-accent text-white text-[10px] md:text-xs py-2 px-4 rounded-2xl whitespace-nowrap shadow-xl shadow-accent/20 relative font-bold">
+                      핵심 요약을 음성으로 들어보세요! 🎧
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 -mb-1 w-2.5 h-2.5 bg-accent rotate-45" />
+                    </div>
+                  </div>
+                )}
+
+                <button
+                  onClick={handleToggleAudio}
+                  className={`w-full md:w-auto flex items-center justify-center gap-2 px-5 md:px-7 py-3 md:py-3.5 rounded-2xl md:rounded-full font-black text-xs md:text-sm transition-all active:scale-95 group shadow-lg ${
+                    isPlaying
+                      ? "bg-red-500 text-white shadow-red-500/20"
+                      : "bg-background border-2 border-border-subtle/50 text-foreground hover:border-accent/50"
+                  } ${!isPlaying && report.audio_content ? "ring-4 ring-accent/10" : ""}`}
+                >
+                  {isPlaying ? (
+                    <Pause size={18} fill="currentColor" />
+                  ) : (
+                    <Volume2
+                      size={18}
+                      className="group-hover:scale-110 transition-transform text-accent"
+                    />
+                  )}
+                  <span className="whitespace-nowrap">
+                    {isPlaying ? "재생 중지" : "리포트 듣기"}
+                  </span>
+                </button>
+              </div>
+
+              <button
+                onClick={() => setShowSummary(!showSummary)}
+                className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 md:px-7 py-3 md:py-3.5 bg-accent text-white rounded-2xl md:rounded-full font-black text-xs md:text-sm shadow-lg shadow-accent/20 hover:shadow-accent/30 hover:scale-[1.02] transition-all active:scale-95 group"
+              >
+                {showSummary ? (
+                  <X size={18} />
+                ) : (
+                  <FileText
+                    size={18}
+                    className="group-hover:rotate-12 transition-transform"
+                  />
+                )}
+                <span className="whitespace-nowrap">
+                  {showSummary ? "닫기" : "요약 보기"}
+                </span>
+              </button>
+            </div>
           </div>
 
           <div

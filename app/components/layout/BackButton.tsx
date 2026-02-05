@@ -15,7 +15,7 @@ export function BackButton({
   className = "mb-8",
 }: BackButtonProps) {
   return (
-    <div className={className}>
+    <div className={`hidden lg:block ${className}`}>
       <Link
         href={href}
         onClick={() => window.scrollTo({ top: 0, behavior: "instant" })}
