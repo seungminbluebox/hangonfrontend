@@ -172,34 +172,7 @@ export default async function Home({
             <MarketTicker data={marketData} />
           </div>
 
-          {/* 2. 데일리 리포트 하이라이트 (슬림 가로형 배치) */}
-          <Link href="/news/daily-report" className="w-full group block">
-            <div className="relative overflow-hidden bg-accent rounded-[1.5rem] px-5 py-4 text-white shadow-lg shadow-accent/20 transition-all active:scale-[0.98]">
-              <div className="relative z-10 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center shrink-0 shadow-inner">
-                    <Library className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-[9px] font-black uppercase tracking-widest text-white/60 mb-0.5">
-                      Market Insight
-                    </span>
-                    <h2 className="text-[17px] font-black leading-tight tracking-tight">
-                      데일리 리포트 보러가기
-                    </h2>
-                  </div>
-                </div>
-                <div className="flex items-center gap-1 px-3 py-1.5 bg-white/20 rounded-full text-[10px] font-black uppercase backdrop-blur-sm border border-white/10">
-                  <TrendingUp className="w-3 h-3" />
-                </div>
-              </div>
-              {/* 은은한 배경 효과 */}
-              <div className="absolute -right-4 -top-4 w-20 h-20 bg-white/10 rounded-full blur-2xl" />
-              <div className="absolute -left-4 -bottom-4 w-20 h-20 bg-white/10 rounded-full blur-2xl" />
-            </div>
-          </Link>
-
-          {/* 3. 날짜 조정 (뉴스 바로 위 - 헤더의 마지막 요소) */}
+          {/* 2. 날짜 조정 (뉴스 바로 위 - 헤더의 마지막 요소) */}
           <div className="w-full pt-4 border-t border-border-subtle/30 flex justify-center">
             <DateNavigation currentDate={targetDate} />
           </div>

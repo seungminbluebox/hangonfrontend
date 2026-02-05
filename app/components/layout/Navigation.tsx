@@ -37,6 +37,7 @@ export function Navigation() {
   const [showMenuHint, setShowMenuHint] = useState(false);
   const [isStandalone, setIsStandalone] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
+  const [isNotified, setIsNotified] = useState(false);
   const [showTips, setShowTips] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const pathname = usePathname();
@@ -66,6 +67,21 @@ export function Navigation() {
     const checkIOS =
       /iPhone|iPad|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
     setIsIOS(checkIOS);
+
+    // 알림 구독 여부 확인 (권한 및 기존 구독 여부)
+    if ("Notification" in window) {
+      if (Notification.permission === "granted") {
+        setIsNotified(true);
+      }
+    }
+
+    if ("serviceWorker" in navigator && "PushManager" in window) {
+      navigator.serviceWorker.ready.then((registration) => {
+        registration.pushManager.getSubscription().then((sub) => {
+          if (sub) setIsNotified(true);
+        });
+      });
+    }
 
     // 팁은 2초 뒤에 표시
     const timer = setTimeout(() => {
@@ -527,7 +543,7 @@ export function Navigation() {
               </div>
               <div className="relative">
                 <NotificationManager />
-                {isStandalone && showTips && (
+                {isStandalone && !isNotified && showTips && (
                   <div className="absolute top-full mt-3 right-0 z-50 animate-in fade-in slide-in-from-top-2 duration-700">
                     <div className="bg-accent text-white text-[10px] py-2 px-3 rounded-xl whitespace-nowrap shadow-[0_10px_25px_rgba(37,99,235,0.4)] relative font-black tracking-tight animate-bounce-subtle">
                       중요한 경제 소식, 실시간 알림 받기! 🔔
@@ -546,17 +562,17 @@ export function Navigation() {
       <div
         className={`lg:hidden fixed ${
           scrolled ? "top-[52px]" : "top-[72px]"
-        } left-0 right-0 z-[50] bg-background/80 backdrop-blur-xl border-b border-border-subtle transition-all duration-300`}
+        } left-0 right-0 z-[50] bg-card/95 backdrop-blur-xl border-b border-border-subtle/80 shadow-[0_4px_12px_rgba(0,0,0,0.03)] transition-all duration-300`}
       >
-        <div className="flex items-center no-scrollbar overflow-x-auto h-[48px]">
+        <div className="flex items-center no-scrollbar overflow-x-auto h-[52px]">
           {/* Category Badge */}
-          <div className="sticky left-0 flex items-center h-full pl-4 pr-3 bg-background/80 backdrop-blur-xl z-10 shrink-0 after:content-[''] after:absolute after:right-0 after:top-1/4 after:h-1/2 after:w-px after:bg-border-subtle">
-            <span className="text-[10px] font-black text-accent uppercase tracking-widest bg-accent/10 px-2 py-0.5 rounded-md">
+          <div className="sticky left-0 flex items-center h-full pl-4 pr-3 bg-card/95 backdrop-blur-xl z-20 shrink-0 after:content-[''] after:absolute after:right-0 after:top-1/4 after:h-1/2 after:w-px after:bg-border-subtle/50">
+            <span className="text-[15px] font-black text-accent uppercase tracking-[0.15em]   rounded-md  ">
               {categoryNames[currentCategory]}
             </span>
           </div>
 
-          <div className="flex items-center gap-2 px-3">
+          <div className="flex items-center gap-2 px-4">
             {subLinks.map((link) => {
               const isActive = pathname === link.href;
               const Icon = link.icon;
@@ -565,20 +581,22 @@ export function Navigation() {
                   key={link.href}
                   href={link.href}
                   onClick={handleLinkClick}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full whitespace-nowrap text-[11px] font-black transition-all ${
+                  className={`flex items-center gap-2 px-3.5 py-2 rounded-xl whitespace-nowrap text-[11px] font-black transition-all duration-300 ${
                     isActive
-                      ? "bg-foreground text-background shadow-lg shadow-foreground/5"
-                      : "bg-secondary/40 text-text-muted hover:text-foreground hover:bg-secondary/60"
+                      ? "bg-accent text-white shadow-lg shadow-accent/25 ring-2 ring-accent ring-offset-2 ring-offset-card"
+                      : "bg-secondary border border-border-subtle/30 text-text-muted hover:text-foreground hover:bg-secondary/80"
                   }`}
                 >
                   <Icon
-                    className={`w-3.5 h-3.5 ${isActive ? "stroke-[2.5px]" : "stroke-2"}`}
+                    className={`w-3.5 h-3.5 ${isActive ? "stroke-[2.5px] scale-110" : "stroke-2 opacity-70"}`}
                   />
                   {link.name}
                 </Link>
               );
             })}
           </div>
+          {/* End gradient mask for scroll indication */}
+          <div className="sticky right-0 w-8 h-full bg-gradient-to-l from-card to-transparent pointer-events-none z-10 shrink-0" />
         </div>
       </div>
 
