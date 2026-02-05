@@ -583,7 +583,7 @@ export function Navigation() {
       </div>
 
       {/* Mobile Bottom Navigation */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[60] bg-background/90 backdrop-blur-xl border-t border-border-subtle px-4 py-2 pb-6 shadow-[0_-10px_30px_rgba(0,0,0,0.05)] dark:shadow-[0_-10px_30px_rgba(0,0,0,0.3)]">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[60] bg-background/90 backdrop-blur-xl border-t border-border-subtle px-4 py-0 shadow-[0_-10px_30px_rgba(0,0,0,0.05)] dark:shadow-[0_-10px_30px_rgba(0,0,0,0.3)]">
         <div className="grid grid-cols-5 items-center max-w-sm mx-auto">
           {[
             {
