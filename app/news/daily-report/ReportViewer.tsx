@@ -17,6 +17,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Link from "next/link";
 import { BackButton } from "../../components/layout/BackButton";
+import { supabase } from "@/lib/supabase";
 
 interface DailyReport {
   date: string;
@@ -30,6 +31,8 @@ interface DailyReport {
 export function ReportViewer({ report }: { report: DailyReport }) {
   const [showSummary, setShowSummary] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isAudioLoading, setIsAudioLoading] = useState(false);
+  const [audioContent, setAudioContent] = useState<string | null>(null);
   const [showTooltip, setShowTooltip] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -59,14 +62,44 @@ export function ReportViewer({ report }: { report: DailyReport }) {
       return;
     }
 
-    // 이미 DB에 저장된 오디오가 있는 경우 사용
-    if (report.audio_content) {
-      const audioUrl = `data:audio/mp3;base64,${report.audio_content}`;
+    // 이미 캐시된 오디오가 있는 경우 사용
+    if (audioContent) {
+      const audioUrl = `data:audio/mp3;base64,${audioContent}`;
       const audio = new Audio(audioUrl);
       audio.onended = () => setIsPlaying(false);
       audioRef.current = audio;
       audio.play();
       setIsPlaying(true);
+      return;
+    }
+
+    // 오디오 데이터가 없는 경우 Supabase에서 온디맨드로 가져옴
+    if (report.audio_script) {
+      setIsAudioLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from("daily_reports")
+          .select("audio_content")
+          .eq("date", report.date)
+          .single();
+
+        if (error || !data?.audio_content) {
+          throw new Error("Audio content not found");
+        }
+
+        setAudioContent(data.audio_content);
+        const audioUrl = `data:audio/mp3;base64,${data.audio_content}`;
+        const audio = new Audio(audioUrl);
+        audio.onended = () => setIsPlaying(false);
+        audioRef.current = audio;
+        audio.play();
+        setIsPlaying(true);
+      } catch (err) {
+        console.error("Error loading audio:", err);
+        alert("음성 데이터를 불러오는 중 오류가 발생했습니다.");
+      } finally {
+        setIsAudioLoading(false);
+      }
       return;
     }
 
@@ -181,24 +214,29 @@ export function ReportViewer({ report }: { report: DailyReport }) {
             <div className="flex items-center gap-2 md:gap-3">
               {/* Audio Button with Tooltip */}
               <div className="relative flex-1 md:flex-none">
-                {showTooltip && !isPlaying && report.audio_content && (
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 animate-bounce z-10">
-                    <div className="bg-accent text-white text-[10px] md:text-xs py-2 px-4 rounded-2xl whitespace-nowrap shadow-xl shadow-accent/20 relative font-bold">
-                      핵심 요약을 음성으로 들어보세요! 🎧
-                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 -mb-1 w-2.5 h-2.5 bg-accent rotate-45" />
+                {showTooltip &&
+                  !isPlaying &&
+                  (report.audio_content || report.audio_script) && (
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 animate-bounce z-10">
+                      <div className="bg-accent text-white text-[10px] md:text-xs py-2 px-4 rounded-2xl whitespace-nowrap shadow-xl shadow-accent/20 relative font-bold">
+                        핵심 요약을 음성으로 들어보세요! 🎧
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 -mb-1 w-2.5 h-2.5 bg-accent rotate-45" />
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
                 <button
                   onClick={handleToggleAudio}
+                  disabled={isAudioLoading}
                   className={`w-full md:w-auto flex items-center justify-center gap-2 px-5 md:px-7 py-3 md:py-3.5 rounded-2xl md:rounded-full font-black text-xs md:text-sm transition-all active:scale-95 group shadow-lg ${
                     isPlaying
                       ? "bg-red-500 text-white shadow-red-500/20"
                       : "bg-background border-2 border-border-subtle/50 text-foreground hover:border-accent/50"
-                  } ${!isPlaying && report.audio_content ? "ring-4 ring-accent/10" : ""}`}
+                  } ${!isPlaying && (report.audio_content || report.audio_script) ? "ring-4 ring-accent/10" : ""} ${isAudioLoading ? "opacity-70 cursor-not-allowed" : ""}`}
                 >
-                  {isPlaying ? (
+                  {isAudioLoading ? (
+                    <div className="w-[18px] h-[18px] border-2 border-accent border-t-transparent rounded-full animate-spin" />
+                  ) : isPlaying ? (
                     <Pause size={18} fill="currentColor" />
                   ) : (
                     <Volume2
@@ -207,7 +245,11 @@ export function ReportViewer({ report }: { report: DailyReport }) {
                     />
                   )}
                   <span className="whitespace-nowrap">
-                    {isPlaying ? "재생 중지" : "리포트 듣기"}
+                    {isAudioLoading
+                      ? "로딩 중..."
+                      : isPlaying
+                        ? "재생 중지"
+                        : "리포트 듣기"}
                   </span>
                 </button>
               </div>

@@ -18,6 +18,7 @@ import {
   Landmark,
   Activity,
   BarChart3,
+  Calendar,
   ChevronDown,
   Building2,
   Library,
@@ -223,6 +224,13 @@ export function Navigation() {
       desc: "현재 시장은, 안전자산vs위험자산? ",
       category: "global",
     },
+    {
+      name: "실적 캘린더",
+      href: "/earnings",
+      icon: Calendar,
+      desc: "한/미 주요 기업 실적 발표 일정",
+      category: "earnings",
+    },
   ];
 
   const currentCategory =
@@ -234,6 +242,7 @@ export function Navigation() {
     domestic: "국내",
     us: "미국",
     global: "글로벌",
+    earnings: "일정",
   };
 
   return (
@@ -623,6 +632,12 @@ export function Navigation() {
               icon: Globe,
               cat: "global",
             },
+            {
+              name: "실적",
+              href: "/earnings",
+              icon: Calendar,
+              cat: "earnings",
+            },
           ].map((item) => {
             const Icon = item.icon;
             const isActive = currentCategory === item.cat;
@@ -695,31 +710,6 @@ export function Navigation() {
               </Link>
             );
           })}
-
-          {/* 메뉴 토글 버튼 */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className={`flex flex-col items-center gap-1 transition-all active:scale-95 ${
-              isOpen ? "text-accent" : "text-text-muted hover:text-foreground"
-            }`}
-          >
-            <div
-              className={`p-2 rounded-xl transition-all duration-300 ${
-                isOpen ? "bg-accent/10" : "group-hover:bg-secondary/50"
-              }`}
-            >
-              {isOpen ? (
-                <X className="w-5 h-5 stroke-[2.5px]" />
-              ) : (
-                <Menu className="w-5 h-5 stroke-2" />
-              )}
-            </div>
-            <span
-              className={`text-[10px] font-black tracking-tight ${isOpen ? "opacity-100" : "opacity-60"}`}
-            >
-              메뉴
-            </span>
-          </button>
         </div>
       </div>
 

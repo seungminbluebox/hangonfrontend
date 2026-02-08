@@ -8,7 +8,7 @@ import { cache } from "react";
 const getLatestReport = cache(async () => {
   const { data: report } = await supabase
     .from("daily_reports")
-    .select("*")
+    .select("date, title, summary, content, audio_script")
     .order("date", { ascending: false })
     .limit(1)
     .maybeSingle();
