@@ -30,6 +30,7 @@ import {
   Waves,
   Bell,
   LayoutDashboard,
+  Coffee,
 } from "lucide-react";
 
 export function Navigation() {
@@ -225,10 +226,10 @@ export function Navigation() {
       category: "global",
     },
     {
-      name: "실적 캘린더",
-      href: "/earnings",
-      icon: Calendar,
-      desc: "한/미 주요 기업 실적 발표 일정",
+      name: "휴장 일정",
+      href: "/market-holidays",
+      icon: Coffee,
+      desc: "한/미 증시 휴장일 및 조기 종료",
       category: "earnings",
     },
   ];
@@ -633,9 +634,9 @@ export function Navigation() {
               cat: "global",
             },
             {
-              name: "실적",
-              href: "/earnings",
-              icon: Calendar,
+              name: "일정",
+              href: "/market-holidays",
+              icon: Coffee,
               cat: "earnings",
             },
           ].map((item) => {

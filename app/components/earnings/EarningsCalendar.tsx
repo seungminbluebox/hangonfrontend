@@ -51,7 +51,11 @@ export function EarningsCalendar() {
   const [isMonthView, setIsMonthView] = useState(false);
 
   const isFutureEarning = (earningDate: string): boolean => {
-    return new Date(earningDate) > new Date();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // 오늘 00:00:00
+    const target = new Date(earningDate);
+    target.setHours(0, 0, 0, 0); // 타겟 00:00:00
+    return target > today;
   };
 
   const isValidEps = (val: any) => {
@@ -115,8 +119,8 @@ export function EarningsCalendar() {
       };
     }
 
-    // 실제 데이터가 없고 미래 날짜인 경우
-    if (isFuture) {
+    // 실제 데이터가 없고 미래 또는 당일인 경우
+    if (isFuture || isSameDay(new Date(event.date), new Date())) {
       if (hasEstimate) {
         return {
           value: formatEps(event.eps_estimate),
@@ -124,7 +128,9 @@ export function EarningsCalendar() {
           type: "estimate" as const,
         };
       }
-      return "발표 전 예상치 집계 중";
+      return isFuture
+        ? "발표 전 예상치 집계 중"
+        : "오늘 발표 예정 (예측치 확인 중)";
     }
 
     // 날짜는 지났으나 실제 데이터가 아직 없는 경우 (대기 중)
@@ -156,8 +162,8 @@ export function EarningsCalendar() {
       };
     }
 
-    // 실제 데이터가 없고 미래 날짜인 경우
-    if (isFuture) {
+    // 실제 데이터가 없고 미래 또는 당일인 경우
+    if (isFuture || isSameDay(new Date(event.date), new Date())) {
       if (hasEstimate) {
         return {
           value: event.revenue_estimate_formatted,
@@ -165,7 +171,9 @@ export function EarningsCalendar() {
           type: "estimate" as const,
         };
       }
-      return "매출 예상치 확인 중";
+      return isFuture
+        ? "매출 예상치 확인 중"
+        : "오늘 발표 예정 (매출 예상치 확인 중)";
     }
 
     // 날짜는 지났으나 실제 데이터가 아직 없는 경우
