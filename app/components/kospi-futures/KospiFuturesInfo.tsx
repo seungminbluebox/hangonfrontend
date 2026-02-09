@@ -51,6 +51,7 @@ export function KospiFuturesInfo({ data: initialData }: KospiFuturesInfoProps) {
   const [showShare, setShowShare] = React.useState(false);
   const [lastCheckTime, setLastCheckTime] = React.useState<string>(
     new Date().toLocaleString("ko-KR", {
+      timeZone: "Asia/Seoul",
       month: "numeric",
       day: "numeric",
     }),
@@ -72,6 +73,7 @@ export function KospiFuturesInfo({ data: initialData }: KospiFuturesInfoProps) {
             setData(kospiData);
             setLastCheckTime(
               new Date().toLocaleString("ko-KR", {
+                timeZone: "Asia/Seoul",
                 month: "numeric",
                 day: "numeric",
               }),

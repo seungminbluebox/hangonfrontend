@@ -48,6 +48,7 @@ async function fetchFromYahoo(
 
 // 날짜 포맷터 재사용으로 성능 최적화 (toLocaleString은 매우 느림)
 const dateFormatter = new Intl.DateTimeFormat("ko-KR", {
+  timeZone: "Asia/Seoul",
   month: "numeric",
   day: "numeric",
   hour: "2-digit",

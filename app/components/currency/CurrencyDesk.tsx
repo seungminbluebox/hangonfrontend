@@ -54,6 +54,7 @@ export function CurrencyDesk({
   );
   const [lastCheckTime, setLastCheckTime] = useState<string>(
     new Date().toLocaleString("ko-KR", {
+      timeZone: "Asia/Seoul",
       month: "numeric",
       day: "numeric",
     }),
@@ -73,6 +74,7 @@ export function CurrencyDesk({
             setLiveData(usdData);
             setLastCheckTime(
               new Date().toLocaleString("ko-KR", {
+                timeZone: "Asia/Seoul",
                 month: "numeric",
                 day: "numeric",
               }),
