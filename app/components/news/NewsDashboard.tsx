@@ -351,7 +351,7 @@ export function NewsDashboard({
                     keyword={selectedItem.keyword}
                     summary={selectedItem.summary}
                     createdAt={selectedItem.created_at}
-                    now={lastTick}
+                    serverTime={lastTick}
                     onReactionChange={(counts) =>
                       handleReactionUpdate(selectedItem.id, counts)
                     }

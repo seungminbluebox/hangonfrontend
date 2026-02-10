@@ -197,19 +197,6 @@ interface ReactionData {
   neutral: number;
 }
 
-interface NewsReactionsInnerProps {
-  newsId: string;
-  keyword?: string;
-  summary?: string;
-  createdAt?: string;
-  serverTime: number;
-  onReactionChange?: (counts: {
-    good: number;
-    bad: number;
-    neutral: number;
-  }) => void;
-}
-
 export function NewsReactions({
   newsId,
   keyword,
