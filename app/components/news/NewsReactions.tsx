@@ -15,7 +15,7 @@ interface NewsReactionsProps {
     bad: number;
     neutral: number;
   }) => void;
-  now?: number;
+  serverTime?: number;
 }
 
 type ReactionType = "good" | "bad" | "neutral";
@@ -197,12 +197,12 @@ interface ReactionData {
   neutral: number;
 }
 
-interface NewsReactionsProps {
+interface NewsReactionsInnerProps {
   newsId: string;
   keyword?: string;
   summary?: string;
   createdAt?: string;
-  now: number;
+  serverTime: number;
   onReactionChange?: (counts: {
     good: number;
     bad: number;
@@ -215,7 +215,7 @@ export function NewsReactions({
   keyword,
   summary,
   createdAt,
-  now,
+  serverTime: now,
   onReactionChange,
 }: NewsReactionsProps) {
   const [counts, setCounts] = useState<ReactionData>({
