@@ -216,7 +216,7 @@ export default async function Home({
 
       <div className="scroll-mt-24">
         {news && news.length > 0 ? (
-          <NewsDashboard news={news} />
+          <NewsDashboard news={news} serverTime={Date.now()} />
         ) : (
           <div className="col-span-full py-32 text-center space-y-3">
             <div className="mx-auto w-12 h-12 rounded-2xl bg-card border border-border-subtle flex items-center justify-center">

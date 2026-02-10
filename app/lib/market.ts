@@ -6,7 +6,7 @@ export interface MarketData {
   changePercent: string;
   isUp: boolean;
   isDown: boolean;
-  history: { value: number | null; time: string }[];
+  history: { value: number | null; time: string; fullDate?: string }[];
 }
 
 const SYMBOLS = [
@@ -54,6 +54,12 @@ const dateFormatter = new Intl.DateTimeFormat("ko-KR", {
   hour: "2-digit",
   minute: "2-digit",
   hour12: false,
+});
+
+const fullDateFormatter = new Intl.DateTimeFormat("ko-KR", {
+  timeZone: "Asia/Seoul",
+  month: "numeric",
+  day: "numeric",
 });
 
 /**
@@ -115,17 +121,20 @@ export async function getMarketData(
         // 데이터 포인트 최적화: 차트용 데이터가 너무 많으면(500개 이상) 샘플링하여 렌더링 속도 향상
         // 서버에서의 처리 시간 및 클라이언트로 전송되는 JSON 크기를 줄여 응답 속도 확보
         const skip = Math.max(1, Math.floor(rawClose.length / 500));
-        const history: { value: number | null; time: string }[] = [];
+        const history: MarketData["history"] = [];
 
         for (let i = 0; i < rawClose.length; i += skip) {
           const val = rawClose[i];
           if (val === null) continue;
 
+          const date = timestamps[i] ? new Date(timestamps[i] * 1000) : null;
+
           history.push({
             value: val,
-            time: timestamps[i]
-              ? dateFormatter.format(new Date(timestamps[i] * 1000))
+            time: date
+              ? dateFormatter.format(date).split(" ").slice(2).join(" ")
               : "",
+            fullDate: date ? fullDateFormatter.format(date) : "",
           });
         }
 

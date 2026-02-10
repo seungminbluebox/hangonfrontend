@@ -283,7 +283,7 @@ export function InterestRateInfo({ initialData }: InterestRateInfoProps) {
                 <YAxis
                   axisLine={false}
                   tickLine={false}
-                  width={35}
+                  width={40}
                   tick={{
                     fontSize: 10,
                     fontWeight: "bold",
@@ -292,6 +292,7 @@ export function InterestRateInfo({ initialData }: InterestRateInfoProps) {
                   }}
                   orientation="right"
                   domain={["dataMin - 0.5", "dataMax + 0.5"]}
+                  tickFormatter={(value) => value.toFixed(2)}
                 />
                 <Tooltip
                   content={<CustomTooltip />}

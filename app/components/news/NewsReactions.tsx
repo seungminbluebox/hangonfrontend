@@ -9,6 +9,13 @@ interface NewsReactionsProps {
   newsId: string;
   keyword?: string;
   summary?: string;
+  createdAt?: string;
+  onReactionChange?: (counts: {
+    good: number;
+    bad: number;
+    neutral: number;
+  }) => void;
+  now?: number;
 }
 
 type ReactionType = "good" | "bad" | "neutral";
@@ -68,11 +75,11 @@ const detectSentiment = (keyword: string, summary: string): ReactionType => {
 };
 
 // 24시간 동안 선형적으로 증가하는 가중치 계산
-const getTimeWeight = (createdAt?: string): number => {
+const getTimeWeight = (createdAt?: string, now?: number): number => {
   if (!createdAt) return 1;
 
   const createdTime = new Date(createdAt).getTime();
-  const currentTime = new Date().getTime();
+  const currentTime = now || new Date().getTime();
   const elapsedMs = currentTime - createdTime;
   const growthMs = 24 * 60 * 60 * 1000; // 24시간
 
@@ -88,6 +95,7 @@ export const getFakeCount = (
   type: ReactionType,
   sentiment?: ReactionType,
   createdAt?: string,
+  now?: number,
 ): number => {
   // 1. 고유 씨드 생성 (v4 업데이트 - 수치 다양화 및 10단위 절대 방지)
   let hash = 0;
@@ -134,7 +142,7 @@ export const getFakeCount = (
   }
 
   // 4. 시간에 따른 선형 증가 적용
-  const weight = getTimeWeight(createdAt);
+  const weight = getTimeWeight(createdAt, now);
   const weightedCount = baseFakeCount * weight;
 
   // 5. 최종 보정: 일의 자리가 0이 되는 것을 원천 차단
@@ -164,11 +172,13 @@ export const getTotalFakeCount = (
   realGood: number = 0,
   realBad: number = 0,
   realNeutral: number = 0,
+  now?: number,
 ): number => {
   const sentiment = detectSentiment(keyword || "", summary || "");
-  const g = getFakeCount(id, "good", sentiment, createdAt) + realGood;
-  const b = getFakeCount(id, "bad", sentiment, createdAt) + realBad;
-  const n = getFakeCount(id, "neutral", sentiment, createdAt) + realNeutral;
+  const g = getFakeCount(id, "good", sentiment, createdAt, now) + realGood;
+  const b = getFakeCount(id, "bad", sentiment, createdAt, now) + realBad;
+  const n =
+    getFakeCount(id, "neutral", sentiment, createdAt, now) + realNeutral;
 
   let total = g + b + n;
 
@@ -192,6 +202,7 @@ interface NewsReactionsProps {
   keyword?: string;
   summary?: string;
   createdAt?: string;
+  now: number;
   onReactionChange?: (counts: {
     good: number;
     bad: number;
@@ -204,6 +215,7 @@ export function NewsReactions({
   keyword,
   summary,
   createdAt,
+  now,
   onReactionChange,
 }: NewsReactionsProps) {
   const [counts, setCounts] = useState<ReactionData>({
@@ -214,7 +226,7 @@ export function NewsReactions({
   const [userReaction, setUserReaction] = useState<ReactionType | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [clickEffect, setClickEffect] = useState<ReactionType | null>(null);
-  const [lastTick, setLastTick] = useState(Date.now());
+  const [lastTick, setLastTick] = useState(now);
 
   // 1분마다 강제 리렌더링을 위한 타이머
   useEffect(() => {
@@ -258,10 +270,13 @@ export function NewsReactions({
       // 4. 가짜 데이터와 합치기
       const finalCounts = {
         good:
-          getFakeCount(newsId, "good", sentiment, createdAt) + realCounts.good,
-        bad: getFakeCount(newsId, "bad", sentiment, createdAt) + realCounts.bad,
+          getFakeCount(newsId, "good", sentiment, createdAt, lastTick) +
+          realCounts.good,
+        bad:
+          getFakeCount(newsId, "bad", sentiment, createdAt, lastTick) +
+          realCounts.bad,
         neutral:
-          getFakeCount(newsId, "neutral", sentiment, createdAt) +
+          getFakeCount(newsId, "neutral", sentiment, createdAt, lastTick) +
           realCounts.neutral,
       };
 

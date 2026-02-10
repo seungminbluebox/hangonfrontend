@@ -29,7 +29,13 @@ interface NewsItem {
   }[];
 }
 
-export function NewsDashboard({ news }: { news: NewsItem[] }) {
+export function NewsDashboard({
+  news,
+  serverTime,
+}: {
+  news: NewsItem[];
+  serverTime: number;
+}) {
   const [selectedId, setSelectedId] = useState<string | null>(
     news.length > 0 ? news[0].id : null,
   );
@@ -44,9 +50,9 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
   const [isDailyShareModalOpen, setIsDailyShareModalOpen] = useState(false);
   const detailRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [lastTick, setLastTick] = useState(Date.now());
+  const [lastTick, setLastTick] = useState<number>(serverTime);
 
-  // 1분마다 리렌더링 트리거 (선형 증가 숫자 반영)
+  // Hydration fix: Only start ticking after mount
   useEffect(() => {
     const timer = setInterval(() => setLastTick(Date.now()), 60000);
     return () => clearInterval(timer);
@@ -187,6 +193,7 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
                           realReactionCounts[item.id]?.good || 0,
                           realReactionCounts[item.id]?.bad || 0,
                           realReactionCounts[item.id]?.neutral || 0,
+                          lastTick,
                         )}
                       />
                       <span className="ml-0.5">명 참여</span>
@@ -344,6 +351,7 @@ export function NewsDashboard({ news }: { news: NewsItem[] }) {
                     keyword={selectedItem.keyword}
                     summary={selectedItem.summary}
                     createdAt={selectedItem.created_at}
+                    now={lastTick}
                     onReactionChange={(counts) =>
                       handleReactionUpdate(selectedItem.id, counts)
                     }

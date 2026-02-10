@@ -94,62 +94,55 @@ export function NasdaqFuturesInfo({
     <div className="space-y-12">
       {/* Live Quote Card */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2 bg-secondary/20 border border-border-subtle rounded-[2.5rem] p-8 pr-0 md:p-10 flex flex-col justify-between">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 mr-8">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-accent/10 flex items-center justify-center">
-                <Activity className="w-5 h-5 text-accent" />
+        <div className="md:col-span-2 bg-secondary/20 border border-border-subtle rounded-[2.5rem] flex flex-col justify-between overflow-hidden">
+          <div className="p-8 md:p-10 pb-0">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-accent/10 flex items-center justify-center shrink-0">
+                  <Activity className="w-5 h-5 text-accent" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-black italic tracking-tight leading-none mb-1.5">
+                    나스닥 100 선물
+                  </h2>
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest leading-none">
+                      www.hangon.co.kr
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div>
-                <h2 className="text-xl font-black italic tracking-tight leading-none mb-1.5">
-                  나스닥 100 선물
-                </h2>
-                <div className="flex flex-col gap-1.5">
-                  <span className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest leading-none">
-                    Nasdaq 100 Futures (NQ=F)
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-1 bg-red-500/5 px-2 py-0.5 rounded-md border border-red-500/10 shrink-0">
-                      <div className="w-1 h-1 rounded-full bg-red-500 animate-pulse" />
-                      <span className="text-[9px] font-bold text-red-500 uppercase tracking-widest">
-                        Live
-                      </span>
-                    </div>
-                    <span className="text-[9px] font-bold text-foreground/30 uppercase tracking-widest">
-                      {lastCheckTime} 업데이트됨
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setShowShare(true)}
+                  className="w-11 h-11 flex items-center justify-center bg-accent/10 hover:bg-accent/20 text-accent rounded-2xl transition-all group shrink-0"
+                >
+                  <Share2 className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                </button>
+                <div className="flex flex-col items-end">
+                  <div className="flex items-baseline gap-2">
+                    <span
+                      className={`text-4xl md:text-5xl font-black italic tracking-tighter ${isUp ? "text-red-500" : "text-blue-500"}`}
+                    >
+                      {data.value}
+                    </span>
+                  </div>
+                  <div
+                    className={`flex items-center gap-1.5 mt-1 font-black italic text-sm ${isUp ? "text-red-500" : "text-blue-500"}`}
+                  >
+                    <TrendingUp
+                      className={`w-4 h-4 ${!isUp && "rotate-180"}`}
+                    />
+                    <span>
+                      {data.change} ({data.changePercent})
                     </span>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setShowShare(true)}
-                className="w-11 h-11 flex items-center justify-center bg-accent/10 hover:bg-accent/20 text-accent rounded-2xl transition-all group"
-              >
-                <Share2 className="w-5 h-5 group-hover:scale-110 transition-transform" />
-              </button>
-              <div className="flex flex-col items-end">
-                <div className="flex items-baseline gap-2">
-                  <span
-                    className={`text-4xl md:text-5xl font-black italic tracking-tighter ${isUp ? "text-red-500" : "text-blue-500"}`}
-                  >
-                    {data.value}
-                  </span>
-                </div>
-                <div
-                  className={`flex items-center gap-1.5 mt-1 font-black italic text-sm ${isUp ? "text-red-500" : "text-blue-500"}`}
-                >
-                  <TrendingUp className={`w-4 h-4 ${!isUp && "rotate-180"}`} />
-                  <span>
-                    {data.change} ({data.changePercent})
-                  </span>
-                </div>
-              </div>
-            </div>
           </div>
 
-          <div className="h-[250px] w-full mt-4">
+          <div className="h-[250px] w-full mt-4 p-1">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart
                 data={data.history}
@@ -180,6 +173,14 @@ export function NasdaqFuturesInfo({
                   axisLine={false}
                   tickLine={false}
                   minTickGap={60}
+                  tickFormatter={(value, index) => {
+                    const points = data.history;
+                    if (!points || index < 0 || index >= points.length)
+                      return value;
+
+                    const current = points[index];
+                    return `${current.fullDate} ${value}`;
+                  }}
                   tick={{
                     fontSize: 10,
                     fontWeight: "bold",
@@ -197,7 +198,7 @@ export function NasdaqFuturesInfo({
                     fill: "currentColor",
                     opacity: 0.3,
                   }}
-                  orientation="right"
+                  tickFormatter={(value) => value.toFixed(2)}
                 />
                 <Tooltip
                   content={<CustomTooltip />}

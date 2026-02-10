@@ -37,7 +37,27 @@ function Digit({ digit }: { digit: string }) {
 }
 
 export function RollingNumber({ value, className = "" }: RollingNumberProps) {
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const digits = value.toString().split("");
+
+  if (!mounted) {
+    return (
+      <div
+        className={`inline-flex items-center tabular-nums leading-none ${className}`}
+      >
+        {digits.map((digit, idx) => (
+          <span key={idx} className="inline-block">
+            {digit}
+          </span>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div
