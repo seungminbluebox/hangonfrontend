@@ -11,6 +11,7 @@ import {
   TrendingUp,
   ArrowUpRight,
   ArrowDownRight,
+  Activity,
 } from "lucide-react";
 import { AreaChart, Area, ResponsiveContainer, YAxis } from "recharts";
 import { getKospiNightFuturesData } from "../../../lib/market-night-futures";
@@ -51,7 +52,7 @@ export function KospiNightFuturesShareCard({
       style: {
         transform: "scale(1)",
         transformOrigin: "top left",
-        width: "360px",
+        width: "330px",
         height: "500px",
         position: "relative",
         borderRadius: "35px",
@@ -105,7 +106,7 @@ export function KospiNightFuturesShareCard({
     }
   };
 
-  const isUp = parseFloat(data.change) >= 0;
+  const isUp = data.isUp;
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-300">
@@ -130,7 +131,7 @@ export function KospiNightFuturesShareCard({
             <div className="scale-[0.85] xs:scale-90 sm:scale-100 origin-center shrink-0">
               <div
                 ref={cardRef}
-                className={`w-[360px] h-[500px] p-7 rounded-[35px] shadow-2xl relative overflow-hidden transition-colors duration-300 border flex flex-col justify-between ${
+                className={`w-[330px] h-[500px] p-7 rounded-[35px] shadow-2xl relative overflow-hidden transition-colors duration-300 border flex flex-col justify-between ${
                   shareTheme === "light"
                     ? "bg-[#F8F7F4] text-neutral-900 border-neutral-100"
                     : "bg-[#0f172a] text-white border-white/5"
@@ -217,7 +218,7 @@ export function KospiNightFuturesShareCard({
                                 <stop
                                   offset="5%"
                                   stopColor={isUp ? "#ef4444" : "#3b82f6"}
-                                  stopOpacity={0.3}
+                                  stopOpacity={0.1}
                                 />
                                 <stop
                                   offset="95%"
@@ -226,7 +227,10 @@ export function KospiNightFuturesShareCard({
                                 />
                               </linearGradient>
                             </defs>
-                            <YAxis domain={["auto", "auto"]} hide />
+                            <YAxis
+                              hide
+                              domain={["dataMin - 1", "dataMax + 1"]}
+                            />
                             <Area
                               type="monotone"
                               dataKey="value"
@@ -234,13 +238,20 @@ export function KospiNightFuturesShareCard({
                               strokeWidth={3}
                               fillOpacity={1}
                               fill="url(#colorValue)"
-                              isAnimationActive={false}
+                              dot={false}
                             />
                           </AreaChart>
                         </ResponsiveContainer>
                       </div>
                     </div>
+                  </div>
 
+                  {/* Insight Marker */}
+                  <div className="mt-6 pt-6 border-t border-dashed opacity-50 border-gray-400">
+                    <div className="flex items-center gap-1.5 mb-1 text-[10px] font-black uppercase letter-spacing-1">
+                      <Activity className="w-3 h-3 text-accent" />
+                      Market Pulse
+                    </div>
                     <p
                       className={`text-[11px] font-bold leading-relaxed ${
                         shareTheme === "dark"
@@ -248,9 +259,7 @@ export function KospiNightFuturesShareCard({
                           : "text-slate-500"
                       }`}
                     >
-                      국내 증시 휴장 시카고 거래소(CME)에서 거래되는 코스피
-                      야간선물의 실시간 흐름입니다. 시초가 예측의 가이드가
-                      됩니다.
+                      내일의 코스피 방향을 가늠하는 실시간 야간 시장 지표입니다.
                     </p>
                   </div>
 

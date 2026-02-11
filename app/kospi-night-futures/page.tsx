@@ -4,9 +4,21 @@ import { BackButton } from "../components/layout/BackButton";
 import { getKospiNightFuturesData } from "@/lib/market-night-futures";
 
 export const metadata: Metadata = {
-  title: "코스피 야간선물 리포트",
+  title: "코스피 야간선물",
   description:
-    "밤사이의 시장 심리를 읽는 핵심 지표, 코스피 야간선물 실시간 흐름을 제공합니다.",
+    "밤사이의 시장 심리를 읽는 핵심 지표, 코스피 야간선물 실시간 지수와 추세를 제공합니다.",
+  keywords: [
+    "코스피 야간선물",
+    "야선",
+    "코스피 야선",
+    "코스피 200 야간선물",
+    "HangOn",
+  ],
+  openGraph: {
+    title: "실시간 코스피 야간선물 | HangOn",
+    description: "내일의 국장 방향을 미리 보는 야간 시장 심리 분석.",
+    type: "website",
+  },
 };
 
 export default async function KospiNightFuturesPage() {

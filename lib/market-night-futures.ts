@@ -15,19 +15,22 @@ export async function getKospiNightFuturesData(): Promise<MarketData | null> {
     const history = data
       .map((item: any) => {
         const date = new Date(item.recorded_at);
+        const formattedTime = date.toLocaleTimeString("ko-KR", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+          timeZone: "Asia/Seoul",
+        });
+        const formattedDate = date.toLocaleDateString("ko-KR", {
+          month: "numeric",
+          day: "numeric",
+          timeZone: "Asia/Seoul",
+        });
         return {
           value: parseFloat(item.price),
-          time: date.toLocaleTimeString("ko-KR", {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false,
-            timeZone: "Asia/Seoul",
-          }),
-          fullDate: date.toLocaleDateString("ko-KR", {
-            month: "numeric",
-            day: "numeric",
-            timeZone: "Asia/Seoul",
-          }),
+          time: formattedTime,
+          fullDate: formattedDate,
+          label: `${formattedDate} ${formattedTime}`,
         };
       })
       .reverse();

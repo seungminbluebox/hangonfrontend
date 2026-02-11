@@ -6,13 +6,17 @@ export interface MarketData {
   changePercent: string;
   isUp: boolean;
   isDown: boolean;
-  history: { value: number | null; time: string; fullDate?: string }[];
+  history: {
+    value: number | null;
+    time: string;
+    fullDate?: string;
+    label?: string;
+  }[];
 }
 
 const SYMBOLS = [
   { name: "KOSPI", symbol: "^KS11" },
   { name: "KOSDAQ", symbol: "^KQ11" },
-  { name: "코스피 200 선물", symbol: "^KS200" },
   { name: "S&P 500", symbol: "^GSPC" },
   { name: "나스닥", symbol: "NQ=F" },
   { name: "다우존스", symbol: "^DJI" },
@@ -24,11 +28,11 @@ const SYMBOLS = [
 
 async function fetchFromYahoo(
   symbol: string,
-  range: string = "5d",
+  range: string = "1d",
   interval: string = "1m",
 ) {
   try {
-    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=${interval}&range=${range}`;
+    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=${interval}&range=${range}&includePrePost=true`;
     const response = await fetch(url, {
       next: { revalidate: 60 }, // 1분 간격으로 야후 Finance 데이터 갱신 (사용자 요청 반영)
       headers: {
@@ -78,10 +82,11 @@ export async function getMarketData(
       ? SYMBOLS.filter((s) => names.includes(s.name))
       : SYMBOLS;
 
-    // 데이터 범위 설정 (사용자 요청에 따라 interval은 1m 고정)
-    // full 모드일 때만 5일치를 가져오고, 요약형일 때는 1일치만 페칭하여 데이터량 조절
-    const range = isFull ? "5d" : "1d";
-    const interval = "1m";
+    // 데이터 범위 설정
+    // full 모드일 때 5일치(나스닥은 사용자 요청으로 2일치)를 가져오며, 연속성을 위해 적절한 단위 설정
+    const range = isFull ? (names?.includes("나스닥") ? "2d" : "5d") : "1d";
+    // 나스닥은 2일치이므로 1분 단위로 가져와도 데이터량이 적당함 (더 실시간에 가까움)
+    const interval = isFull ? (names?.includes("나스닥") ? "1m" : "5m") : "1m";
 
     // 모든 데이터를 동시에 가져오기 위해 Promise.all 사용
     const rawData = await Promise.all(
@@ -120,21 +125,61 @@ export async function getMarketData(
 
         // 데이터 포인트 최적화: 차트용 데이터가 너무 많으면(500개 이상) 샘플링하여 렌더링 속도 향상
         // 서버에서의 처리 시간 및 클라이언트로 전송되는 JSON 크기를 줄여 응답 속도 확보
-        const skip = Math.max(1, Math.floor(rawClose.length / 500));
+        const skip = Math.max(1, Math.floor(rawClose.length / 400));
         const history: MarketData["history"] = [];
 
         for (let i = 0; i < rawClose.length; i += skip) {
-          const val = rawClose[i];
-          if (val === null) continue;
+          // 마지막 데이터 포인트는 무조건 포함하도록 i 조정
+          const actualIdx =
+            i + skip >= rawClose.length ? rawClose.length - 1 : i;
+          const val = rawClose[actualIdx];
+          if (val === null) {
+            if (actualIdx === rawClose.length - 1) break;
+            continue;
+          }
 
-          const date = timestamps[i] ? new Date(timestamps[i] * 1000) : null;
+          const date = timestamps[actualIdx]
+            ? new Date(timestamps[actualIdx] * 1000)
+            : null;
+          const formattedTime = date
+            ? dateFormatter.format(date).split(" ").slice(2).join(" ")
+            : "";
+          const formattedDate = date ? fullDateFormatter.format(date) : "";
 
           history.push({
             value: val,
-            time: date
-              ? dateFormatter.format(date).split(" ").slice(2).join(" ")
-              : "",
-            fullDate: date ? fullDateFormatter.format(date) : "",
+            time: formattedTime,
+            fullDate: formattedDate,
+            label: `${formattedDate} ${formattedTime}`,
+          });
+
+          // 마지막 포인트를 추가했다면 루프 종료
+          if (actualIdx === rawClose.length - 1) break;
+        }
+
+        // 현재 가격이 히스토리의 마지막 가격과 다르거나, 마지막 데이터가 3분 이상 지연되었을 때 현재 포인트를 추가
+        const lastTimestamp =
+          timestamps.length > 0 ? timestamps[timestamps.length - 1] * 1000 : 0;
+        const nowMs = Date.now();
+        const gapMs = nowMs - lastTimestamp;
+
+        if (
+          history.length > 0 &&
+          (currentPrice !== history[history.length - 1].value || gapMs > 180000)
+        ) {
+          const now = new Date();
+          const formattedTime = dateFormatter
+            .format(now)
+            .split(" ")
+            .slice(2)
+            .join(" ");
+          const formattedDate = fullDateFormatter.format(now);
+
+          history.push({
+            value: currentPrice,
+            time: formattedTime,
+            fullDate: formattedDate,
+            label: `${formattedDate} ${formattedTime}`,
           });
         }
 

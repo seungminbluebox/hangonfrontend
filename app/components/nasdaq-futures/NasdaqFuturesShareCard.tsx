@@ -53,7 +53,7 @@ export function NasdaqFuturesShareCard({
       style: {
         transform: "scale(1)",
         transformOrigin: "top left",
-        width: "360px",
+        width: "330px",
         height: "500px",
         position: "relative",
         borderRadius: "35px",
@@ -130,7 +130,7 @@ export function NasdaqFuturesShareCard({
             <div className="scale-[0.85] xs:scale-90 sm:scale-100 origin-center shrink-0">
               <div
                 ref={cardRef}
-                className={`w-[360px] h-[500px] p-7 rounded-[35px] shadow-2xl relative overflow-hidden transition-colors duration-300 border flex flex-col justify-between ${
+                className={`w-[330px] h-[500px] p-7 rounded-[35px] shadow-2xl relative overflow-hidden transition-colors duration-300 border flex flex-col justify-between ${
                   shareTheme === "light"
                     ? "bg-[#F8F7F4] text-neutral-900 border-neutral-100"
                     : "bg-[#0f172a] text-white border-white/5"

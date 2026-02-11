@@ -30,13 +30,20 @@ interface NasdaqFuturesInfoProps {
 
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
+    const data = payload[0].payload;
     return (
       <div className="bg-background/90 backdrop-blur-md border border-border-subtle p-3 rounded-2xl shadow-xl">
-        <p className="text-[10px] font-black text-foreground/40 uppercase mb-1">
-          {payload[0].payload.time}
-        </p>
+        <div className="flex items-center gap-2 mb-1">
+          <p className="text-[10px] font-black text-foreground/40 uppercase">
+            {data.fullDate}
+          </p>
+          <div className="w-1 h-1 rounded-full bg-foreground/20" />
+          <p className="text-[10px] font-black text-foreground/40 uppercase">
+            {data.time}
+          </p>
+        </div>
         <p className="text-sm font-black italic text-accent">
-          {payload[0].value.toLocaleString(undefined, {
+          {data.value.toLocaleString(undefined, {
             minimumFractionDigits: 2,
           })}
         </p>
@@ -91,52 +98,38 @@ export function NasdaqFuturesInfo({
   const isUp = data.isUp;
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-8">
       {/* Live Quote Card */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2 bg-secondary/20 border border-border-subtle rounded-[2.5rem] flex flex-col justify-between overflow-hidden">
-          <div className="p-8 md:p-10 pb-0">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-accent/10 flex items-center justify-center shrink-0">
-                  <Activity className="w-5 h-5 text-accent" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-black italic tracking-tight leading-none mb-1.5">
-                    나스닥 100 선물
-                  </h2>
-                  <div className="flex flex-col gap-1.5">
-                    <span className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest leading-none">
-                      www.hangon.co.kr
-                    </span>
-                  </div>
-                </div>
+          <div className="p-6 md:p-8 pb-0 relative">
+            <button
+              onClick={() => setShowShare(true)}
+              className="absolute top-4 right-4 md:top-6 md:right-6 w-10 h-10 flex items-center justify-center bg-accent/10 hover:bg-accent/20 text-accent/80 hover:text-accent rounded-xl transition-all group z-10 shadow-sm"
+            >
+              <Share2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
+            </button>
+
+            <div className="flex flex-col md:flex-row md:items-start justify-between gap-3 md:gap-8">
+              <div className="flex flex-row md:flex-col items-baseline md:items-start justify-between w-full md:w-auto">
+                <h2 className="text-xl font-black italic tracking-tight leading-none">
+                  나스닥 선물
+                </h2>
               </div>
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => setShowShare(true)}
-                  className="w-11 h-11 flex items-center justify-center bg-accent/10 hover:bg-accent/20 text-accent rounded-2xl transition-all group shrink-0"
+
+              <div className="flex flex-row md:flex-col items-baseline md:items-end justify-between w-full md:w-auto gap-1 md:pr-12">
+                <span
+                  className={`text-3xl md:text-4xl font-black italic tracking-tighter ${isUp ? "text-red-500" : "text-blue-500"}`}
                 >
-                  <Share2 className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                </button>
-                <div className="flex flex-col items-end">
-                  <div className="flex items-baseline gap-2">
-                    <span
-                      className={`text-4xl md:text-5xl font-black italic tracking-tighter ${isUp ? "text-red-500" : "text-blue-500"}`}
-                    >
-                      {data.value}
-                    </span>
-                  </div>
-                  <div
-                    className={`flex items-center gap-1.5 mt-1 font-black italic text-sm ${isUp ? "text-red-500" : "text-blue-500"}`}
-                  >
-                    <TrendingUp
-                      className={`w-4 h-4 ${!isUp && "rotate-180"}`}
-                    />
-                    <span>
-                      {data.change} ({data.changePercent})
-                    </span>
-                  </div>
+                  {data.value}
+                </span>
+                <div
+                  className={`flex items-center gap-1 font-black italic text-[11px] ${isUp ? "text-red-500" : "text-blue-500"}`}
+                >
+                  <TrendingUp className={`w-3 h-3 ${!isUp && "rotate-180"}`} />
+                  <span>
+                    {data.change} ({data.changePercent})
+                  </span>
                 </div>
               </div>
             </div>
@@ -146,7 +139,7 @@ export function NasdaqFuturesInfo({
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart
                 data={data.history}
-                margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                margin={{ top: 10, right: 10, left: -5, bottom: 0 }}
               >
                 <defs>
                   <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
@@ -169,17 +162,12 @@ export function NasdaqFuturesInfo({
                   opacity={0.05}
                 />
                 <XAxis
-                  dataKey="time"
+                  dataKey="label"
                   axisLine={false}
                   tickLine={false}
-                  minTickGap={60}
-                  tickFormatter={(value, index) => {
-                    const points = data.history;
-                    if (!points || index < 0 || index >= points.length)
-                      return value;
-
-                    const current = points[index];
-                    return `${current.fullDate} ${value}`;
+                  minTickGap={80}
+                  tickFormatter={(value) => {
+                    return value;
                   }}
                   tick={{
                     fontSize: 10,
@@ -199,6 +187,7 @@ export function NasdaqFuturesInfo({
                     opacity: 0.3,
                   }}
                   tickFormatter={(value) => value.toFixed(2)}
+                  width={60}
                 />
                 <Tooltip
                   content={<CustomTooltip />}
@@ -349,12 +338,12 @@ function KnowledgeItem({
   desc: string;
 }) {
   return (
-    <div className="p-6 rounded-3xl bg-secondary/20 border border-border-subtle group hover:bg-secondary/30 transition-all">
-      <div className="flex items-center gap-3 mb-3">
+    <div className="p-5 rounded-2xl bg-secondary/10 border border-border-subtle hover:bg-secondary/20 transition-all">
+      <div className="flex items-center gap-2.5 mb-2">
         {icon}
-        <h4 className="text-sm font-black italic">{title}</h4>
+        <h4 className="text-sm font-bold opacity-80">{title}</h4>
       </div>
-      <p className="text-xs text-foreground/50 leading-relaxed font-bold group-hover:text-foreground/70 transition-colors">
+      <p className="text-xs text-foreground/40 leading-relaxed font-medium">
         {desc}
       </p>
     </div>

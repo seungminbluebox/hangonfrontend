@@ -160,13 +160,6 @@ export function Navigation() {
       category: "domestic",
     },
     {
-      name: "주간 선물",
-      href: "/kospi-futures",
-      icon: Activity,
-      desc: "국내 시장의 선행지표",
-      category: "domestic",
-    },
-    {
       name: "야간 선물",
       href: "/kospi-night-futures",
       icon: Activity,
@@ -353,7 +346,6 @@ export function Navigation() {
                         "/kospi-fear-greed",
                         "/money-flow/domestic",
                         "/credit-balance",
-                        "/kospi-futures",
                         "/kospi-night-futures",
                       ].includes(pathname)
                         ? "text-domestic"
@@ -378,7 +370,7 @@ export function Navigation() {
                     }`}
                   >
                     <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1 overflow-hidden">
-                      {navLinks.slice(3, 8).map((link) => {
+                      {navLinks.slice(3, 7).map((link) => {
                         const Icon = link.icon;
                         return (
                           <Link
@@ -443,7 +435,7 @@ export function Navigation() {
                     }`}
                   >
                     <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1">
-                      {navLinks.slice(8, 12).map((link) => {
+                      {navLinks.slice(7, 11).map((link) => {
                         const Icon = link.icon;
                         return (
                           <Link
@@ -507,7 +499,7 @@ export function Navigation() {
                     }`}
                   >
                     <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1">
-                      {navLinks.slice(12).map((link) => {
+                      {navLinks.slice(11).map((link) => {
                         const Icon = link.icon;
                         return (
                           <Link
@@ -833,7 +825,7 @@ export function Navigation() {
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(3, 8).map((link, index) => {
+              {navLinks.slice(3, 7).map((link, index) => {
                 const Icon = link.icon;
                 return (
                   <Link
@@ -897,7 +889,7 @@ export function Navigation() {
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(8, 12).map((link, index) => {
+              {navLinks.slice(7, 11).map((link, index) => {
                 const Icon = link.icon;
                 return (
                   <Link
@@ -957,7 +949,7 @@ export function Navigation() {
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(12).map((link, index) => {
+              {navLinks.slice(11).map((link, index) => {
                 const Icon = link.icon;
                 return (
                   <Link
