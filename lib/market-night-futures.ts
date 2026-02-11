@@ -7,7 +7,7 @@ export async function getKospiNightFuturesData(): Promise<MarketData | null> {
       .from("market_night_futures")
       .select("*")
       .order("recorded_at", { ascending: false })
-      .limit(100);
+      .limit(1080); // 100개에서 1080개로 상향 (약 36시간 분량)
 
     if (error || !data || data.length === 0) return null;
 
