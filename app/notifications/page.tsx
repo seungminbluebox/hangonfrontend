@@ -21,6 +21,8 @@ import {
 import { supabase } from "../../lib/supabase";
 import { BackButton } from "../components/layout/BackButton";
 
+const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+
 interface PreferenceGroup {
   id: string;
   title: string;
@@ -144,6 +146,7 @@ export default function NotificationSettingsPage() {
   const [savingStatus, setSavingStatus] = useState<"idle" | "saving" | "saved">(
     "idle",
   );
+  const [isSubscribing, setIsSubscribing] = useState(false);
 
   useEffect(() => {
     async function init() {
@@ -276,6 +279,94 @@ export default function NotificationSettingsPage() {
     return group?.items.every((item) => preferences[item.id]) ?? false;
   };
 
+  const subscribe = async () => {
+    if (!isStandalone) {
+      if (
+        confirm(
+          "앱 설치를 하시면 알림을 받을 수 있습니다!\n지금 앱을 설치하시겠습니까?",
+        )
+      ) {
+        const deferredPrompt = (window as any).deferredPrompt;
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          if (outcome === "accepted") {
+            (window as any).deferredPrompt = null;
+          }
+        } else {
+          alert(
+            "브라우저 설정 메뉴에서 '앱 설치' 또는 '홈 화면에 추가'를 선택해 주세요!",
+          );
+        }
+      }
+      return;
+    }
+
+    if (!VAPID_PUBLIC_KEY) {
+      alert("VAPID Public Key가 설정되지 않았습니다.");
+      return;
+    }
+
+    try {
+      setIsSubscribing(true);
+
+      let registration = await navigator.serviceWorker.getRegistration();
+      if (!registration) {
+        registration = await navigator.serviceWorker.register("/sw.js");
+      }
+
+      await navigator.serviceWorker.ready;
+
+      if (!registration.active) {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
+
+      const sub = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+      });
+
+      const defaultPreferences: Record<string, boolean> = {};
+      NOTIFICATION_GROUPS.forEach((g) =>
+        g.items.forEach((i) => (defaultPreferences[i.id] = true)),
+      );
+
+      const { data: existing } = await supabase
+        .from("push_subscriptions")
+        .select("id")
+        .eq("subscription->>endpoint", sub.endpoint)
+        .maybeSingle();
+
+      if (!existing) {
+        const { error } = await supabase.from("push_subscriptions").insert([
+          {
+            subscription: sub.toJSON(),
+            user_agent: navigator.userAgent,
+            preferences: defaultPreferences,
+          },
+        ]);
+        if (error) throw error;
+      }
+
+      setSubscription(sub);
+      setPreferences(defaultPreferences);
+      setPermissionState("granted");
+      alert("알림 구독이 완료되었습니다! 🚀");
+    } catch (error: any) {
+      console.error("Failed to subscribe:", error);
+      if (Notification.permission === "denied") {
+        alert(
+          "알림 권한이 거부되어 있습니다. 브라우저 설정에서 알림을 허용해 주세요.",
+        );
+        setPermissionState("denied");
+      } else {
+        alert("알림 구독에 실패했습니다.");
+      }
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen gap-4">
@@ -360,6 +451,27 @@ export default function NotificationSettingsPage() {
                 세부적인 알림 설정이 가능합니다.
               </p>
             </div>
+
+            <div className="pt-2">
+              <button
+                onClick={subscribe}
+                disabled={isSubscribing}
+                className="w-full py-4 bg-accent text-white rounded-2xl font-black text-lg shadow-lg shadow-accent/20 hover:bg-accent/90 transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-3"
+              >
+                {isSubscribing ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    신청 중...
+                  </>
+                ) : (
+                  <>
+                    <Bell className="w-5 h-5" />
+                    실시간 알림 신청하기
+                  </>
+                )}
+              </button>
+            </div>
+
             {!isStandalone && (
               <div className="bg-yellow-500/10 border border-yellow-500/20 p-4 rounded-2xl flex items-start gap-3 text-left">
                 <AlertCircle className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
@@ -493,4 +605,19 @@ export default function NotificationSettingsPage() {
       </div>
     </main>
   );
+}
+
+function urlBase64ToUint8Array(base64String: string) {
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding)
+    .replace(/\-/g, "+")
+    .replace(/_/g, "/");
+
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
 }
