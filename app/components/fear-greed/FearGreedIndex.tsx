@@ -8,8 +8,10 @@ import {
   ArrowUpRight,
   Share2,
   Microscope,
+  TrendingUp,
 } from "lucide-react";
 import { FearGreedShareCard } from "./FearGreedShareCard";
+import { FearGreedChart } from "./FearGreedChart";
 import { supabase } from "@/lib/supabase";
 
 interface FearGreedData {
@@ -21,14 +23,21 @@ interface FearGreedData {
   updated_at: string;
 }
 
+interface FearGreedHistory {
+  date: string;
+  value: number;
+}
+
 export function FearGreedIndex({
   type = "global",
 }: {
   type?: "global" | "kospi";
 }) {
   const [data, setData] = useState<FearGreedData | null>(null);
+  const [history, setHistory] = useState<FearGreedHistory[]>([]);
   const [loading, setLoading] = useState(true);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showChart, setShowChart] = useState(false); // 차트 노출 여부 (나중에 true로 바꾸기 편리함) 여름방학
   const [lastCheckTime, setLastCheckTime] = useState<string>(
     new Date().toLocaleString("ko-KR", {
       month: "numeric",
@@ -37,10 +46,13 @@ export function FearGreedIndex({
   );
 
   const targetId = type === "kospi" ? 2 : 1;
+  const historyTable =
+    type === "kospi" ? "fear_greed_history_kr" : "fear_greed_history_us";
 
   useEffect(() => {
     async function fetchData() {
       try {
+        // 1. 현재 상태 가져오기
         const { data: res, error } = await supabase
           .from("fear_greed")
           .select("*")
@@ -50,6 +62,23 @@ export function FearGreedIndex({
         if (res) {
           setData(res);
         }
+
+        // 2. 히스토리 데이터 가져오기 (최근 30개)
+        const { data: histRes } = await supabase
+          .from(historyTable)
+          .select("created_at, value")
+          .order("created_at", { ascending: false })
+          .limit(30);
+
+        if (histRes) {
+          const formattedHist = histRes
+            .map((h) => ({
+              date: h.created_at,
+              value: h.value,
+            }))
+            .reverse();
+          setHistory(formattedHist);
+        }
       } catch (err) {
         console.error("Error fetching Fear & Greed data:", err);
       } finally {
@@ -57,7 +86,7 @@ export function FearGreedIndex({
       }
     }
     fetchData();
-  }, [targetId]);
+  }, [targetId, historyTable]);
 
   if (loading) {
     return (
@@ -151,79 +180,85 @@ export function FearGreedIndex({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left: Analog Gauge */}
-        <div className="lg:col-span-5 bg-card/40 border border-border-subtle rounded-[2.5rem] p-8 flex flex-col items-center justify-center relative overflow-hidden shadow-sm">
-          <div className="relative w-72 h-36 mt-8 overflow-hidden">
-            {/* SVG Arc segments */}
-            <svg
-              className="absolute top-0 left-0 w-72 h-72 -rotate-180"
-              viewBox="0 0 100 100"
-            >
-              {/* Background Arc */}
-              <circle
-                cx="50"
-                cy="50"
-                r={radius}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="12"
-                strokeDasharray={`${semiCircumference} ${circumference}`}
-                className="text-secondary/10"
+        {/* Left: Analog Gauge & History Chart */}
+        <div className="lg:col-span-5 flex flex-col gap-6">
+          {/* Analog Gauge Card */}
+          <div className="bg-card/40 border border-border-subtle rounded-[2.5rem] p-8 flex flex-col items-center justify-center relative shadow-sm">
+            <div className="relative w-72 h-36 mt-8 overflow-hidden">
+              {/* SVG Arc segments */}
+              <svg
+                className="absolute top-0 left-0 w-72 h-72 -rotate-180"
+                viewBox="0 0 100 100"
+              >
+                {/* Background Arc */}
+                <circle
+                  cx="50"
+                  cy="50"
+                  r={radius}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="12"
+                  strokeDasharray={`${semiCircumference} ${circumference}`}
+                  className="text-secondary/10"
+                />
+                {/* Colored Segments */}
+                {segments.map((seg, i) => {
+                  const strokeDasharray = `${(seg.size / 100) * semiCircumference} ${circumference}`;
+                  const strokeDashoffset = -currentOffset;
+                  currentOffset += (seg.size / 100) * semiCircumference;
+                  return (
+                    <circle
+                      key={i}
+                      cx="50"
+                      cy="50"
+                      r={radius}
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="12"
+                      strokeDasharray={strokeDasharray}
+                      strokeDashoffset={strokeDashoffset}
+                      className={`${seg.color} opacity-80`}
+                      style={{ transition: "stroke-dashoffset 1s ease-out" }}
+                    />
+                  );
+                })}
+              </svg>
+
+              {/* The Needle */}
+              <div
+                className="absolute bottom-0 left-1/2 w-2 h-32 origin-bottom transition-all duration-1000 ease-out z-10 bg-foreground"
+                style={{
+                  transform: `translateX(-50%) rotate(${needleRotation}deg)`,
+                  clipPath: "polygon(50% 0%, 100% 100%, 0% 100%)",
+                }}
               />
-              {/* Colored Segments */}
-              {segments.map((seg, i) => {
-                const strokeDasharray = `${(seg.size / 100) * semiCircumference} ${circumference}`;
-                const strokeDashoffset = -currentOffset;
-                currentOffset += (seg.size / 100) * semiCircumference;
-                return (
-                  <circle
-                    key={i}
-                    cx="50"
-                    cy="50"
-                    r={radius}
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="12"
-                    strokeDasharray={strokeDasharray}
-                    strokeDashoffset={strokeDashoffset}
-                    className={`${seg.color} opacity-80`}
-                    style={{ transition: "stroke-dashoffset 1s ease-out" }}
-                  />
-                );
-              })}
-            </svg>
-
-            {/* The Needle */}
-            <div
-              className="absolute bottom-0 left-1/2 w-2 h-32 origin-bottom transition-all duration-1000 ease-out z-10 bg-foreground"
-              style={{
-                transform: `translateX(-50%) rotate(${needleRotation}deg)`,
-                clipPath: "polygon(50% 0%, 100% 100%, 0% 100%)",
-              }}
-            />
-            {/* Needle Center Point */}
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-8 h-8 bg-foreground rounded-full z-20 shadow-lg border-[6px] border-card" />
-          </div>
-
-          <div className="mt-8 text-center bg-secondary/5 px-8 py-4 rounded-3xl border border-border-subtle/30 shadow-inner">
-            <div
-              className={`text-7xl font-black  tracking-tighter transition-colors duration-500 ${statusInfo.text}`}
-            >
-              {Math.round(data.value)}
+              {/* Needle Center Point */}
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-8 h-8 bg-foreground rounded-full z-20 shadow-lg border-[6px] border-card" />
             </div>
-            <div
-              className={`text-sm font-black mt-1 uppercase tracking-[0.3em] ${statusInfo.text}`}
-            >
-              {statusInfo.label}
+
+            <div className="mt-8 text-center bg-secondary/5 px-8 py-4 rounded-3xl border border-border-subtle/30 shadow-inner">
+              <div
+                className={`text-7xl font-black  tracking-tighter transition-colors duration-500 ${statusInfo.text}`}
+              >
+                {Math.round(data.value)}
+              </div>
+              <div
+                className={`text-sm font-black mt-1 uppercase tracking-[0.3em] ${statusInfo.text}`}
+              >
+                {statusInfo.label}
+              </div>
+            </div>
+
+            <div className="absolute bottom-4 right-8 flex items-center gap-1.5 opacity-30">
+              <div className="w-1 h-1 rounded-full bg-foreground" />
+              <span className="text-[10px] font-bold tracking-tight">
+                Market Mood Gauge
+              </span>
             </div>
           </div>
 
-          <div className="absolute bottom-4 right-8 flex items-center gap-1.5 opacity-30">
-            <div className="w-1 h-1 rounded-full bg-foreground" />
-            <span className="text-[10px] font-bold tracking-tight">
-              Market Mood Gauge
-            </span>
-          </div>
+          {/* history chart */}
+          {showChart && history.length > 0 && <FearGreedChart data={history} />}
         </div>
 
         {/* Right: AI Analysis */}

@@ -151,28 +151,48 @@ export function FearGreedShareCard({
         </div>
 
         <div className="px-4 bg-black/[0.02] dark:bg-white/[0.02] overflow-y-auto flex-1 flex flex-col items-center">
-          {/* Container for scaled preview - Aligning more naturally with padding */}
-          <div className="pt-8 pb-12 flex flex-col items-center scale-[0.65] xs:scale-[0.8] sm:scale-95 origin-top transition-all duration-300">
-            {/* Card Content - Optimized for 3:4 Fill with Single Insight */}
+          {/* Container for scaled preview */}
+          <div className="py-6 flex flex-col items-center scale-[0.65] xs:scale-[0.8] sm:scale-95 origin-top transition-all duration-300">
+            {/* Card Content - Optimized for compact minimalist look */}
             <div
               ref={cardRef}
-              className={`w-[360px] h-[540px] p-7 rounded-[35px] shadow-2xl relative overflow-hidden transition-colors duration-300 border flex flex-col justify-between ${
+              className={`w-[360px] h-[480px] p-8 rounded-[35px] shadow-2xl relative overflow-hidden transition-colors duration-300 border flex flex-col ${
                 shareTheme === "light"
                   ? "bg-[#F8F7F4] text-neutral-900 border-neutral-100"
                   : "bg-[#0f172a] text-white border-white/5"
               }`}
             >
-              {/* Header: Date and Logo - Moved into flow to prevent capture clipping */}
-              <div className="flex justify-between items-center mb-2">
-                <p
-                  className={`text-[10px] font-black uppercase tracking-[0.2em] ${
-                    shareTheme === "light"
-                      ? "text-neutral-400"
-                      : "text-white/40"
-                  }`}
-                >
-                  {new Date().toLocaleDateString("ko-KR")}
-                </p>
+              {/* Header: Date and Logo */}
+              <div className="flex justify-between items-start shrink-0">
+                <div className="flex flex-col gap-1.5">
+                  <p
+                    className={`text-[10px] font-black uppercase tracking-[0.2em] ${
+                      shareTheme === "light"
+                        ? "text-neutral-400"
+                        : "text-white/40"
+                    }`}
+                  >
+                    {new Date().toLocaleDateString("ko-KR")}
+                  </p>
+                  <div className="flex items-center gap-2.5 mt-1.5">
+                    <div
+                      className="w-2 h-2 rounded-full animate-pulse shadow-sm"
+                      style={{ backgroundColor: statusColor }}
+                    />
+                    <p
+                      className={`text-[18px] font-black tracking-tight leading-none ${
+                        shareTheme === "light"
+                          ? "text-neutral-900"
+                          : "text-white"
+                      }`}
+                    >
+                      {type === "kospi" ? "코스피" : "미국 시장"}
+                      <span className="ml-2.5 opacity-30 font-black text-[11px] tracking-widest">
+                        공포 탐욕 지수
+                      </span>
+                    </p>
+                  </div>
+                </div>
                 <div
                   className={`flex items-center gap-1.5 opacity-30 grayscale ${
                     shareTheme === "light" ? "text-neutral-900" : "text-white"
@@ -185,131 +205,125 @@ export function FearGreedShareCard({
                 </div>
               </div>
 
-              <div className="flex flex-col gap-4 flex-1 justify-center">
-                <div
-                  className={`flex flex-col items-center justify-center pt-6 pb-4 rounded-[3rem] border shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden ${
-                    shareTheme === "light"
-                      ? "bg-white/80 border-white"
-                      : "bg-white/[0.03] border-white/10"
-                  }`}
-                >
+              {/* Main Content: Focused Title & Gauge */}
+              <div className="flex-1 flex flex-col items-center pt-5">
+                <div className="relative w-56 h-28 overflow-hidden mb-4">
+                  <svg
+                    className="absolute top-0 left-0 w-56 h-56 -rotate-180"
+                    viewBox="0 0 100 100"
+                  >
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="42"
+                      fill="none"
+                      stroke={
+                        shareTheme === "light"
+                          ? "#f1f5f9"
+                          : "rgba(255,255,255,0.05)"
+                      }
+                      strokeWidth="8"
+                      strokeDasharray="132 264"
+                    />
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="42"
+                      fill="none"
+                      stroke="#ef4444"
+                      strokeWidth="10"
+                      strokeDasharray="33 264"
+                    />
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="42"
+                      fill="none"
+                      stroke="#f97316"
+                      strokeWidth="10"
+                      strokeDasharray="26 264"
+                      strokeDashoffset="-33"
+                    />
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="42"
+                      fill="none"
+                      stroke="#eab308"
+                      strokeWidth="10"
+                      strokeDasharray="14 264"
+                      strokeDashoffset="-59"
+                    />
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="42"
+                      fill="none"
+                      stroke="#10b981"
+                      strokeWidth="10"
+                      strokeDasharray="26 264"
+                      strokeDashoffset="-73"
+                    />
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="42"
+                      fill="none"
+                      stroke="#22c55e"
+                      strokeWidth="10"
+                      strokeDasharray="33 264"
+                      strokeDashoffset="-99"
+                    />
+                  </svg>
                   <div
-                    className={`absolute inset-0 pointer-events-none ${
+                    className={`absolute bottom-0 left-1/2 w-1 h-20 origin-bottom transition-all duration-1000 z-20 ${
+                      shareTheme === "light" ? "bg-neutral-900" : "bg-white"
+                    }`}
+                    style={{
+                      transform: `translateX(-50%) rotate(${needleRotation}deg)`,
+                      clipPath: "polygon(50% 0%, 100% 100%, 0% 100%)",
+                    }}
+                  />
+                  <div
+                    className={`absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-4 h-4 rounded-full z-30 shadow-md border-[3px] ${
                       shareTheme === "light"
-                        ? "bg-gradient-to-b from-white to-transparent opacity-50"
-                        : "bg-gradient-to-b from-white/10 to-transparent opacity-20"
+                        ? "bg-neutral-900 border-white"
+                        : "bg-white border-[#0f172a]"
                     }`}
                   />
-                  <div className="relative w-52 h-26 overflow-hidden z-10 scale-[1.05] origin-bottom transition-transform">
-                    <svg
-                      className="absolute top-0 left-0 w-52 h-52 -rotate-180"
-                      viewBox="0 0 100 100"
-                    >
-                      <circle
-                        cx="50"
-                        cy="50"
-                        r="42"
-                        fill="none"
-                        stroke={
-                          shareTheme === "light"
-                            ? "#f1f5f9"
-                            : "rgba(255,255,255,0.05)"
-                        }
-                        strokeWidth="8"
-                        strokeDasharray="132 264"
-                      />
-                      <circle
-                        cx="50"
-                        cy="50"
-                        r="42"
-                        fill="none"
-                        stroke="#ef4444"
-                        strokeWidth="10"
-                        strokeDasharray="33 264"
-                      />
-                      <circle
-                        cx="50"
-                        cy="50"
-                        r="42"
-                        fill="none"
-                        stroke="#f97316"
-                        strokeWidth="10"
-                        strokeDasharray="26 264"
-                        strokeDashoffset="-33"
-                      />
-                      <circle
-                        cx="50"
-                        cy="50"
-                        r="42"
-                        fill="none"
-                        stroke="#eab308"
-                        strokeWidth="10"
-                        strokeDasharray="14 264"
-                        strokeDashoffset="-59"
-                      />
-                      <circle
-                        cx="50"
-                        cy="50"
-                        r="42"
-                        fill="none"
-                        stroke="#10b981"
-                        strokeWidth="10"
-                        strokeDasharray="26 264"
-                        strokeDashoffset="-73"
-                      />
-                      <circle
-                        cx="50"
-                        cy="50"
-                        r="42"
-                        fill="none"
-                        stroke="#22c55e"
-                        strokeWidth="10"
-                        strokeDasharray="33 264"
-                        strokeDashoffset="-99"
-                      />
-                    </svg>
-                    <div
-                      className={`absolute bottom-0 left-1/2 w-1 h-20 origin-bottom transition-all duration-1000 z-20 ${
-                        shareTheme === "light" ? "bg-neutral-900" : "bg-white"
-                      }`}
-                      style={{
-                        transform: `translateX(-50%) rotate(${needleRotation}deg)`,
-                        clipPath: "polygon(50% 0%, 100% 100%, 0% 100%)",
-                      }}
-                    />
-                    <div
-                      className={`absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-4 h-4 rounded-full z-30 shadow-md border-[3px] ${
+                </div>
+
+                <div className="text-center mb-4">
+                  <div
+                    className="text-6xl font-black tracking-tighter tabular-nums leading-none"
+                    style={{
+                      color: statusColor,
+                      filter:
                         shareTheme === "light"
-                          ? "bg-neutral-900 border-white"
-                          : "bg-white border-[#0f172a]"
-                      }`}
-                    />
+                          ? "drop-shadow(0 4px 12px rgba(0,0,0,0.08))"
+                          : "none",
+                    }}
+                  >
+                    {Math.round(data.value)}
                   </div>
-                  <div className="mt-4 text-center z-10">
-                    <div
-                      className="text-6xl font-black tracking-tighter tabular-nums"
-                      style={{
-                        color: statusColor,
-                        filter:
-                          shareTheme === "light"
-                            ? "drop-shadow(0 4px 12px rgba(0,0,0,0.08))"
-                            : "none",
-                      }}
-                    >
-                      {Math.round(data.value)}
-                    </div>
-                    <div
-                      className="text-[10px] font-black uppercase tracking-[0.4em] mt-1 opacity-90"
-                      style={{ color: statusColor }}
-                    >
-                      {statusLabel}
-                    </div>
+                  <div
+                    className="text-[11px] font-black uppercase tracking-[0.4em] mt-2 opacity-90"
+                    style={{ color: statusColor }}
+                  >
+                    {statusLabel}
                   </div>
                 </div>
 
-                <div className="space-y-1.5 px-2 text-center">
+                {/* Divider Line */}
+                <div
+                  className={`w-12 h-[2px] mb-4 rounded-full opacity-20 ${
+                    shareTheme === "light" ? "bg-neutral-900" : "bg-white"
+                  }`}
+                />
+
+                <div className="max-w-[280px] text-center mb-2">
                   <h3
-                    className={`mb-2 text-[20px] font-black italic leading-tight tracking-tighter break-keep transition-colors ${
+                    className={`text-[20px] font-black italic leading-[1.3] tracking-tighter break-keep transition-colors ${
                       shareTheme === "light" ? "text-neutral-900" : "text-white"
                     }`}
                   >
@@ -318,42 +332,15 @@ export function FearGreedShareCard({
                 </div>
               </div>
 
-              <div className="flex flex-col gap-4">
-                <div
-                  className={`rounded-[2.2rem] mt-0 p-4 border shadow-inner transition-colors duration-300 ${
-                    shareTheme === "light"
-                      ? "bg-black/[0.03] border-black/[0.05]"
-                      : "bg-white/[0.07] border-white/10"
+              {/* Bottom: App Link & CTA */}
+              <div className="mt-auto relative z-10 flex justify-center shrink-0">
+                <p
+                  className={`text-[13px] font-black tracking-tighter opacity-20 ${
+                    shareTheme === "light" ? "text-neutral-900" : "text-white"
                   }`}
                 >
-                  <div className="space-y-2.5">
-                    {data.advice.slice(0, 1).map((item, idx) => (
-                      <div key={idx} className="flex items-start gap-2.5">
-                        <div className="mt-1.5 w-1.2 h-1.2 rounded-full bg-accent/30 shrink-0" />
-                        <p
-                          className={`text-[13.5px] font-bold leading-relaxed tracking-tight break-keep ${
-                            shareTheme === "light"
-                              ? "text-neutral-700"
-                              : "text-white/80"
-                          }`}
-                        >
-                          {item}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Bottom: App Link & CTA */}
-                <div className="mt-auto relative z-10 flex justify-center pt-2">
-                  <p
-                    className={`text-[13px] font-black tracking-tighter opacity-30 ${
-                      shareTheme === "light" ? "text-neutral-900" : "text-white"
-                    }`}
-                  >
-                    www.hangon.co.kr
-                  </p>
-                </div>
+                  www.hangon.co.kr
+                </p>
               </div>
             </div>
           </div>
