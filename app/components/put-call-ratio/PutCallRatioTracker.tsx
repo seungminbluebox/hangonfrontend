@@ -341,7 +341,7 @@ export function PutCallRatioTracker({ market }: PutCallRatioTrackerProps) {
                         </p>
                         <div className="flex items-center gap-3">
                           <div className="w-2 h-2 rounded-full bg-accent" />
-                          <p className="text-xl font-black italic">
+                          <p className="text-xl font-black italic text-white">
                             {payload[0].value}
                             <span className="text-[10px] ml-1 uppercase text-white/40 not-italic">
                               PCR
