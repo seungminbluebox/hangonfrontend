@@ -53,6 +53,34 @@ export function PutCallRatioShareCard({
   const [canShare, setCanShare] = useState(false);
   const [shareTheme, setShareTheme] = useState<"light" | "dark">("light");
 
+  // Get status-based theme colors
+  const statusTheme = data.isExtremeFear
+    ? {
+        label: "바닥권 (FEAR)",
+        badgeBg: "bg-red-500",
+        badgeShadow: "shadow-red-500/20",
+        accent: "text-red-500",
+        chart: "#ef4444",
+        glow: "bg-red-500",
+      }
+    : data.isExtremeGreed
+      ? {
+          label: "고점권 (GREED)",
+          badgeBg: "bg-emerald-500",
+          badgeShadow: "shadow-emerald-500/20",
+          accent: "text-emerald-500",
+          chart: "#10b981",
+          glow: "bg-emerald-500",
+        }
+      : {
+          label: "중립 (NEUTRAL)",
+          badgeBg: "bg-blue-500",
+          badgeShadow: "shadow-blue-500/20",
+          accent: "text-blue-500",
+          chart: "#3b82f6",
+          glow: "bg-blue-500",
+        };
+
   useEffect(() => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     if (
@@ -165,13 +193,7 @@ export function PutCallRatioShareCard({
             >
               {/* Decorative Background Elements */}
               <div
-                className={`absolute top-[-10%] right-[-10%] w-[200px] h-[200px] rounded-full blur-[80px] opacity-20 ${
-                  data.isExtremeFear
-                    ? "bg-blue-500"
-                    : data.isExtremeGreed
-                      ? "bg-red-500"
-                      : "bg-green-500"
-                }`}
+                className={`absolute top-[-10%] right-[-10%] w-[200px] h-[200px] rounded-full blur-[80px] opacity-20 ${statusTheme.glow}`}
               />
 
               {/* Header */}
@@ -204,7 +226,9 @@ export function PutCallRatioShareCard({
                 {/* Value Display */}
                 <div className="flex flex-col items-center">
                   <div className="mb-1 text-center">
-                    <p className="text-[18px] font-black italic tracking-widest text-accent leading-none">
+                    <p
+                      className={`text-[18px] font-black italic tracking-widest leading-none ${statusTheme.accent}`}
+                    >
                       미국 증시 풋/콜 비율 (PCR)
                     </p>
                   </div>
@@ -214,19 +238,9 @@ export function PutCallRatioShareCard({
                     </h1>
                   </div>
                   <div
-                    className={`px-6 py-2 rounded-full text-[13px] font-black uppercase tracking-[0.2em] shadow-lg ${
-                      data.isExtremeFear
-                        ? "bg-blue-500 text-white shadow-blue-500/20"
-                        : data.isExtremeGreed
-                          ? "bg-red-500 text-white shadow-red-500/20"
-                          : "bg-green-500 text-white shadow-green-500/20"
-                    }`}
+                    className={`px-6 py-2 rounded-full text-[13px] font-black uppercase tracking-[0.2em] shadow-lg text-white ${statusTheme.badgeBg} ${statusTheme.badgeShadow}`}
                   >
-                    {data.isExtremeFear
-                      ? "공포 (FEAR)"
-                      : data.isExtremeGreed
-                        ? "탐욕 (GREED)"
-                        : "중립 (NEUTRAL)"}
+                    {statusTheme.label}
                   </div>
                 </div>
 
@@ -247,24 +261,12 @@ export function PutCallRatioShareCard({
                         >
                           <stop
                             offset="5%"
-                            stopColor={
-                              data.isExtremeFear
-                                ? "#3b82f6"
-                                : data.isExtremeGreed
-                                  ? "#ef4444"
-                                  : "#22c55e"
-                            }
+                            stopColor={statusTheme.chart}
                             stopOpacity={0.3}
                           />
                           <stop
                             offset="95%"
-                            stopColor={
-                              data.isExtremeFear
-                                ? "#3b82f6"
-                                : data.isExtremeGreed
-                                  ? "#ef4444"
-                                  : "#22c55e"
-                            }
+                            stopColor={statusTheme.chart}
                             stopOpacity={0}
                           />
                         </linearGradient>
@@ -297,13 +299,7 @@ export function PutCallRatioShareCard({
                       <Area
                         type="monotone"
                         dataKey="total"
-                        stroke={
-                          data.isExtremeFear
-                            ? "#3b82f6"
-                            : data.isExtremeGreed
-                              ? "#ef4444"
-                              : "#22c55e"
-                        }
+                        stroke={statusTheme.chart}
                         strokeWidth={4}
                         fill="url(#shareColor)"
                         isAnimationActive={false}
@@ -322,7 +318,9 @@ export function PutCallRatioShareCard({
                     }`}
                   >
                     <div className="flex items-center gap-1.5 mb-3 flex-nowrap">
-                      <Lightbulb className="w-3.5 h-3.5 text-accent shrink-0" />
+                      <Lightbulb
+                        className={`w-3.5 h-3.5 shrink-0 ${statusTheme.accent}`}
+                      />
                       <h4 className="text-[12px] font-black italic tracking-tight">
                         {data.analysis.title}
                       </h4>
