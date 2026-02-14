@@ -334,12 +334,6 @@ export function CurrencyDesk({
                   />
                 </LineChart>
               </ResponsiveContainer>
-              <div className="mt-4 flex items-center justify-center text-[10px] font-black text-blue-500 uppercase tracking-widest bg-blue-500/5 p-2 rounded-xl border border-blue-500/10">
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-3 h-3" />
-                  <span>최근 5일간 추이</span>
-                </div>
-              </div>
             </div>
           </div>
         )}

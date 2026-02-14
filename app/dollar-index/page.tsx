@@ -1,4 +1,5 @@
 import { DollarIndexTracker } from "../components/dollar-index/DollarIndexTracker";
+import { BackButton } from "../components/layout/BackButton";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -9,8 +10,11 @@ export const metadata: Metadata = {
 
 export default function DollarIndexPage() {
   return (
-    <main className="container mx-auto px-2 py-8">
-      <DollarIndexTracker />
+    <main className="min-h-screen bg-background text-foreground">
+      <div className="max-w-6xl mx-auto px-2 sm:px-8 pt-6 md:pt-32 pb-20">
+        <BackButton />
+        <DollarIndexTracker />
+      </div>
     </main>
   );
 }
