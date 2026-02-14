@@ -507,7 +507,7 @@ export function Navigation() {
                     }`}
                   >
                     <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1">
-                      {navLinks.slice(11).map((link) => {
+                      {navLinks.slice(12).map((link) => {
                         const Icon = link.icon;
                         return (
                           <Link

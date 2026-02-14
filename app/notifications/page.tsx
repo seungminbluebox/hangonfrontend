@@ -73,6 +73,11 @@ const NOTIFICATION_GROUPS: PreferenceGroup[] = [
         label: "미국 풋콜옵션 비율",
         description: "시장 심리 지표 PCR 업데이트",
       },
+      {
+        id: "us_dollar_index",
+        label: "달러 인덱스",
+        description: "달러 가치 변화 및 글로벌 시장 영향 분석",
+      },
     ],
   },
   {
@@ -173,6 +178,7 @@ export default function NotificationSettingsPage() {
           setSubscription({ endpoint: "test-endpoint" });
           const defaultPrefs: Record<string, boolean> = {
             etiquette_mode: false,
+            us_dollar_index: true,
           };
           NOTIFICATION_GROUPS.forEach((g) =>
             g.items.forEach((i) => (defaultPrefs[i.id] = true)),
@@ -331,6 +337,7 @@ export default function NotificationSettingsPage() {
 
       const defaultPreferences: Record<string, boolean> = {
         etiquette_mode: false,
+        us_dollar_index: true,
       };
       NOTIFICATION_GROUPS.forEach((g) =>
         g.items.forEach((i) => (defaultPreferences[i.id] = true)),
