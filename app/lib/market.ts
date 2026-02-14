@@ -21,6 +21,7 @@ const SYMBOLS = [
   { name: "나스닥", symbol: "NQ=F" },
   { name: "다우존스", symbol: "^DJI" },
   { name: "원/달러 환율", symbol: "USDKRW=X" },
+  { name: "달러 인덱스", symbol: "DX-Y.NYB" },
   { name: "비트코인", symbol: "BTC-USD" },
   { name: "금 가격", symbol: "GC=F" },
   { name: "WTI 원유", symbol: "CL=F" },
@@ -41,8 +42,17 @@ async function fetchFromYahoo(
       },
     });
 
-    if (!response.ok) return null;
+    if (!response.ok) {
+      console.error(
+        `Yahoo Finance API error for ${symbol}: ${response.status} ${response.statusText}`,
+      );
+      return null;
+    }
     const data = await response.json();
+    if (!data.chart?.result || data.chart.result.length === 0) {
+      console.error(`No result in Yahoo Finance response for ${symbol}`);
+      return null;
+    }
     return data.chart.result[0];
   } catch (error) {
     console.error(`Error fetching ${symbol} from Yahoo:`, error);

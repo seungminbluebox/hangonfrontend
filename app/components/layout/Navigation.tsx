@@ -203,6 +203,13 @@ export function Navigation() {
       desc: "옵션 시장 투자 심리",
       category: "us",
     },
+    {
+      name: "달러 인덱스",
+      href: "/dollar-index",
+      icon: Banknote,
+      desc: "글로벌 달러 가치 분석 리포트",
+      category: "us",
+    },
     // 한미 공통
     {
       name: "환율분석",
@@ -412,6 +419,7 @@ export function Navigation() {
                         "/money-flow/us",
                         "/nasdaq-futures",
                         "/put-call-ratio",
+                        "/dollar-index",
                       ].includes(pathname)
                         ? "text-us"
                         : "text-text-muted hover:text-foreground hover:bg-background/40"
@@ -435,7 +443,7 @@ export function Navigation() {
                     }`}
                   >
                     <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1">
-                      {navLinks.slice(7, 11).map((link) => {
+                      {navLinks.slice(7, 12).map((link) => {
                         const Icon = link.icon;
                         return (
                           <Link
@@ -889,7 +897,7 @@ export function Navigation() {
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(7, 11).map((link, index) => {
+              {navLinks.slice(7, 12).map((link, index) => {
                 const Icon = link.icon;
                 return (
                   <Link

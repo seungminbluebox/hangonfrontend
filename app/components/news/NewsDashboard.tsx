@@ -246,7 +246,7 @@ export function NewsDashboard({
         ref={detailRef}
         className={`w-full lg:w-[500px] sticky top-10 ${
           isMobileDetailOpen
-            ? "fixed inset-0 z-50 bg-background lg:relative lg:inset-auto lg:z-auto lg:bg-transparent overflow-y-auto p-4 lg:p-8"
+            ? "fixed inset-0 z-[40] bg-background lg:relative lg:inset-auto lg:z-auto lg:bg-transparent overflow-y-auto pt-4 pb-4  lg:p-8"
             : "hidden lg:block"
         }`}
       >
