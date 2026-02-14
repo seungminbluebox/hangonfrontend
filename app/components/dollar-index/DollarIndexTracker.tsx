@@ -106,6 +106,11 @@ export function DollarIndexTracker() {
 
   const isUp = data.value ? parseFloat(data.change || "0") >= 0 : true;
 
+  const today = new Date().toLocaleDateString("ko-KR", {
+    month: "long",
+    day: "numeric",
+  });
+
   return (
     <div className="space-y-6 max-w-[1200px] mx-auto pb-12 px-1">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
@@ -241,7 +246,8 @@ export function DollarIndexTracker() {
                   <DollarSign className="w-5 h-5 text-accent" />
                 </div>
                 <h3 className="text-xl font-black italic leading-tight tracking-tight">
-                  {data.analysis?.title || "달러 인덱스 분석"}
+                  {today} <br />
+                  달러 인덱스 브리핑
                 </h3>
               </div>
             </div>

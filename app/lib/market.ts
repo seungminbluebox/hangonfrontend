@@ -93,10 +93,19 @@ export async function getMarketData(
       : SYMBOLS;
 
     // 데이터 범위 설정
-    // full 모드일 때 5일치(나스닥은 사용자 요청으로 2일치)를 가져오며, 연속성을 위해 적절한 단위 설정
-    const range = isFull ? (names?.includes("나스닥") ? "2d" : "5d") : "1d";
-    // 나스닥은 2일치이므로 1분 단위로 가져와도 데이터량이 적당함 (더 실시간에 가까움)
-    const interval = isFull ? (names?.includes("나스닥") ? "1m" : "5m") : "1m";
+    const range = isFull
+      ? names?.includes("나스닥")
+        ? "2d"
+        : names?.includes("원/달러 환율")
+          ? "5d"
+          : "5d"
+      : "1d";
+    // 나스닥과 환율은 더 정밀한 데이터를 위해 1분 단위로 가져옴
+    const interval = isFull
+      ? names?.includes("나스닥") || names?.includes("원/달러 환율")
+        ? "1m"
+        : "5m"
+      : "1m";
 
     // 모든 데이터를 동시에 가져오기 위해 Promise.all 사용
     const rawData = await Promise.all(
