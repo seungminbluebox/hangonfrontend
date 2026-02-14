@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 export default function MarketHolidaysPage() {
   return (
     <main className="min-h-screen pb-20">
-      <div className="max-w-2xl mx-auto px-4 mt-8">
-        <div className="mb-6">
+      <div className="max-w-2xl mx-auto px-4 pt-6 md:pt-32">
+        <div className="mb-6 md:mb-10">
           <BackButton />
         </div>
         <MarketHolidays />

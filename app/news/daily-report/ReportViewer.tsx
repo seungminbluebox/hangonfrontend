@@ -18,6 +18,7 @@ import remarkGfm from "remark-gfm";
 import Link from "next/link";
 import { BackButton } from "../../components/layout/BackButton";
 import { supabase } from "@/lib/supabase";
+import { useAudio } from "../../lib/AudioContext";
 
 interface DailyReport {
   date: string;
@@ -30,46 +31,35 @@ interface DailyReport {
 
 export function ReportViewer({ report }: { report: DailyReport }) {
   const [showSummary, setShowSummary] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [isAudioLoading, setIsAudioLoading] = useState(false);
   const [audioContent, setAudioContent] = useState<string | null>(null);
   const [showTooltip, setShowTooltip] = useState(true);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const { isPlaying, currentReport, play, pause, resume } = useAudio();
+  const isThisReportPlaying = currentReport?.date === report.date && isPlaying;
 
   useEffect(() => {
     // 5초 후에 툴팁 자동으로 사라짐
-    const timer = setTimeout(() => setShowTooltip(false), 80000);
-    return () => {
-      clearTimeout(timer);
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-    };
+    const timer = setTimeout(() => setShowTooltip(false), 8000);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleToggleAudio = async () => {
     setShowTooltip(false);
-    if (isPlaying) {
-      audioRef.current?.pause();
-      setIsPlaying(false);
+
+    // 현재 이 리포트가 재생 중이면 일시정지
+    if (currentReport?.date === report.date) {
+      if (isPlaying) {
+        pause();
+      } else {
+        resume();
+      }
       return;
     }
 
-    if (audioRef.current) {
-      audioRef.current.play();
-      setIsPlaying(true);
-      return;
-    }
-
-    // 이미 캐시된 오디오가 있는 경우 사용
+    // 이미 로드된 오디오 콘텐츠가 있는 경우 바로 재생
     if (audioContent) {
-      const audioUrl = `data:audio/mp3;base64,${audioContent}`;
-      const audio = new Audio(audioUrl);
-      audio.onended = () => setIsPlaying(false);
-      audioRef.current = audio;
-      audio.play();
-      setIsPlaying(true);
+      play({ date: report.date, title: report.title }, audioContent);
       return;
     }
 
@@ -88,12 +78,7 @@ export function ReportViewer({ report }: { report: DailyReport }) {
         }
 
         setAudioContent(data.audio_content);
-        const audioUrl = `data:audio/mp3;base64,${data.audio_content}`;
-        const audio = new Audio(audioUrl);
-        audio.onended = () => setIsPlaying(false);
-        audioRef.current = audio;
-        audio.play();
-        setIsPlaying(true);
+        play({ date: report.date, title: report.title }, data.audio_content);
       } catch (err) {
         console.error("Error loading audio:", err);
         alert("음성 데이터를 불러오는 중 오류가 발생했습니다.");
@@ -232,11 +217,11 @@ export function ReportViewer({ report }: { report: DailyReport }) {
                     isPlaying
                       ? "bg-red-500 text-white shadow-red-500/20"
                       : "bg-background border-2 border-border-subtle/50 text-foreground hover:border-accent/50"
-                  } ${!isPlaying && (report.audio_content || report.audio_script) ? "ring-4 ring-accent/10" : ""} ${isAudioLoading ? "opacity-70 cursor-not-allowed" : ""}`}
+                  } ${!isThisReportPlaying && (report.audio_content || report.audio_script) ? "ring-4 ring-accent/10" : ""} ${isAudioLoading ? "opacity-70 cursor-not-allowed" : ""}`}
                 >
                   {isAudioLoading ? (
                     <div className="w-[18px] h-[18px] border-2 border-accent border-t-transparent rounded-full animate-spin" />
-                  ) : isPlaying ? (
+                  ) : isThisReportPlaying ? (
                     <Pause size={18} fill="currentColor" />
                   ) : (
                     <Volume2
@@ -247,7 +232,7 @@ export function ReportViewer({ report }: { report: DailyReport }) {
                   <span className="whitespace-nowrap">
                     {isAudioLoading
                       ? "로딩 중..."
-                      : isPlaying
+                      : isThisReportPlaying
                         ? "재생 중지"
                         : "리포트 듣기"}
                   </span>

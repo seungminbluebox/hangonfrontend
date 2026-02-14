@@ -511,7 +511,9 @@ export default function NotificationSettingsPage() {
                         수면 에티켓 모드
                       </h3>
                       <p className="text-[11px] font-bold text-foreground/40 mt-0.5 leading-snug">
-                        새벽(0~9시) 알림을 오전 9시에 한꺼번에 받습니다.
+                        새벽(0~9시) 알림을
+                        <br />
+                        오전 9시에 한꺼번에 받습니다.
                       </p>
                     </div>
                   </div>
@@ -522,16 +524,16 @@ export default function NotificationSettingsPage() {
                         !preferences["etiquette_mode"],
                       )
                     }
-                    className={`w-14 h-7 rounded-full transition-all relative border-2 ${
+                    className={`w-10 h-5 rounded-full transition-all relative border-2 shrink-0 ${
                       preferences["etiquette_mode"]
-                        ? "bg-accent border-accent shadow-lg shadow-accent/30"
+                        ? "bg-accent border-accent"
                         : "bg-foreground/5 border-foreground/5"
                     }`}
                   >
                     <div
-                      className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform shadow-sm ${
+                      className={`absolute top-0.5 left-0.5 w-3 h-3 bg-white rounded-full transition-transform shadow-sm ${
                         preferences["etiquette_mode"]
-                          ? "translate-x-7"
+                          ? "translate-x-5"
                           : "translate-x-0"
                       }`}
                     />
@@ -576,7 +578,7 @@ export default function NotificationSettingsPage() {
                               !isGroupAllChecked(group.id),
                             )
                           }
-                          className={`w-10 h-5 rounded-full transition-all relative border-2 ${
+                          className={`w-10 h-5 rounded-full transition-all relative border-2 shrink-0 ${
                             isGroupAllChecked(group.id)
                               ? "bg-accent border-accent"
                               : "bg-foreground/10 border-foreground/5"
@@ -619,7 +621,7 @@ export default function NotificationSettingsPage() {
                                 !preferences[item.id],
                               )
                             }
-                            className={`w-10 h-5 rounded-full transition-all relative border-2 ${
+                            className={`w-10 h-5 rounded-full transition-all relative border-2 shrink-0 ${
                               preferences[item.id]
                                 ? "bg-accent border-accent"
                                 : "bg-foreground/10 border-foreground/5"

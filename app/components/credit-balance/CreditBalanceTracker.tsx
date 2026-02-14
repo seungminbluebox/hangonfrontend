@@ -250,7 +250,7 @@ export function CreditBalanceTracker() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Trend Chart */}
-          <div className="lg:col-span-12 bg-secondary/20 border border-border-subtle rounded-[2.5rem] p-8">
+          <div className="lg:col-span-12 bg-secondary/20 border border-border-subtle rounded-[2.5rem] p-4 pt-6">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">

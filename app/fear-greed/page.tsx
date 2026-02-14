@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function FearGreedPage() {
   return (
-    <main className="min-h-screen bg-background text-foreground max-w-6xl mx-auto px-4 sm:px-8 pb-20">
+    <main className="min-h-screen bg-background text-foreground max-w-6xl mx-auto px-2 sm:px-8 pb-20">
       <div className="pt-6 md:pt-32">
         <BackButton />
       </div>

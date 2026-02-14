@@ -1,6 +1,7 @@
 import { Providers } from "./providers";
 import { InstallPWA } from "./components/layout/InstallPWA";
 import { Navigation } from "./components/layout/Navigation";
+import { AudioControlBar } from "./components/layout/AudioControlBar";
 import type { Metadata } from "next";
 import { Inter, Playfair_Display, Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
@@ -152,6 +153,7 @@ export default function RootLayout({
         <Providers>
           <Navigation />
           <div className="pt-28 pb-20 md:pt-0 md:pb-0">{children}</div>
+          <AudioControlBar />
         </Providers>
         <GoogleAnalytics gaId="G-GGHNG01WQ9" />
       </body>

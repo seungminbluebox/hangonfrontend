@@ -325,6 +325,7 @@ export function PutCallRatioTracker({ market }: PutCallRatioTrackerProps) {
                 domain={["dataMin - 0.05", "dataMax + 0.05"]}
                 axisLine={false}
                 tickLine={false}
+                tickFormatter={(val) => Number(val).toFixed(2)}
                 tick={{
                   fontSize: 10,
                   fontWeight: 700,

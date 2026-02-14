@@ -141,7 +141,7 @@ export function CurrencyDesk({
   return (
     <div className="w-full space-y-4 md:space-y-6">
       {/* Header & AI Report */}
-      <div className="bg-gradient-to-br from-blue-600/10 via-background to-background border border-blue-500/20 rounded-[2rem] p-5 md:p-8 shadow-sm">
+      <div className="bg-gradient-to-br from-blue-600/10 via-background to-background border border-blue-500/20 rounded-[2rem] p-2 md:p-8 shadow-sm">
         <div className="flex items-start justify-between gap-4 mb-6 md:mb-8">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-blue-500/20 flex items-center justify-center shrink-0 mt-1 sm:mt-0">
@@ -173,7 +173,7 @@ export function CurrencyDesk({
 
         {/* Main Highlight Card */}
         {(liveData || (data && data.currency_data["USD/KRW"])) && (
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 bg-white/5 border border-white/10 rounded-3xl p-2 px-4 md:p-8 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 bg-white/5 border border-white/10 rounded-3xl p-5  md:p-8 items-center">
             <div className="md:col-span-5 flex flex-col gap-1">
               <div className="flex items-center gap-2 mb-1">
                 <div className="px-2 py-0.5 bg-blue-500 text-white text-[10px] font-black rounded-md uppercase tracking-wider">
@@ -236,7 +236,7 @@ export function CurrencyDesk({
                       ? liveData.history
                       : data?.currency_data["USD/KRW"].history
                   }
-                  margin={{ top: 5, right: 0, left: 0, bottom: 0 }}
+                  margin={{ top: 5, right: 10, left: -5, bottom: 0 }}
                 >
                   <defs>
                     <linearGradient
@@ -269,6 +269,7 @@ export function CurrencyDesk({
                       backgroundColor: "#1e293b",
                       border: "none",
                       borderRadius: "12px",
+                      pointerEvents: "none",
                     }}
                     itemStyle={{
                       color: "#fff",
@@ -293,6 +294,7 @@ export function CurrencyDesk({
                     strokeWidth={4}
                     dot={false}
                     activeDot={{ r: 6, strokeWidth: 0 }}
+                    isAnimationActive={false}
                   />
                   <YAxis
                     domain={["dataMin - 5", "dataMax + 5"]}
@@ -308,7 +310,6 @@ export function CurrencyDesk({
                       fill: "currentColor",
                       opacity: 0.3,
                     }}
-                    orientation="right"
                   />
                   <XAxis
                     dataKey="time"
@@ -332,7 +333,7 @@ export function CurrencyDesk({
         {/* AI Analysis Section */}
         <div className="space-y-4">
           <div className="flex items-center gap-2"></div>
-          <div className="relative p-5 pt-3 md:p-6 rounded-2xl bg-white/5 border border-white/5 backdrop-blur-sm">
+          <div className="relative  pt-3 md:p-6 rounded-2xl bg-white/5 p-3 border border-white/5 backdrop-blur-sm">
             <div className="mb-4 pb-4 border-b border-white/5">
               <p className="text-sm md:text-base font-bold text-foreground/60 leading-relaxed flex items-center flex-wrap gap-1">
                 현재 원/달러 환율은

@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function PutCallRatioPage() {
   return (
     <main className="min-h-screen bg-background text-foreground pb-32">
-      <div className="max-w-4xl mx-auto px-4 md:px-6 pt-6 md:pt-32 space-y-8 md:space-y-12">
+      <div className="max-w-4xl mx-auto px-2 md:px-6 pt-6 md:pt-32 space-y-8 md:space-y-12">
         <BackButton />
 
         {/* Content Wrapper */}
