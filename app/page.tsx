@@ -65,9 +65,7 @@ export default async function Home({
   const [newsResponse, marketData, reportResponse] = await Promise.all([
     supabase
       .from("daily_news")
-      .select(
-        "id, title, content, image_url, category, created_at, source, keyword, summary, links",
-      )
+      .select("*")
       .filter("created_at", "gte", startOfDay)
       .filter("created_at", "lte", endOfDay)
       .order("created_at", { ascending: false }),
