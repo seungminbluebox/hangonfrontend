@@ -503,14 +503,18 @@ export function PutCallRatioTracker({ market }: PutCallRatioTrackerProps) {
         </div>
       )}
 
-      {showShareModal && (
+      {showShareModal && analysis && (
         <PutCallRatioShareCard
           data={{
             latestVal,
             latestDate,
             isExtremeFear,
             isExtremeGreed,
-            analysis,
+            analysis: {
+              title: analysis.title,
+              summary: analysis.summary,
+              recommendation: analysis.recommendation,
+            },
             history: history,
           }}
           onClose={() => setShowShareModal(false)}
