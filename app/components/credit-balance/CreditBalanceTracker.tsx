@@ -37,6 +37,7 @@ import {
 import { clsx } from "clsx";
 import { CreditBalanceShareCard } from "./CreditBalanceShareCard";
 import { supabase } from "@/lib/supabase";
+import useSWR from "swr";
 
 interface CreditHistory {
   date: string;
@@ -53,53 +54,60 @@ interface CreditAnalysis {
   updated_at: string;
 }
 
+const creditHistoryFetcher = async (
+  table: string,
+): Promise<CreditHistory[]> => {
+  const { data, error } = await supabase
+    .from(table)
+    .select("date, total, customer_deposit")
+    .order("date", { ascending: false })
+    .limit(250);
+
+  if (error) throw error;
+  return data ? [...data].reverse() : [];
+};
+
+const creditAnalysisFetcher = async (
+  table: string,
+): Promise<CreditAnalysis | null> => {
+  const { data, error } = await supabase
+    .from(table)
+    .select("title, summary, analysis, recommendation, latest_data, updated_at")
+    .eq("id", 1)
+    .single();
+
+  if (error && error.code !== "PGRST116") throw error;
+  return (data as CreditAnalysis) || null;
+};
+
 export function CreditBalanceTracker() {
-  const [history, setHistory] = useState<CreditHistory[]>([]);
-  const [analysis, setAnalysis] = useState<CreditAnalysis | null>(null);
-  const [loading, setLoading] = useState(true);
   const [isAnalysisExpanded, setIsAnalysisExpanded] = useState(true);
   const [showShareModal, setShowShareModal] = useState(false);
-  const [lastCheckTime, setLastCheckTime] = useState<string>("");
 
-  useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-      try {
-        const { data: historyData, error: hError } = await supabase
-          .from("credit_balance_history")
-          .select("date, total, customer_deposit")
-          .order("date", { ascending: false })
-          .limit(250);
+  // SWR: 데이터 페칭
+  const { data: history = [] } = useSWR<CreditHistory[]>(
+    "credit_balance_history",
+    creditHistoryFetcher,
+    { refreshInterval: 60000 },
+  );
 
-        if (hError) throw hError;
-        setHistory(historyData ? [...historyData].reverse() : []);
+  const { data: analysis } = useSWR<CreditAnalysis | null>(
+    "credit_balance_analysis",
+    creditAnalysisFetcher,
+    { refreshInterval: 60000 },
+  );
 
-        const { data: analysisData, error: aError } = await supabase
-          .from("credit_balance_analysis")
-          .select("*")
-          .eq("id", 1)
-          .single();
+  const loading = !analysis && history.length === 0;
 
-        if (aError && aError.code !== "PGRST116") throw aError;
-        setAnalysis(analysisData);
-
-        if (analysisData?.updated_at) {
-          const date = new Date(analysisData.updated_at);
-          setLastCheckTime(
-            date.toLocaleString("ko-KR", {
-              month: "numeric",
-              day: "numeric",
-            }),
-          );
-        }
-      } catch (error) {
-        console.error("Error fetching credit balance data:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchData();
-  }, []);
+  const lastCheckTime = analysis?.updated_at
+    ? new Date(analysis.updated_at).toLocaleString("ko-KR", {
+        month: "numeric",
+        day: "numeric",
+      })
+    : new Date().toLocaleString("ko-KR", {
+        month: "numeric",
+        day: "numeric",
+      });
 
   if (loading) {
     return (

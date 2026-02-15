@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { MoneyFlowShareCard } from "./MoneyFlowShareCard";
 import { supabase } from "@/lib/supabase";
+import useSWR from "swr";
 
 interface FlowItem {
   symbol: string;
@@ -33,13 +34,23 @@ interface MoneyFlowData {
   updated_at: string;
 }
 
+const moneyFlowFetcher = async (key: string): Promise<MoneyFlowData | null> => {
+  const [_, categoryId] = key.split(":");
+  const { data, error } = await supabase
+    .from("money_flow")
+    .select("flow_data, summary, analysis, strategy, updated_at")
+    .eq("id", parseInt(categoryId))
+    .single();
+
+  if (error) return null;
+  return (data as MoneyFlowData) || null;
+};
+
 export function MoneyFlowTracker({
   type = "domestic",
 }: {
   type?: "domestic" | "us" | "safe";
 }) {
-  const [data, setData] = useState<MoneyFlowData | null>(null);
-  const [loading, setLoading] = useState(true);
   const [showFullAnalysis, setShowFullAnalysis] = useState(false);
   const [shareConfig, setShareConfig] = useState<{
     isOpen: boolean;
@@ -53,34 +64,20 @@ export function MoneyFlowTracker({
   };
   const title = titleMap[type];
 
-  useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-      try {
-        const typeMap = {
-          domestic: 1,
-          us: 2,
-          safe: 3,
-        };
-        const categoryId = typeMap[type];
+  const typeMap = {
+    domestic: 1,
+    us: 2,
+    safe: 3,
+  };
+  const categoryId = typeMap[type];
 
-        const { data: res, error } = await supabase
-          .from("money_flow")
-          .select("*")
-          .eq("id", categoryId)
-          .single();
+  const { data, isValidating } = useSWR<MoneyFlowData | null>(
+    `money_flow:${categoryId}`,
+    moneyFlowFetcher,
+    { refreshInterval: 60000 },
+  );
 
-        if (res) {
-          setData(res);
-        }
-      } catch (err) {
-        console.error("Error fetching money flow data:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchData();
-  }, [type]);
+  const loading = !data && isValidating;
 
   if (loading) {
     return (

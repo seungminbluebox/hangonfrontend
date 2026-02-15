@@ -63,7 +63,7 @@ const pcrHistoryFetcher = async (key: string) => {
   return data ? [...data].reverse() : [];
 };
 
-const pcrAnalysisFetcher = async (key: string) => {
+const pcrAnalysisFetcher = async (key: string): Promise<PCRAnalysis | null> => {
   const [_, analysisTable] = key.split(":");
   const { data, error } = await supabase
     .from(analysisTable)
@@ -71,7 +71,7 @@ const pcrAnalysisFetcher = async (key: string) => {
     .eq("id", 1)
     .single();
   if (error && error.code !== "PGRST116") throw error;
-  return data;
+  return (data as PCRAnalysis) || null;
 };
 
 export function PutCallRatioTracker({ market }: PutCallRatioTrackerProps) {
@@ -87,7 +87,7 @@ export function PutCallRatioTracker({ market }: PutCallRatioTrackerProps) {
     { refreshInterval: 60000 },
   );
 
-  const { data: analysis } = useSWR<PCRAnalysis>(
+  const { data: analysis } = useSWR<PCRAnalysis | null>(
     `pcr_analysis:${analysisTable}`,
     pcrAnalysisFetcher,
     { refreshInterval: 60000 },

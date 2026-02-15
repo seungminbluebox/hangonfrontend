@@ -27,6 +27,7 @@ import {
 } from "date-fns";
 import { ko } from "date-fns/locale";
 import { clsx } from "clsx";
+import useSWR from "swr";
 
 interface MarketHoliday {
   id: number;
@@ -39,31 +40,23 @@ interface MarketHoliday {
   close_time?: string;
 }
 
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
 export function MarketHolidays() {
-  const [holidays, setHolidays] = useState<MarketHoliday[]>([]);
-  const [loading, setLoading] = useState(true);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
-  useEffect(() => {
-    async function fetchHolidays() {
-      try {
-        const year = currentMonth.getFullYear();
-        const start = `${year}-01-01`;
-        const end = `${year}-12-31`;
-        const res = await fetch(
-          `/api/market/holidays?start=${start}&end=${end}`,
-        );
-        const data = await res.json();
-        setHolidays(data);
-      } catch (error) {
-        console.error("Failed to fetch holidays:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchHolidays();
-  }, [currentMonth.getFullYear()]);
+  const year = currentMonth.getFullYear();
+  const { data: holidays = [], isValidating } = useSWR<MarketHoliday[]>(
+    `/api/market/holidays?start=${year}-01-01&end=${year}-12-31`,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      staleWhileRevalidate: true,
+    },
+  );
+
+  const loading = !holidays.length && isValidating;
 
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(monthStart);

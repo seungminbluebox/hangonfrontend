@@ -29,18 +29,18 @@ interface FearGreedHistory {
   value: number;
 }
 
-const fearGreedFetcher = async (key: string) => {
+const fearGreedFetcher = async (key: string): Promise<FearGreedData | null> => {
   const [type, targetId] = key.split(":");
   const { data, error } = await supabase
     .from("fear_greed")
     .select("value, description, title, analysis, advice, updated_at")
     .eq("id", targetId)
     .single();
-  if (error) throw error;
-  return data;
+  if (error) return null;
+  return (data as FearGreedData) || null;
 };
 
-const historyFetcher = async (key: string) => {
+const historyFetcher = async (key: string): Promise<FearGreedHistory[]> => {
   const [type, historyTable] = key.split(":");
   const { data: histRes, error } = await supabase
     .from(historyTable)
@@ -48,9 +48,9 @@ const historyFetcher = async (key: string) => {
     .order("created_at", { ascending: false })
     .limit(30);
 
-  if (error) throw error;
+  if (error) return [];
 
-  return histRes
+  return (histRes || [])
     .map((h) => ({
       date: h.created_at,
       value: h.value,
@@ -71,7 +71,7 @@ export function FearGreedIndex({
     type === "kospi" ? "fear_greed_history_kr" : "fear_greed_history_us";
 
   // SWR: 현재 지수 페칭
-  const { data } = useSWR<FearGreedData>(
+  const { data } = useSWR<FearGreedData | null>(
     `fear_greed:${targetId}`,
     fearGreedFetcher,
     { refreshInterval: 60000 },
