@@ -2,6 +2,7 @@
 
 // Currency Dashboard component with live data and analysis
 import React, { useEffect, useState } from "react";
+import useSWR from "swr";
 import {
   RefreshCcw,
   Wallet,
@@ -42,17 +43,46 @@ interface CurrencyData {
   updated_at: string;
 }
 
+const marketFetcher = (url: string) => fetch(url).then((res) => res.json());
+const supabaseFetcher = async (table: string) => {
+  const { data, error } = await supabase
+    .from(table)
+    .select("currency_data, title, analysis, updated_at")
+    .eq("id", 1)
+    .single();
+  if (error) throw error;
+  return data;
+};
+
 export function CurrencyDesk({
   liveData: initialLiveData,
 }: {
   liveData?: MarketData;
 }) {
-  const [data, setData] = useState<CurrencyData | null>(null);
-  const [loading, setLoading] = useState(true);
   const [showShare, setShowShare] = useState(false);
-  const [liveData, setLiveData] = useState<MarketData | undefined>(
-    initialLiveData,
+
+  // 1. 라이브 가격 데이터 (SWR)
+  const { data: liveMarketData } = useSWR<MarketData[]>(
+    `/api/market?symbols=${encodeURIComponent("원/달러 환율")}&full=true`,
+    marketFetcher,
+    {
+      refreshInterval: 60000,
+      revalidateOnFocus: true,
+    },
   );
+
+  const liveData = liveMarketData?.[0] || initialLiveData;
+
+  // 2. AI 분석 데이터 (SWR + Supabase)
+  const { data, isValidating } = useSWR<CurrencyData>(
+    "currency_desk",
+    supabaseFetcher,
+    {
+      refreshInterval: 60000,
+      revalidateOnFocus: true,
+    },
+  );
+
   const [lastCheckTime, setLastCheckTime] = useState<string>(
     new Date().toLocaleString("ko-KR", {
       timeZone: "Asia/Seoul",
@@ -61,60 +91,19 @@ export function CurrencyDesk({
     }),
   );
 
-  // 1분마다 라이브 가격 데이터 갱신
   useEffect(() => {
-    const pollInterval = setInterval(async () => {
-      try {
-        const response = await fetch(
-          `/api/market?symbols=${encodeURIComponent("원/달러 환율")}&full=true`,
-        );
-        if (response.ok) {
-          const marketData = await response.json();
-          const usdData = marketData[0];
-          if (usdData) {
-            setLiveData(usdData);
-            setLastCheckTime(
-              new Date().toLocaleString("ko-KR", {
-                timeZone: "Asia/Seoul",
-                month: "numeric",
-                day: "numeric",
-              }),
-            );
-          }
-        }
-      } catch (err) {
-        console.error("Live data polling error:", err);
-      }
-    }, 60000);
-
-    return () => clearInterval(pollInterval);
-  }, []);
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const { data: res, error } = await supabase
-          .from("currency_desk")
-          .select("*")
-          .eq("id", 1)
-          .single();
-
-        if (res) {
-          setData(res);
-        }
-      } catch (err) {
-        console.error("Error fetching currency data:", err);
-      } finally {
-        setLoading(false);
-      }
+    if (liveMarketData) {
+      setLastCheckTime(
+        new Date().toLocaleString("ko-KR", {
+          timeZone: "Asia/Seoul",
+          month: "numeric",
+          day: "numeric",
+        }),
+      );
     }
-    fetchData();
-    // AI 분석 데이터도 1분마다 갱신하여 최신 상태 유지
-    const interval = setInterval(fetchData, 60000);
-    return () => clearInterval(interval);
-  }, []);
+  }, [liveMarketData]);
 
-  if (loading) {
+  if (!data && !liveData) {
     return (
       <div className="w-full h-[500px] bg-card/50 animate-pulse rounded-[2.5rem] border border-border-subtle" />
     );

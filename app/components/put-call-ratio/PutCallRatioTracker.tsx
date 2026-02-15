@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import useSWR from "swr";
 import {
   AreaChart,
   Area,
@@ -51,62 +52,48 @@ interface PutCallRatioTrackerProps {
   market: "US" | "KR";
 }
 
+const pcrHistoryFetcher = async (key: string) => {
+  const [_, historyTable] = key.split(":");
+  const { data, error } = await supabase
+    .from(historyTable)
+    .select("date, total, index, equity")
+    .order("date", { ascending: false })
+    .limit(60);
+  if (error) throw error;
+  return data ? [...data].reverse() : [];
+};
+
+const pcrAnalysisFetcher = async (key: string) => {
+  const [_, analysisTable] = key.split(":");
+  const { data, error } = await supabase
+    .from(analysisTable)
+    .select("title, summary, analysis, recommendation, latest_data, updated_at")
+    .eq("id", 1)
+    .single();
+  if (error && error.code !== "PGRST116") throw error;
+  return data;
+};
+
 export function PutCallRatioTracker({ market }: PutCallRatioTrackerProps) {
-  const [history, setHistory] = useState<PCRHistory[]>([]);
-  const [analysis, setAnalysis] = useState<PCRAnalysis | null>(null);
-  const [loading, setLoading] = useState(true);
   const [isAnalysisExpanded, setIsAnalysisExpanded] = useState(true);
   const [showShareModal, setShowShareModal] = useState(false);
-  const [lastCheckTime, setLastCheckTime] = useState<string>(
-    new Date().toLocaleString("ko-KR", {
-      month: "numeric",
-      day: "numeric",
-    }),
+
+  const historyTable = market === "US" ? "pcr_history" : "kr_pcr_history";
+  const analysisTable = market === "US" ? "pcr_analysis" : "kr_pcr_analysis";
+
+  const { data: history = [] } = useSWR<PCRHistory[]>(
+    `pcr_history:${historyTable}`,
+    pcrHistoryFetcher,
+    { refreshInterval: 60000 },
   );
 
-  useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-      const historyTable = market === "US" ? "pcr_history" : "kr_pcr_history";
-      const analysisTable =
-        market === "US" ? "pcr_analysis" : "kr_pcr_analysis";
+  const { data: analysis } = useSWR<PCRAnalysis>(
+    `pcr_analysis:${analysisTable}`,
+    pcrAnalysisFetcher,
+    { refreshInterval: 60000 },
+  );
 
-      try {
-        // 1. 히스토리 데이터 (최근 60일)
-        const { data: historyData, error: hError } = await supabase
-          .from(historyTable)
-          .select("*")
-          .order("date", { ascending: false })
-          .limit(60);
-
-        if (hError) throw hError;
-        setHistory(historyData ? [...historyData].reverse() : []);
-
-        // 2. AI 분석 결과
-        const { data: analysisData, error: aError } = await supabase
-          .from(analysisTable)
-          .select("*")
-          .eq("id", 1)
-          .single();
-
-        if (aError && aError.code !== "PGRST116") throw aError;
-        setAnalysis(analysisData);
-
-        setLastCheckTime(
-          new Date().toLocaleString("ko-KR", {
-            month: "numeric",
-            day: "numeric",
-          }),
-        );
-      } catch (err) {
-        console.error("Error fetching PCR data:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchData();
-  }, [market]);
+  const loading = !analysis && history.length === 0;
 
   if (loading) {
     return (

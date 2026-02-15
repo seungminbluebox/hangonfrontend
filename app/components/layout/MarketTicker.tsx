@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
+import useSWR from "swr";
 import { LineChart, Line, ResponsiveContainer, YAxis } from "recharts";
 import {
   TrendingUp,
@@ -12,40 +13,31 @@ import {
 } from "lucide-react";
 import { MarketData } from "../../lib/market";
 
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
 export function MarketTicker({ data: initialData }: { data: MarketData[] }) {
   const router = useRouter();
   const [isClient, setIsClient] = React.useState(false);
   const [isExpanded, setIsExpanded] = React.useState(false);
-  const [liveData, setLiveData] = React.useState<MarketData[]>(initialData);
 
-  // Poll for live data every 1 minute
-  React.useEffect(() => {
-    const pollInterval = setInterval(async () => {
-      try {
-        const symbols = [
-          "KOSPI",
-          "S&P 500",
-          "나스닥",
-          "원/달러 환율",
-          "비트코인",
-          "금 가격",
-        ].join(",");
-        const response = await fetch(
-          `/api/market?symbols=${encodeURIComponent(symbols)}`,
-        );
-        if (response.ok) {
-          const newData = await response.json();
-          if (Array.isArray(newData)) {
-            setLiveData(newData);
-          }
-        }
-      } catch (error) {
-        console.error("Failed to poll market data:", error);
-      }
-    }, 60000);
+  const symbols = [
+    "KOSPI",
+    "S&P 500",
+    "나스닥",
+    "원/달러 환율",
+    "비트코인",
+    "금 가격",
+  ].join(",");
 
-    return () => clearInterval(pollInterval);
-  }, []);
+  const { data: liveData } = useSWR<MarketData[]>(
+    `/api/market?symbols=${encodeURIComponent(symbols)}`,
+    fetcher,
+    {
+      fallbackData: initialData,
+      refreshInterval: 60000, // 1분마다 자동 갱신
+      revalidateOnFocus: true,
+    },
+  );
 
   React.useEffect(() => {
     setIsClient(true);

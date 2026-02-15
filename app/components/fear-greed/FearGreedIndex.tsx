@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import useSWR from "swr";
 import {
   Info,
   BrainCircuit,
@@ -28,73 +29,66 @@ interface FearGreedHistory {
   value: number;
 }
 
+const fearGreedFetcher = async (key: string) => {
+  const [type, targetId] = key.split(":");
+  const { data, error } = await supabase
+    .from("fear_greed")
+    .select("value, description, title, analysis, advice, updated_at")
+    .eq("id", targetId)
+    .single();
+  if (error) throw error;
+  return data;
+};
+
+const historyFetcher = async (key: string) => {
+  const [type, historyTable] = key.split(":");
+  const { data: histRes, error } = await supabase
+    .from(historyTable)
+    .select("created_at, value")
+    .order("created_at", { ascending: false })
+    .limit(30);
+
+  if (error) throw error;
+
+  return histRes
+    .map((h) => ({
+      date: h.created_at,
+      value: h.value,
+    }))
+    .reverse();
+};
+
 export function FearGreedIndex({
   type = "global",
 }: {
   type?: "global" | "kospi";
 }) {
-  const [data, setData] = useState<FearGreedData | null>(null);
-  const [history, setHistory] = useState<FearGreedHistory[]>([]);
-  const [loading, setLoading] = useState(true);
   const [showShareModal, setShowShareModal] = useState(false);
-  const [showChart, setShowChart] = useState(false); // 차트 노출 여부 (나중에 true로 바꾸기 편리함) 여름방학
-  const [lastCheckTime, setLastCheckTime] = useState<string>(
-    new Date().toLocaleString("ko-KR", {
-      month: "numeric",
-      day: "numeric",
-    }),
-  );
+  const [showChart, setShowChart] = useState(false);
 
   const targetId = type === "kospi" ? 2 : 1;
   const historyTable =
     type === "kospi" ? "fear_greed_history_kr" : "fear_greed_history_us";
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        // 1. 현재 상태 가져오기
-        const { data: res, error } = await supabase
-          .from("fear_greed")
-          .select("*")
-          .eq("id", targetId)
-          .single();
+  // SWR: 현재 지수 페칭
+  const { data } = useSWR<FearGreedData>(
+    `fear_greed:${targetId}`,
+    fearGreedFetcher,
+    { refreshInterval: 60000 },
+  );
 
-        if (res) {
-          setData(res);
-        }
+  // SWR: 히스토리 페칭
+  const { data: history = [] } = useSWR<FearGreedHistory[]>(
+    `history:${historyTable}`,
+    historyFetcher,
+    { refreshInterval: 60000 },
+  );
 
-        // 2. 히스토리 데이터 가져오기 (최근 30개)
-        const { data: histRes } = await supabase
-          .from(historyTable)
-          .select("created_at, value")
-          .order("created_at", { ascending: false })
-          .limit(30);
-
-        if (histRes) {
-          const formattedHist = histRes
-            .map((h) => ({
-              date: h.created_at,
-              value: h.value,
-            }))
-            .reverse();
-          setHistory(formattedHist);
-        }
-      } catch (err) {
-        console.error("Error fetching Fear & Greed data:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchData();
-  }, [targetId, historyTable]);
-
-  if (loading) {
+  if (!data) {
     return (
       <div className="w-full h-[400px] bg-card/50 animate-pulse rounded-[2.5rem] border border-border-subtle" />
     );
   }
-
-  if (!data) return null;
 
   // Gauge calculation: 0 to 180 degrees (from -90 to +90)
   const needleRotation = (data.value / 100) * 180 - 90;

@@ -65,7 +65,7 @@ export default async function Home({
   const [newsResponse, marketData, reportResponse] = await Promise.all([
     supabase
       .from("daily_news")
-      .select("*") // 상세 JOIN은 하단에서 별도 처리 (안정성 확보)
+      .select("id, title, content, image_url, category, created_at, source")
       .filter("created_at", "gte", startOfDay)
       .filter("created_at", "lte", endOfDay)
       .order("created_at", { ascending: false }),
