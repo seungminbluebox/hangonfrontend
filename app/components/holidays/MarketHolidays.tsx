@@ -40,7 +40,8 @@ interface MarketHoliday {
   close_time?: string;
 }
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+const fetcher = (url: string): Promise<MarketHoliday[]> =>
+  fetch(url).then((res) => res.json());
 
 export function MarketHolidays() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -52,7 +53,6 @@ export function MarketHolidays() {
     fetcher,
     {
       revalidateOnFocus: false,
-      staleWhileRevalidate: true,
     },
   );
 

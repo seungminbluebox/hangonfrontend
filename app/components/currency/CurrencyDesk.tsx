@@ -43,15 +43,17 @@ interface CurrencyData {
   updated_at: string;
 }
 
-const marketFetcher = (url: string) => fetch(url).then((res) => res.json());
-const supabaseFetcher = async (table: string) => {
+const marketFetcher = (url: string): Promise<MarketData[]> =>
+  fetch(url).then((res) => res.json());
+
+const supabaseFetcher = async (table: string): Promise<CurrencyData | null> => {
   const { data, error } = await supabase
     .from(table)
     .select("currency_data, title, analysis, updated_at")
     .eq("id", 1)
     .single();
-  if (error) throw error;
-  return data;
+  if (error) return null;
+  return (data as CurrencyData) || null;
 };
 
 export function CurrencyDesk({
@@ -74,7 +76,7 @@ export function CurrencyDesk({
   const liveData = liveMarketData?.[0] || initialLiveData;
 
   // 2. AI 분석 데이터 (SWR + Supabase)
-  const { data, isValidating } = useSWR<CurrencyData>(
+  const { data, isValidating } = useSWR<CurrencyData | null>(
     "currency_desk",
     supabaseFetcher,
     {
