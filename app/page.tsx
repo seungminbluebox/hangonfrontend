@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import { DateNavigation } from "./components/layout/DateNavigation";
 import { NewsDashboard } from "./components/news/NewsDashboard";
+import { DailyReportBanner } from "./components/news/DailyReportBanner";
 import { MarketTicker } from "./components/layout/MarketTicker";
 import { getMarketData } from "./lib/market";
 import { TrendingUp, Globe, Calendar, Mail, Library } from "lucide-react";
@@ -61,7 +62,7 @@ export default async function Home({
   const endOfDay = `${targetDate}T23:59:59Z`;
 
   // 데이터 페칭 병렬화 및 필요한 마켓 데이터만 요청
-  const [newsResponse, marketData] = await Promise.all([
+  const [newsResponse, marketData, reportResponse] = await Promise.all([
     supabase
       .from("daily_news")
       .select("*") // 상세 JOIN은 하단에서 별도 처리 (안정성 확보)
@@ -76,9 +77,16 @@ export default async function Home({
       "비트코인",
       "금 가격",
     ]),
+    supabase
+      .from("daily_reports")
+      .select("date, title, summary, audio_script")
+      .order("date", { ascending: false })
+      .limit(1)
+      .maybeSingle(),
   ]);
 
   let { data: news, error } = newsResponse;
+  const { data: latestReport } = reportResponse;
 
   // [추가] 각 뉴스 아이템별 실제 반응 데이터를 안전하게 병합
   if (news && news.length > 0) {
@@ -168,8 +176,9 @@ export default async function Home({
         {/* [개선] 모바일 전용 레이아웃 (세로형 배치) */}
         <div className="w-full flex flex-col items-center gap-5 sm:hidden">
           {/* 1. 마켓 상태 카드 */}
-          <div className="w-full">
+          <div className="w-full space-y-3">
             <MarketTicker data={marketData} />
+            {latestReport && <DailyReportBanner report={latestReport} />}
           </div>
 
           {/* 2. 날짜 조정 (뉴스 바로 위 - 헤더의 마지막 요소) */}
@@ -180,37 +189,13 @@ export default async function Home({
 
         {/* 데스크탑 레이아웃 (안정적인 기존 레이아웃 유지 및 정돈) */}
         <div className="hidden sm:flex flex-col items-center gap-6 mb-10 w-full max-w-4xl">
-          <MarketTicker data={marketData} />
+          <div className="w-full space-y-4">
+            <MarketTicker data={marketData} />
+            {latestReport && <DailyReportBanner report={latestReport} />}
+          </div>
           <div className="flex items-center justify-center bg-secondary/10 p-2 px-6 rounded-3xl border border-border-subtle/20">
             <DateNavigation currentDate={targetDate} />
           </div>
-        </div>
-
-        {/* 데스크탑 데일리 리포트 배너 */}
-        <div className="hidden sm:block w-full max-w-4xl mx-auto px-4">
-          <Link href="/news/daily-report" className="group block">
-            <div className="relative overflow-hidden bg-gradient-to-br from-accent/90 to-accent rounded-2xl p-6 text-white shadow-xl shadow-accent/20 transition-all duration-300 group-hover:scale-[1.01] group-hover:shadow-2xl">
-              <div className="relative z-10 flex flex-row items-center justify-between gap-4">
-                <div className="space-y-1 text-left">
-                  <div className="flex items-center gap-1.5 text-white/80">
-                    <Library className="w-4 h-4" />
-                    <span className="text-[10px] font-bold uppercase tracking-wider">
-                      Market Analysis
-                    </span>
-                  </div>
-                  <h2 className="text-xl font-bold">
-                    오늘의 마켓 데일리 브리핑
-                  </h2>
-                  <p className="text-white/70 text-sm font-medium">
-                    거시경제 맥락으로 파악하는 시장 요약 보고서
-                  </p>
-                </div>
-                <div className="flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-xl text-sm font-bold group-hover:bg-white group-hover:text-accent transition-colors">
-                  리포트 읽기 <TrendingUp className="w-4 h-4" />
-                </div>
-              </div>
-            </div>
-          </Link>
         </div>
       </header>
 

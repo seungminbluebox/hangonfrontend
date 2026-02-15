@@ -48,12 +48,14 @@ export function NewsDashboard({
   const [isMobileDetailOpen, setIsMobileDetailOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isDailyShareModalOpen, setIsDailyShareModalOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const detailRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [lastTick, setLastTick] = useState<number>(serverTime);
 
   // Hydration fix: Only start ticking after mount
   useEffect(() => {
+    setIsMounted(true);
     const timer = setInterval(() => setLastTick(Date.now()), 60000);
     return () => clearInterval(timer);
   }, []);
@@ -169,8 +171,7 @@ export function NewsDashboard({
                   </span>
                   {(() => {
                     const isNew =
-                      new Date().getTime() -
-                        new Date(item.created_at).getTime() <
+                      lastTick - new Date(item.created_at).getTime() <
                       6 * 60 * 60 * 1000;
                     if (isNew) {
                       return (
@@ -295,11 +296,8 @@ export function NewsDashboard({
                     {selectedItem.links?.map((link, idx) => {
                       let finalUrl = link.url;
 
-                      // 네이버 뉴스 모바일 최적화 대응
-                      if (
-                        typeof window !== "undefined" &&
-                        finalUrl.includes("naver.com")
-                      ) {
+                      // 네이버 뉴스 모바일 최적화 대응 (클라이언트 사이드에서만 수행하여 Hydration Error 방지)
+                      if (isMounted && finalUrl.includes("naver.com")) {
                         const isMobile = /iPhone|iPad|iPod|Android/i.test(
                           navigator.userAgent,
                         );
@@ -389,8 +387,7 @@ export function NewsDashboard({
                         >
                           {item.category}
                         </span>
-                        {new Date().getTime() -
-                          new Date(item.created_at).getTime() <
+                        {lastTick - new Date(item.created_at).getTime() <
                           6 * 60 * 60 * 1000 && (
                           <span className="text-[8px] font-black px-1 py-0.5 rounded bg-accent text-white dark:text-background">
                             NEW

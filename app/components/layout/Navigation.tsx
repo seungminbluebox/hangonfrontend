@@ -233,6 +233,13 @@ export function Navigation() {
       category: "global",
     },
     {
+      name: "커플링 지수",
+      href: "/market-correlation",
+      icon: Globe,
+      desc: "한-미 증시 동조화 분석 리포트",
+      category: "global",
+    },
+    {
       name: "휴장 일정",
       href: "/market-holidays",
       icon: Coffee,
