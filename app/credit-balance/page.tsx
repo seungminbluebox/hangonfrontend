@@ -11,6 +11,8 @@ export const metadata: Metadata = {
     "국내 증시의 빚투 현황을 분석합니다. 신용융자 잔고의 증감 수치를 통해 시장의 과열과 공포를 읽어보세요.",
 };
 
+export const revalidate = 3600;
+
 export default function CreditBalancePage() {
   return (
     <main className="min-h-screen bg-background text-foreground pb-32">

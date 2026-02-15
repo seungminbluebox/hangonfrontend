@@ -35,7 +35,10 @@ async function fetchFromYahoo(
   try {
     const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=${interval}&range=${range}&includePrePost=true`;
     const response = await fetch(url, {
-      next: { revalidate: 60 }, // 1분 간격으로 야후 Finance 데이터 갱신 (사용자 요청 반영)
+      next: {
+        revalidate: 60,
+        tags: ["market-data", `market-data-${symbol}`],
+      }, // 1분 간격으로 야후 Finance 데이터 갱신 (사용자 요청 반영)
       headers: {
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",

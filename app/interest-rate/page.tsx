@@ -10,6 +10,8 @@ export const metadata: Metadata = {
     "한국과 미국의 기준금리 현황과 금리에 대한 기본 지식을 전해드립니다.",
 };
 
+export const revalidate = 3600;
+
 export default async function InterestRatePage() {
   const rates = await getInterestRates();
 

@@ -2,8 +2,6 @@ import { NextResponse } from "next/server";
 import { getMarketData } from "../../../lib/market";
 import { supabase } from "../../../../lib/supabase";
 
-export const dynamic = "force-dynamic";
-
 export async function GET() {
   try {
     // 1. 야후 파이낸스에서 실시간 지수 및 5일치 히스토리 가져오기 (1분 캐시 설정됨)
@@ -44,14 +42,21 @@ export async function GET() {
       );
     }
 
-    return NextResponse.json({
-      ...dxy,
-      analysis: analysisData || {
-        title: "분석 데이터를 불러올 수 없습니다.",
-        analysis: "현재 AI 분석 결과를 가져오는 중입니다.",
-        updated_at: new Date().toISOString(),
+    return NextResponse.json(
+      {
+        ...dxy,
+        analysis: analysisData || {
+          title: "분석 데이터를 불러올 수 없습니다.",
+          analysis: "현재 AI 분석 결과를 가져오는 중입니다.",
+          updated_at: new Date().toISOString(),
+        },
       },
-    });
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=30",
+        },
+      },
+    );
   } catch (error: any) {
     console.error("Dollar Index API Global Error:", error);
     return NextResponse.json(

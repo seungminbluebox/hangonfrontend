@@ -1,8 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import { NextResponse } from "next/server";
 
-export const dynamic = "force-dynamic";
-
 export async function GET() {
   try {
     // 1. 분석 데이터 가져오기 (가장 최신 분석 결과 1건)
@@ -23,10 +21,17 @@ export async function GET() {
 
     if (historyError) throw historyError;
 
-    return NextResponse.json({
-      analysis: analysisData,
-      history: historyData,
-    });
+    return NextResponse.json(
+      {
+        analysis: analysisData,
+        history: historyData,
+      },
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=30",
+        },
+      },
+    );
   } catch (error: any) {
     console.error("Error fetching credit balance data:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });

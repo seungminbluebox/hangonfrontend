@@ -10,6 +10,9 @@ export const metadata: Metadata = {
     "실시간 달러 환율 현황 중계와 스마트한 달러 투자 전략을 확인하세요.",
 };
 
+// 1시간 주기로 정적 페이지 생성 (On-Demand로 백엔드에서 갱신 가능)
+export const revalidate = 3600;
+
 export default async function CurrencyDeskPage() {
   const marketData = await getMarketData(["원/달러 환율"], true);
   const usdData = marketData.find((m) => m.name === "원/달러 환율");

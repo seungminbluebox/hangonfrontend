@@ -35,6 +35,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+export const revalidate = 3600;
+
 export default async function MoneyFlowDetailPage({ params }: Props) {
   const { type } = await params;
 

@@ -11,6 +11,8 @@ export const metadata: Metadata = {
     "시장의 심리를 가장 빠르게 반영하는 풋/콜 옵션 비율을 확인하세요. 투자자들의 베팅 방향을 통해 향후 주가 방향을 예측합니다.",
 };
 
+export const revalidate = 3600;
+
 export default function PutCallRatioPage() {
   return (
     <main className="min-h-screen bg-background text-foreground pb-32">

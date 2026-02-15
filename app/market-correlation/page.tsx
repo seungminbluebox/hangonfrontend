@@ -11,6 +11,8 @@ export const metadata: Metadata = {
     "KOSPI와 S&P 500의 20일 이동 상관계수를 통해 시장이 미국 증시를 따라가는지(커플링), 아니면 독자적으로 움직이는지(디커플링) 분석합니다.",
 };
 
+export const revalidate = 3600;
+
 export default function MarketCorrelationPage() {
   return (
     <main className="min-h-screen bg-background text-foreground pb-32">

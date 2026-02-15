@@ -1,8 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import { NextResponse } from "next/server";
 
-export const dynamic = "force-dynamic";
-
 export async function GET() {
   try {
     const { data, error } = await supabase
@@ -17,7 +15,11 @@ export async function GET() {
       return NextResponse.json({ error: "No reports found" }, { status: 404 });
     }
 
-    return NextResponse.json(data);
+    return NextResponse.json(data, {
+      headers: {
+        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=30",
+      },
+    });
   } catch (error) {
     console.error("API error fetching daily report:", error);
     return NextResponse.json(

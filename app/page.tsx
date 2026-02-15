@@ -8,7 +8,7 @@ import { TrendingUp, Globe, Calendar, Mail, Library } from "lucide-react";
 import { Metadata } from "next"; // 상단 import 추가
 import Link from "next/link";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 type Props = {
   searchParams: Promise<{ date?: string }>;

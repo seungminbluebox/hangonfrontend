@@ -8,6 +8,8 @@ export const metadata: Metadata = {
     "글로벌 달러 가치 변동 추이와 AI 매크로 분석 리포트를 확인하세요.",
 };
 
+export const revalidate = 3600;
+
 export default function DollarIndexPage() {
   return (
     <main className="min-h-screen bg-background text-foreground">

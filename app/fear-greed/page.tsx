@@ -8,6 +8,8 @@ export const metadata: Metadata = {
     "CNN Fear & Greed Index를 바탕으로 한 시장 심리 분석 리포트입니다.",
 };
 
+export const revalidate = 3600;
+
 export default function FearGreedPage() {
   return (
     <main className="min-h-screen bg-background text-foreground max-w-6xl mx-auto px-2 sm:px-8 pb-20">

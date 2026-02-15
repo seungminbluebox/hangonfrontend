@@ -10,6 +10,8 @@ export const metadata: Metadata = {
     "글로벌 시장의 온도계, 나스닥 100 선물 실시간 흐름과 기초 지식을 전해드립니다.",
 };
 
+export const revalidate = 3600;
+
 export default async function NasdaqFuturesPage() {
   const marketData = await getMarketData(["나스닥"], true);
   const nasdaqFutures = marketData.find((m) => m.name === "나스닥");

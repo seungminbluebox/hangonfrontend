@@ -1,15 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
-export const dynamic = "force-dynamic";
-
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const query = searchParams.get("query");
 
     if (!query || query.trim() === "") {
-      return NextResponse.json([]);
+      return NextResponse.json([], {
+        headers: {
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=30",
+        },
+      });
     }
 
     const searchTerm = query.toLowerCase();
@@ -42,7 +44,11 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    return NextResponse.json(formattedData);
+    return NextResponse.json(formattedData, {
+      headers: {
+        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=30",
+      },
+    });
   } catch (error) {
     console.error("Search error:", error);
     return NextResponse.json(

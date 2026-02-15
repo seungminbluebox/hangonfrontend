@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
-export const dynamic = "force-dynamic";
-
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -26,7 +24,11 @@ export async function GET(request: NextRequest) {
 
     if (error) throw error;
 
-    return NextResponse.json(data || []);
+    return NextResponse.json(data || [], {
+      headers: {
+        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=30",
+      },
+    });
   } catch (error) {
     console.error("API error fetching holiday data:", error);
     return NextResponse.json(

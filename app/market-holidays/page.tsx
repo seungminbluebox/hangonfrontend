@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   description: "한국 및 미국 증시 휴장일 및 조기 종료 일정 안내",
 };
 
+export const revalidate = 86400; // 휴장일은 하루 단위로 갱신해도 충분
+
 export default function MarketHolidaysPage() {
   return (
     <main className="min-h-screen pb-20">

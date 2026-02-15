@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   description: "미국 및 한국 주요 기업들의 실적 발표 일정과 예상치 정보",
 };
 
+export const revalidate = 3600;
+
 export default function EarningsPage() {
   return (
     <main className="min-h-screen pb-20">

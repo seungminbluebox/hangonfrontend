@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export const dynamic = "force-dynamic";
-
 /**
  * 현재 주가를 조회하는 API
  * ?symbols=AAPL,005930.KS,MSFT 형식으로 요청
@@ -90,7 +88,11 @@ export async function GET(request: NextRequest) {
 
     await Promise.all(pricePromises);
 
-    return NextResponse.json(prices);
+    return NextResponse.json(prices, {
+      headers: {
+        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=30",
+      },
+    });
   } catch (error) {
     console.error("API error fetching stock prices:", error);
     return NextResponse.json(
