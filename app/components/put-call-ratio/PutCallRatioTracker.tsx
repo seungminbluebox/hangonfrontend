@@ -93,6 +93,16 @@ export function PutCallRatioTracker({ market }: PutCallRatioTrackerProps) {
     { refreshInterval: 60000 },
   );
 
+  const lastCheckTime = analysis?.updated_at
+    ? new Date(analysis.updated_at).toLocaleString("ko-KR", {
+        month: "numeric",
+        day: "numeric",
+      })
+    : new Date().toLocaleString("ko-KR", {
+        month: "numeric",
+        day: "numeric",
+      });
+
   const loading = !analysis && history.length === 0;
 
   if (loading) {

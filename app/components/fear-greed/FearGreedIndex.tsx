@@ -84,6 +84,16 @@ export function FearGreedIndex({
     { refreshInterval: 60000 },
   );
 
+  const lastCheckTime = data?.updated_at
+    ? new Date(data.updated_at).toLocaleString("ko-KR", {
+        month: "numeric",
+        day: "numeric",
+      })
+    : new Date().toLocaleString("ko-KR", {
+        month: "numeric",
+        day: "numeric",
+      });
+
   if (!data) {
     return (
       <div className="w-full h-[400px] bg-card/50 animate-pulse rounded-[2.5rem] border border-border-subtle" />
