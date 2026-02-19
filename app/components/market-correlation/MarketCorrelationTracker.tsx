@@ -265,7 +265,7 @@ export function MarketCorrelationTracker() {
                           )}
                         >
                           {latestData.kospi_change > 0 ? "+" : ""}
-                          {latestData.kospi_change}%
+                          {latestData.kospi_change.toFixed(2)}%
                         </span>
                       </div>
                       <p className="text-xl font-black italic tabular-nums">
@@ -293,7 +293,7 @@ export function MarketCorrelationTracker() {
                           )}
                         >
                           {latestData.sp500_change > 0 ? "+" : ""}
-                          {latestData.sp500_change}%
+                          {latestData.sp500_change.toFixed(2)}%
                         </span>
                       </div>
                       <p className="text-xl font-black italic tabular-nums">
