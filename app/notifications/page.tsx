@@ -117,6 +117,11 @@ const NOTIFICATION_GROUPS: PreferenceGroup[] = [
         label: "글로벌 투자심리",
         description: "글로벌 주요 국가 투자 심리 지표",
       },
+      {
+        id: "common_coupling_index",
+        label: "한미 커플링 지수",
+        description: "한국과 미국 증시 커플링 현황 보고",
+      },
     ],
   },
   {
