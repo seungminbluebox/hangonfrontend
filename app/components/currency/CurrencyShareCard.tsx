@@ -249,7 +249,7 @@ export function CurrencyShareCard({
                                     ? "#ef4444"
                                     : "#3b82f6"
                               }
-                              strokeWidth={3}
+                              strokeWidth={2}
                               dot={false}
                             />
                             <YAxis

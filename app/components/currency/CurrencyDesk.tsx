@@ -285,9 +285,9 @@ export function CurrencyDesk({
                     type="monotone"
                     dataKey="value"
                     stroke={liveData?.isUp ? "#ef4444" : "#3b82f6"}
-                    strokeWidth={4}
+                    strokeWidth={2}
                     dot={false}
-                    activeDot={{ r: 6, strokeWidth: 0 }}
+                    activeDot={{ r: 4, strokeWidth: 0 }}
                     isAnimationActive={false}
                   />
                   <YAxis

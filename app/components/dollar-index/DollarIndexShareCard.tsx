@@ -212,7 +212,7 @@ export function DollarIndexShareCard({
                         type="monotone"
                         dataKey="value"
                         stroke={isUp ? "#f43f5e" : "#3b82f6"}
-                        strokeWidth={4}
+                        strokeWidth={2}
                         dot={false}
                         animationDuration={0}
                       />

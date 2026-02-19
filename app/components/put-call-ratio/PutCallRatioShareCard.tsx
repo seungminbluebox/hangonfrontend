@@ -300,7 +300,7 @@ export function PutCallRatioShareCard({
                         type="monotone"
                         dataKey="total"
                         stroke={statusTheme.chart}
-                        strokeWidth={4}
+                        strokeWidth={2}
                         fill="url(#shareColor)"
                         isAnimationActive={false}
                       />

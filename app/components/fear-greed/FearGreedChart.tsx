@@ -96,7 +96,7 @@ export function FearGreedChart({ data }: FearGreedChartProps) {
             type="monotone"
             dataKey="value"
             stroke="#2563eb"
-            strokeWidth={3}
+            strokeWidth={2}
             fillOpacity={1}
             fill="url(#colorValue)"
             animationDuration={1500}

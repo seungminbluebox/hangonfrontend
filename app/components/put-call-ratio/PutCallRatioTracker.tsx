@@ -400,7 +400,7 @@ export function PutCallRatioTracker({ market }: PutCallRatioTrackerProps) {
                 type="monotone"
                 dataKey="total"
                 stroke="var(--accent)"
-                strokeWidth={4}
+                strokeWidth={2}
                 fillOpacity={1}
                 fill="url(#colorTotal)"
                 animationDuration={2000}

@@ -220,7 +220,7 @@ export function DollarIndexTracker() {
                       type="monotone"
                       dataKey="value"
                       stroke={isUp ? "#f43f5e" : "#3b82f6"}
-                      strokeWidth={3}
+                      strokeWidth={2}
                       dot={false}
                       animationDuration={1500}
                     />

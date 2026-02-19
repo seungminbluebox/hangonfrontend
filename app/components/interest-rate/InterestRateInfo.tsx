@@ -307,18 +307,18 @@ export function InterestRateInfo({ initialData }: InterestRateInfoProps) {
                   type="monotone"
                   dataKey="us"
                   stroke="#3b82f6"
-                  strokeWidth={4}
+                  strokeWidth={2}
                   dot={{ r: 0 }}
-                  activeDot={{ r: 6, strokeWidth: 0 }}
+                  activeDot={{ r: 4, strokeWidth: 0 }}
                 />
                 <Line
                   name="한국"
                   type="monotone"
                   dataKey="kr"
                   stroke="#10b981"
-                  strokeWidth={4}
+                  strokeWidth={2}
                   dot={{ r: 0 }}
-                  activeDot={{ r: 6, strokeWidth: 0 }}
+                  activeDot={{ r: 4, strokeWidth: 0 }}
                 />
               </LineChart>
             </ResponsiveContainer>

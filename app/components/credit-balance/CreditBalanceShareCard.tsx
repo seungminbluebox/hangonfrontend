@@ -187,7 +187,7 @@ export function CreditBalanceShareCard({ data, onClose }: ShareCardProps) {
                       type="monotone"
                       dataKey="ratio"
                       stroke="var(--accent)"
-                      strokeWidth={3}
+                      strokeWidth={2}
                       dot={false}
                       isAnimationActive={false}
                     />

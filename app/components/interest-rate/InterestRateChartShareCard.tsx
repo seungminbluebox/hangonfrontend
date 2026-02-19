@@ -177,14 +177,14 @@ export function InterestRateChartShareCard({
                         type="monotone"
                         dataKey="us"
                         stroke="#3b82f6"
-                        strokeWidth={3}
+                        strokeWidth={2}
                         dot={false}
                       />
                       <Line
                         type="monotone"
-                        dataKey="kr"
-                        stroke="#10b981"
-                        strokeWidth={3}
+                        dataKey="fed"
+                        stroke="#f59e0b"
+                        strokeWidth={2}
                         dot={false}
                       />
                     </LineChart>

@@ -435,7 +435,7 @@ export function MarketCorrelationTracker() {
                 type="monotone"
                 dataKey="correlation_value"
                 stroke="url(#lineGradient)"
-                strokeWidth={4}
+                strokeWidth={2}
                 fill="url(#corrGradient)"
                 animationDuration={1500}
                 baseLine={0.2}

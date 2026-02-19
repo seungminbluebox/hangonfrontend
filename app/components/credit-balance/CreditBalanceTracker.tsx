@@ -373,7 +373,7 @@ export function CreditBalanceTracker() {
                     type="monotone"
                     dataKey="total"
                     stroke="var(--accent)"
-                    strokeWidth={3}
+                    strokeWidth={2}
                     dot={false}
                   />
                 </ComposedChart>

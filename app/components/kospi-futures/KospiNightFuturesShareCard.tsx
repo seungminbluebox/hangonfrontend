@@ -235,7 +235,7 @@ export function KospiNightFuturesShareCard({
                               type="monotone"
                               dataKey="value"
                               stroke={isUp ? "#ef4444" : "#3b82f6"}
-                              strokeWidth={3}
+                              strokeWidth={2}
                               fillOpacity={1}
                               fill="url(#colorValue)"
                               dot={false}
