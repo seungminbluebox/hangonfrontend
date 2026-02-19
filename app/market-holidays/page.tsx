@@ -2,6 +2,7 @@ import React from "react";
 import { Metadata } from "next";
 import { MarketHolidays } from "../components/holidays/MarketHolidays";
 import { BackButton } from "../components/layout/BackButton";
+import { Clock } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "휴장 일정 | Hang on!",
@@ -14,8 +15,14 @@ export default function MarketHolidaysPage() {
   return (
     <main className="min-h-screen pb-20">
       <div className="max-w-2xl mx-auto px-4 pt-6 md:pt-32">
-        <div className="mb-6 md:mb-10">
+        <div className="mb-0 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <BackButton />
+          <div className="flex items-center gap-1.5 px-3 py-1 bg-secondary/10 rounded-xl w-fit">
+            <Clock className="w-3 h-3 text-text-muted/40" />
+            <span className="text-[10px] font-medium text-text-muted/50 tracking-tight">
+              매월 1일경 정기적으로 갱신됩니다.
+            </span>
+          </div>
         </div>
         <MarketHolidays />
       </div>

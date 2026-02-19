@@ -1,6 +1,7 @@
 import { FearGreedIndex } from "../components/fear-greed/FearGreedIndex";
 import { Metadata } from "next";
 import { BackButton } from "../components/layout/BackButton";
+import { Clock } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "코스피 공포와 탐욕 지수 분석",
@@ -10,11 +11,17 @@ export const metadata: Metadata = {
 export default function KospiFearGreedPage() {
   return (
     <main className="min-h-screen bg-background text-foreground max-w-6xl mx-auto px-2 sm:px-8 pb-20">
-      <div className="pt-6 md:pt-32">
+      <div className="pt-6 md:pt-32 flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-0">
         <BackButton />
+        <div className="flex items-center gap-1.5 px-3 py-1 bg-secondary/10 rounded-xl w-fit">
+          <Clock className="w-3 h-3 text-text-muted/40" />
+          <span className="text-[10px] font-medium text-text-muted/50 tracking-tight">
+            한국 정규시장 마감 이후 업데이트 (약 오후 4~5시)
+          </span>
+        </div>
       </div>
 
-      <div className="pt-2 sm:pt-5">
+      <div className="pt-0">
         <FearGreedIndex type="kospi" />
 
         <div className="mt-5 pt-10 border-t border-border-subtle/50">

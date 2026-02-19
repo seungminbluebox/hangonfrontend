@@ -12,6 +12,7 @@ import {
   Play,
   Pause,
   Volume2,
+  Clock,
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -120,8 +121,14 @@ export function ReportViewer({ report }: { report: DailyReport }) {
   return (
     <main className="max-w-4xl mx-auto px-4 sm:px-6 py-4 md:py-20 relative">
       {/* 상단 네비게이션 및 요약 버튼 */}
-      <div className="mb-6 md:mb-10">
+      <div className="mb-0 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <BackButton className="mb-0" />
+        <div className="flex items-center gap-1.5 px-3 py-1 bg-secondary/5 rounded-xl w-fit">
+          <Clock className="w-3 h-3 text-text-muted/30" />
+          <span className="text-[10px] font-medium text-text-muted/40 tracking-tight">
+            매일 오전 8~9시경 새로운 리포트가 업데이트됩니다.
+          </span>
+        </div>
       </div>
 
       {/* 요약 패널 (Show/Hide) */}

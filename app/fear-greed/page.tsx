@@ -1,6 +1,7 @@
 import { FearGreedIndex } from "../components/fear-greed/FearGreedIndex";
 import { Metadata } from "next";
 import { BackButton } from "../components/layout/BackButton";
+import { Clock } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "공포와 탐욕 지수 분석",
@@ -13,11 +14,17 @@ export const revalidate = 3600;
 export default function FearGreedPage() {
   return (
     <main className="min-h-screen bg-background text-foreground max-w-6xl mx-auto px-2 sm:px-8 pb-20">
-      <div className="pt-6 md:pt-32">
+      <div className="pt-6 md:pt-32 flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-0">
         <BackButton />
+        <div className="flex items-center gap-1.5 px-3 py-1 bg-secondary/10 rounded-xl w-fit">
+          <Clock className="w-3 h-3 text-text-muted/40" />
+          <span className="text-[10px] font-medium text-text-muted/50 tracking-tight">
+            미국 정규시장 마감 이후 업데이트 (약 오전 7~8시)
+          </span>
+        </div>
       </div>
 
-      <div className="pt-2 sm:pt-5">
+      <div className="pt-0">
         <FearGreedIndex />
 
         {/* 설명 섹션을 하단으로 이동 */}

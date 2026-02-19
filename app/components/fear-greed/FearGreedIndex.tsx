@@ -171,7 +171,6 @@ export function FearGreedIndex({
             </h2>
             <span className="text-[10px] font-bold text-foreground/30 leading-none">
               {lastCheckTime} 업데이트됨
-              <br />장 마감 시각에 업데이트됩니다.
             </span>
           </div>
         </div>
