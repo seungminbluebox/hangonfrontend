@@ -182,8 +182,8 @@ export function InterestRateChartShareCard({
                       />
                       <Line
                         type="monotone"
-                        dataKey="fed"
-                        stroke="#f59e0b"
+                        dataKey="kr"
+                        stroke="#10b981"
                         strokeWidth={2}
                         dot={false}
                       />
