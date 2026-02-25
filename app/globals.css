@@ -1,5 +1,6 @@
 /* app/globals.css */
 @import "tailwindcss";
+@variant dark (&:where(.dark, .dark *));
 @plugin "@tailwindcss/typography";
 
 /* 1. 기본 라이트 모드 변수 정의 */

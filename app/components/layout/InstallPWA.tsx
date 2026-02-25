@@ -9,6 +9,11 @@ export function InstallPWA() {
   const [isIOS, setIsIOS] = useState(false);
 
   useEffect(() => {
+    // 0. 서비스 워커 등록 (PWA 필수 조건)
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js").catch(() => {});
+    }
+
     // 1. 이미 설치되었는지 확인
     const isStandalone =
       window.matchMedia("(display-mode: standalone)").matches ||
@@ -17,10 +22,10 @@ export function InstallPWA() {
 
     if (isStandalone) return;
 
-    // 2. 닫은 기록 확인 (7일 동안 묻지 않음)
+    // 2. 닫은 기록 확인 (24시간 동안 묻지 않음)
     const lastDismissed = localStorage.getItem("hangon-pwa-last-dismissed");
     const now = Date.now();
-    if (lastDismissed && now - parseInt(lastDismissed) < 604800000) {
+    if (lastDismissed && now - parseInt(lastDismissed) < 86400000) {
       return;
     }
 
@@ -32,11 +37,19 @@ export function InstallPWA() {
     const handler = (e: any) => {
       e.preventDefault();
       setDeferredPrompt(e);
+      (window as any).deferredPrompt = e; // 전역 객체에도 백업
       // 페이지 로드 3초 후 슬그머니 보여줌
       setTimeout(() => setIsVisible(true), 3000);
     };
 
     window.addEventListener("beforeinstallprompt", handler);
+    // 커스텀 이벤트 리스너 추가 (layout.tsx에서 발생시키는 경우 대비)
+    window.addEventListener("pwa-prompt-ready", () => {
+      if ((window as any).deferredPrompt) {
+        setDeferredPrompt((window as any).deferredPrompt);
+        setTimeout(() => setIsVisible(true), 3000);
+      }
+    });
 
     // iOS는 이벤트가 없으므로 별도 트리거
     if (checkIOS) {
@@ -53,22 +66,50 @@ export function InstallPWA() {
   }, []);
 
   const handleInstallClick = async () => {
-    if (isIOS) {
+    // InstallButton.tsx와 동일한 로직 구현
+    const checkIOS =
+      /iPhone|iPad|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+
+    if (checkIOS) {
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "Hang on! | 글로벌 경제 1분 요약",
+            url: window.location.href,
+          });
+          setIsVisible(false);
+          return;
+        } catch (err) {
+          if ((err as Error).name !== "AbortError") {
+            console.error(err);
+          } else {
+            return;
+          }
+        }
+      }
+
       alert(
-        "아이폰은 하단 '공유' 버튼 클릭 후 '홈 화면에 추가'를 선택해 주세요! 📱",
+        "아이폰(iOS)에서 앱으로 설치하려면:\n\n1. Safari 하단 바 가운데의 '공유' 버튼을 누르세요.\n2. 메뉴를 아래로 내려 '홈 화면에 추가'를 선택해 주세요! 📱",
       );
       setIsVisible(false);
       return;
     }
 
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === "accepted") {
-        setDeferredPrompt(null);
-      }
+    const prompt = deferredPrompt || (window as any).deferredPrompt;
+
+    if (!prompt) {
+      alert("브라우저 메뉴에서 '앱 설치'를 선택해 주세요!");
       setIsVisible(false);
+      return;
     }
+
+    prompt.prompt();
+    const { outcome } = await prompt.userChoice;
+    if (outcome === "accepted") {
+      setDeferredPrompt(null);
+      (window as any).deferredPrompt = null;
+    }
+    setIsVisible(false);
   };
 
   const handleClose = () => {
@@ -79,38 +120,32 @@ export function InstallPWA() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-24 left-4 right-4 z-[150] md:left-auto md:right-8 md:bottom-8 md:w-[320px] animate-in slide-in-from-bottom-5 duration-500 pointer-events-none">
-      <div className="bg-card/95 backdrop-blur-2xl border border-border-subtle p-4 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.2)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center gap-4 pointer-events-auto">
-        {/* 앱 아이콘 느낌의 영역 */}
-        <div className="w-12 h-12 bg-accent rounded-2xl flex items-center justify-center shrink-0 shadow-lg shadow-accent/20">
-          <Smartphone className="w-6 h-6 text-white" />
+    <div className="fixed bottom-24 left-4 right-4 z-[150] md:left-auto md:right-8 md:bottom-8 md:w-[280px] animate-in slide-in-from-bottom-8 duration-700 pointer-events-none">
+      <div className="bg-[#1a1c1e] dark:bg-white p-2.5 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.4)] dark:shadow-[0_20px_40px_rgba(0,0,0,0.1)] flex items-center gap-3 pointer-events-auto relative border border-white/5 dark:border-gray-100 group">
+        <button
+          onClick={handleClose}
+          className="absolute -top-2 -right-2 bg-[#1a1c1e] dark:bg-white border border-white/10 dark:border-gray-100 rounded-full p-1 text-white/50 dark:text-gray-400 hover:text-white dark:hover:text-gray-900 transition-colors shadow-md"
+        >
+          <X className="w-3 h-3" />
+        </button>
+
+        {/* 앱 아이콘 - 더 작고 심플하게 */}
+        <div className="w-9 h-9 bg-accent rounded-xl flex items-center justify-center shrink-0 shadow-sm">
+          <Smartphone className="w-5 h-5 text-white stroke-[2.5px]" />
         </div>
 
         <div className="flex-1 min-w-0">
-          <h4 className="text-[14px] font-black text-foreground leading-tight">
-            Hang on! 앱 설치
+          <h4 className="text-[13px] font-black tracking-tight leading-none text-white dark:text-gray-900">
+            {isIOS ? "앱으로 보기" : "hang on! 앱 설치"}
           </h4>
-          <p className="text-[11px] text-text-muted mt-0.5 leading-tight truncate">
-            {isIOS
-              ? "홈 화면에 추가하고 편하게 보세요"
-              : "홈 화면에 추가하여 바로 확인"}
-          </p>
         </div>
 
-        <div className="flex flex-col gap-1.5 shrink-0">
-          <button
-            onClick={handleInstallClick}
-            className="bg-accent text-white px-4 py-2 rounded-xl text-[12px] font-black active:scale-95 transition-all"
-          >
-            설치
-          </button>
-          <button
-            onClick={handleClose}
-            className="text-text-muted text-[11px] font-bold py-1 hover:text-foreground transition-colors text-center"
-          >
-            나중에
-          </button>
-        </div>
+        <button
+          onClick={handleInstallClick}
+          className="bg-accent text-white px-3.5 py-1.5 rounded-lg text-[12px] font-black hover:bg-blue-600 active:scale-95 transition-all shrink-0"
+        >
+          {isIOS ? "열기" : "설치"}
+        </button>
       </div>
     </div>
   );
