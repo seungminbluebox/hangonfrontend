@@ -151,6 +151,7 @@ export default function RootLayout({
       {/* {GTM_ID && <GoogleTagManager gtmId={GTM_ID} />} */}
       <body className="font-sans antialiased text-[15px] tracking-tight">
         <Providers>
+          <InstallPWA />
           <Navigation />
           <div className="pt-28 pb-20 md:pt-0 md:pb-0">{children}</div>
           <AudioControlBar />

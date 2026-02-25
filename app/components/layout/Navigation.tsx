@@ -85,14 +85,14 @@ export function Navigation() {
       });
     }
 
-    // 팁은 2초 뒤에 표시
+    /* 
+    // New PWA banner in layout.tsx handles this more prominently
     const timer = setTimeout(() => {
       setShowTips(true);
-      // 8초 뒤에 자동으로 숨김
       setTimeout(() => setShowTips(false), 8000);
     }, 2000);
-
     return () => clearTimeout(timer);
+    */
   }, []);
 
   // 첫 방문 시 메뉴 힌트 표시 (기존 로직 유지)
@@ -555,16 +555,6 @@ export function Navigation() {
             <div className="flex lg:hidden items-center gap-2">
               <div className="relative">
                 <InstallButton />
-                {!isStandalone && showTips && (
-                  <div className="absolute top-full mt-3 right-0 z-50 animate-in fade-in slide-in-from-top-2 duration-700">
-                    <div className="bg-accent text-white text-[10px] py-2 px-3 rounded-xl whitespace-nowrap shadow-[0_10px_25px_rgba(37,99,235,0.4)] relative font-black tracking-tight animate-bounce-subtle">
-                      {isIOS
-                        ? "앱 설치 : 공유 버튼 누르고 '홈 화면에 추가' 클릭! 📱"
-                        : "앱으로 설치하고 더 편하게 보세요! 📱"}
-                      <div className="absolute bottom-full right-3.5 -mb-1 w-2 h-2 bg-accent rotate-45"></div>
-                    </div>
-                  </div>
-                )}
               </div>
               <div className="relative">
                 <NotificationManager />
