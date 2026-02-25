@@ -22,10 +22,13 @@ export function InstallPWA() {
 
     if (isStandalone) return;
 
-    // 2. 닫은 기록 확인 (24시간 동안 묻지 않음)
+    // 2. 닫은 기록 확인 (24시간 동안 절대 묻지 않음)
     const lastDismissed = localStorage.getItem("hangon-pwa-last-dismissed");
     const now = Date.now();
-    if (lastDismissed && now - parseInt(lastDismissed) < 86400000) {
+
+    // 만약 기록이 있고, 현재 시간이 기록된 시간 + 24시간보다 작으면 노출 안함
+    if (lastDismissed && now < parseInt(lastDismissed) + 86400000) {
+      setIsVisible(false);
       return;
     }
 
@@ -37,23 +40,43 @@ export function InstallPWA() {
     const handler = (e: any) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      (window as any).deferredPrompt = e; // 전역 객체에도 백업
-      // 페이지 로드 3초 후 슬그머니 보여줌
+      (window as any).deferredPrompt = e;
+
+      // handler 내에서도 다시 한번 체크 (더 확실하게)
+      const dismissed = localStorage.getItem("hangon-pwa-last-dismissed");
+      const currentTime = Date.now();
+      if (dismissed && currentTime < parseInt(dismissed) + 86400000) {
+        return;
+      }
+
       setTimeout(() => setIsVisible(true), 3000);
     };
 
     window.addEventListener("beforeinstallprompt", handler);
-    // 커스텀 이벤트 리스너 추가 (layout.tsx에서 발생시키는 경우 대비)
     window.addEventListener("pwa-prompt-ready", () => {
       if ((window as any).deferredPrompt) {
         setDeferredPrompt((window as any).deferredPrompt);
+
+        const dismissed = localStorage.getItem("hangon-pwa-last-dismissed");
+        const currentTime = Date.now();
+        if (dismissed && currentTime < parseInt(dismissed) + 86400000) {
+          return;
+        }
+
         setTimeout(() => setIsVisible(true), 3000);
       }
     });
 
     // iOS는 이벤트가 없으므로 별도 트리거
     if (checkIOS) {
-      setTimeout(() => setIsVisible(true), 4000);
+      setTimeout(() => {
+        const dismissed = localStorage.getItem("hangon-pwa-last-dismissed");
+        const currentTime = Date.now();
+        if (dismissed && currentTime < parseInt(dismissed) + 86400000) {
+          return;
+        }
+        setIsVisible(true);
+      }, 4000);
     }
 
     // 초기값 확인 (layout.tsx에서 캡처한 경우)
