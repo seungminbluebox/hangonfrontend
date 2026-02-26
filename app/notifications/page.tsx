@@ -19,6 +19,7 @@ import {
   Inbox,
   Moon,
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "../../lib/supabase";
 import { BackButton } from "../components/layout/BackButton";
 
@@ -410,20 +411,6 @@ export default function NotificationSettingsPage() {
                 </p>
               </div>
             </div>
-            {savingStatus === "saving" && (
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-accent/10 rounded-full animate-pulse">
-                <Loader2 className="w-3 h-3 text-accent animate-spin" />
-                <span className="text-[10px] font-black text-accent uppercase">
-                  Saving...
-                </span>
-              </div>
-            )}
-            {savingStatus === "saved" && (
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-green-500/10 rounded-full text-green-500">
-                <Check className="w-3 h-3" />
-                <span className="text-[10px] font-black uppercase">Saved!</span>
-              </div>
-            )}
           </div>
 
           {permissionState === "denied" ? (
@@ -671,6 +658,66 @@ export default function NotificationSettingsPage() {
           )}
         </div>
       </div>
+
+      {/* Real-style Top Notification Toast */}
+      <AnimatePresence mode="wait">
+        {(savingStatus === "saving" || savingStatus === "saved") && (
+          <motion.div
+            key={savingStatus}
+            initial={{ opacity: 0, y: -40, x: "-50%", scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, x: "-50%", scale: 1 }}
+            exit={{ opacity: 0, y: -20, x: "-50%", scale: 0.95 }}
+            transition={{
+              type: "spring",
+              damping: 20,
+              stiffness: 300,
+              opacity: { duration: 0.2 },
+            }}
+            className="fixed top-24 left-1/2 z-[100] w-[92%] max-w-md px-4"
+          >
+            <div
+              className={`
+              backdrop-blur-2xl shadow-[0_30px_70px_rgba(0,0,0,0.15)] rounded-3xl p-5 flex items-center gap-4 border-2
+              ${
+                savingStatus === "saving"
+                  ? "bg-zinc-100/90 border-accent/40 text-zinc-900"
+                  : "bg-zinc-100/90 border-green-600/40 text-zinc-900"
+              }
+            `}
+            >
+              <div
+                className={`p-2.5 rounded-2xl shrink-0 border-2 ${
+                  savingStatus === "saving"
+                    ? "bg-accent/10 border-accent/20"
+                    : "bg-green-600/10 border-green-600/20"
+                }`}
+              >
+                {savingStatus === "saving" ? (
+                  <Loader2 className="w-6 h-6 text-accent animate-spin" />
+                ) : (
+                  <Check className="w-6 h-6 text-green-600" />
+                )}
+              </div>
+              <div className="flex flex-col min-w-0 pointer-events-none">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[10px] font-black uppercase tracking-[0.15em] text-zinc-500">
+                    System Message
+                  </span>
+                  <div className="w-1 h-1 rounded-full bg-zinc-300" />
+                  <span className="text-[10px] font-bold text-zinc-400">
+                    just now
+                  </span>
+                </div>
+                <p className="text-sm font-bold leading-tight tracking-tight text-zinc-800">
+                  {savingStatus === "saving"
+                    ? "설정 사항을 적용 중..."
+                    : "변경 사항이 저장되었습니다."}
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }
