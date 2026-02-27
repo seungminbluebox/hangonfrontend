@@ -68,8 +68,6 @@ self.addEventListener("push", (event) => {
     body: data.body || "새로운 소식이 도착했습니다!",
     icon: iconUrl,
     badge: badgeUrl,
-    // tag를 아예 제거(undefined)하거나 항상 유니크한 값을 주어 쌓이도록 보장
-    tag: "hangon-" + Date.now(), // 현재 시간을 추가해 항상 새로운 알림으로 처리
     data: {
       url: data.url || "/",
     },
