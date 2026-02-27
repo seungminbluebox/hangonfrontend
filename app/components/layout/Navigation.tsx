@@ -240,7 +240,7 @@ export function Navigation() {
       category: "global",
     },
     {
-      name: "휴장 일정",
+      name: "휴장일정",
       href: "/market-holidays",
       icon: Coffee,
       desc: "한/미 증시 휴장일 및 조기 종료",
@@ -256,8 +256,8 @@ export function Navigation() {
     main: "메인",
     domestic: "국내",
     us: "미국",
-    global: "글로벌",
-    earnings: "일정",
+    global: "한미공통",
+    earnings: "휴장일정",
   };
 
   return (
@@ -288,67 +288,7 @@ export function Navigation() {
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-4 xl:gap-8">
               <div className="flex items-center gap-1.5 bg-secondary/30 p-1 rounded-2xl border border-border-subtle/50">
-                {/* 1. 주요 소식 (Dropdown) */}
-                <div
-                  className="relative group h-full"
-                  onMouseEnter={() => setActiveDropdown("news")}
-                  onMouseLeave={() => setActiveDropdown(null)}
-                >
-                  <button
-                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
-                      ["/", "/news/daily-report", "/live"].includes(pathname)
-                        ? "text-accent"
-                        : "text-text-muted hover:text-foreground hover:bg-background/40"
-                    }`}
-                  >
-                    <LayoutDashboard className="w-4 h-4" />
-                    <span>주요 소식</span>
-                    <ChevronDown
-                      className={`w-3.5 h-3.5 transition-transform duration-300 ${
-                        activeDropdown === "news" ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
-
-                  {/* Dropdown Menu */}
-                  <div
-                    className={`absolute top-full left-0 pt-2 w-64 transition-all duration-300 z-50 ${
-                      activeDropdown === "news"
-                        ? "opacity-100 translate-y-0"
-                        : "opacity-0 translate-y-2 pointer-events-none"
-                    }`}
-                  >
-                    <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1 overflow-hidden">
-                      {navLinks.slice(0, 3).map((link) => {
-                        const Icon = link.icon;
-                        return (
-                          <Link
-                            key={link.name}
-                            href={link.href}
-                            onClick={handleLinkClick}
-                            className={`flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-bold transition-all ${
-                              pathname === link.href
-                                ? "bg-accent/10 text-accent"
-                                : "hover:bg-secondary/50 text-text-muted hover:text-foreground"
-                            }`}
-                          >
-                            <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
-                              <Icon className="w-4 h-4 text-accent" />
-                            </div>
-                            <div className="flex flex-col overflow-hidden">
-                              <span className="truncate">{link.name}</span>
-                              <span className="text-[10px] opacity-40 font-medium truncate mt-0.5">
-                                {link.desc}
-                              </span>
-                            </div>
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-
-                {/* 2. 국내 증시 (Dropdown) */}
+                {/* 1. 국내 */}
                 <div
                   className="relative group h-full"
                   onMouseEnter={() => setActiveDropdown("domestic")}
@@ -356,18 +296,13 @@ export function Navigation() {
                 >
                   <button
                     className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
-                      [
-                        "/kospi-fear-greed",
-                        "/money-flow/domestic",
-                        "/credit-balance",
-                        "/kospi-night-futures",
-                      ].includes(pathname)
+                      currentCategory === "domestic"
                         ? "text-domestic"
                         : "text-text-muted hover:text-foreground hover:bg-background/40"
                     }`}
                   >
                     <Flag className="w-4 h-4" />
-                    <span>국내 증시</span>
+                    <span>국내</span>
                     <ChevronDown
                       className={`w-3.5 h-3.5 transition-transform duration-300 ${
                         activeDropdown === "domestic" ? "rotate-180" : ""
@@ -384,36 +319,38 @@ export function Navigation() {
                     }`}
                   >
                     <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1 overflow-hidden">
-                      {navLinks.slice(3, 7).map((link) => {
-                        const Icon = link.icon;
-                        return (
-                          <Link
-                            key={link.name}
-                            href={link.href}
-                            onClick={handleLinkClick}
-                            className={`flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-bold transition-all ${
-                              pathname === link.href
-                                ? "bg-domestic/10 text-domestic"
-                                : "hover:bg-secondary/50 text-text-muted hover:text-foreground"
-                            }`}
-                          >
-                            <div className="w-8 h-8 rounded-lg bg-domestic/10 flex items-center justify-center shrink-0">
-                              <Icon className="w-4 h-4 text-domestic" />
-                            </div>
-                            <div className="flex flex-col overflow-hidden">
-                              <span className="truncate">{link.name}</span>
-                              <span className="text-[10px] opacity-40 font-medium truncate mt-0.5">
-                                {link.desc}
-                              </span>
-                            </div>
-                          </Link>
-                        );
-                      })}
+                      {navLinks
+                        .filter((l) => l.category === "domestic")
+                        .map((link) => {
+                          const Icon = link.icon;
+                          return (
+                            <Link
+                              key={link.name}
+                              href={link.href}
+                              onClick={handleLinkClick}
+                              className={`flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-bold transition-all ${
+                                pathname === link.href
+                                  ? "bg-domestic/10 text-domestic"
+                                  : "hover:bg-secondary/50 text-text-muted hover:text-foreground"
+                              }`}
+                            >
+                              <div className="w-8 h-8 rounded-lg bg-domestic/10 flex items-center justify-center shrink-0">
+                                <Icon className="w-4 h-4 text-domestic" />
+                              </div>
+                              <div className="flex flex-col overflow-hidden">
+                                <span className="truncate">{link.name}</span>
+                                <span className="text-[10px] opacity-40 font-medium truncate mt-0.5">
+                                  {link.desc}
+                                </span>
+                              </div>
+                            </Link>
+                          );
+                        })}
                     </div>
                   </div>
                 </div>
 
-                {/* 3. 미국 증시 (Dropdown) */}
+                {/* 2. 미국 */}
                 <div
                   className="relative group h-full"
                   onMouseEnter={() => setActiveDropdown("us")}
@@ -421,19 +358,13 @@ export function Navigation() {
                 >
                   <button
                     className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
-                      [
-                        "/fear-greed",
-                        "/money-flow/us",
-                        "/nasdaq-futures",
-                        "/put-call-ratio",
-                        "/dollar-index",
-                      ].includes(pathname)
+                      currentCategory === "us"
                         ? "text-us"
                         : "text-text-muted hover:text-foreground hover:bg-background/40"
                     }`}
                   >
                     <DollarSign className="w-4 h-4" />
-                    <span>미국 증시</span>
+                    <span>미국</span>
                     <ChevronDown
                       className={`w-3.5 h-3.5 transition-transform duration-300 ${
                         activeDropdown === "us" ? "rotate-180" : ""
@@ -450,36 +381,100 @@ export function Navigation() {
                     }`}
                   >
                     <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1">
-                      {navLinks.slice(7, 12).map((link) => {
-                        const Icon = link.icon;
-                        return (
-                          <Link
-                            key={link.name}
-                            href={link.href}
-                            onClick={handleLinkClick}
-                            className={`flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-bold transition-all ${
-                              pathname === link.href
-                                ? "bg-us/10 text-us"
-                                : "hover:bg-secondary/50 text-text-muted hover:text-foreground"
-                            }`}
-                          >
-                            <div className="w-8 h-8 rounded-lg bg-us/10 flex items-center justify-center shrink-0">
-                              <Icon className="w-4 h-4 text-us" />
-                            </div>
-                            <div className="flex flex-col overflow-hidden">
-                              <span className="truncate">{link.name}</span>
-                              <span className="text-[10px] opacity-40 font-medium truncate mt-0.5">
-                                {link.desc}
-                              </span>
-                            </div>
-                          </Link>
-                        );
-                      })}
+                      {navLinks
+                        .filter((l) => l.category === "us")
+                        .map((link) => {
+                          const Icon = link.icon;
+                          return (
+                            <Link
+                              key={link.name}
+                              href={link.href}
+                              onClick={handleLinkClick}
+                              className={`flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-bold transition-all ${
+                                pathname === link.href
+                                  ? "bg-us/10 text-us"
+                                  : "hover:bg-secondary/50 text-text-muted hover:text-foreground"
+                              }`}
+                            >
+                              <div className="w-8 h-8 rounded-lg bg-us/10 flex items-center justify-center shrink-0">
+                                <Icon className="w-4 h-4 text-us" />
+                              </div>
+                              <div className="flex flex-col overflow-hidden">
+                                <span className="truncate">{link.name}</span>
+                                <span className="text-[10px] opacity-40 font-medium truncate mt-0.5">
+                                  {link.desc}
+                                </span>
+                              </div>
+                            </Link>
+                          );
+                        })}
                     </div>
                   </div>
                 </div>
 
-                {/* 4. 글로벌 매크로 (Dropdown) */}
+                {/* 3. 홈 */}
+                <div
+                  className="relative group h-full"
+                  onMouseEnter={() => setActiveDropdown("news")}
+                  onMouseLeave={() => setActiveDropdown(null)}
+                >
+                  <button
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
+                      currentCategory === "main"
+                        ? "text-accent"
+                        : "text-text-muted hover:text-foreground hover:bg-background/40"
+                    }`}
+                  >
+                    <Home className="w-4 h-4" />
+                    <span>홈</span>
+                    <ChevronDown
+                      className={`w-3.5 h-3.5 transition-transform duration-300 ${
+                        activeDropdown === "news" ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  <div
+                    className={`absolute top-full left-1/2 -translate-x-1/2 pt-2 w-64 transition-all duration-300 z-50 ${
+                      activeDropdown === "news"
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 translate-y-2 pointer-events-none"
+                    }`}
+                  >
+                    <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1 overflow-hidden">
+                      {navLinks
+                        .filter((l) => l.category === "main")
+                        .map((link) => {
+                          const Icon = link.icon;
+                          return (
+                            <Link
+                              key={link.name}
+                              href={link.href}
+                              onClick={handleLinkClick}
+                              className={`flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-bold transition-all ${
+                                pathname === link.href
+                                  ? "bg-accent/10 text-accent"
+                                  : "hover:bg-secondary/50 text-text-muted hover:text-foreground"
+                              }`}
+                            >
+                              <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
+                                <Icon className="w-4 h-4 text-accent" />
+                              </div>
+                              <div className="flex flex-col overflow-hidden">
+                                <span className="truncate">{link.name}</span>
+                                <span className="text-[10px] opacity-40 font-medium truncate mt-0.5">
+                                  {link.desc}
+                                </span>
+                              </div>
+                            </Link>
+                          );
+                        })}
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4. 한미 공통 */}
                 <div
                   className="relative group h-full"
                   onMouseEnter={() => setActiveDropdown("macro")}
@@ -487,11 +482,7 @@ export function Navigation() {
                 >
                   <button
                     className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
-                      [
-                        "/currency-desk",
-                        "/interest-rate",
-                        "/money-flow/safe",
-                      ].includes(pathname)
+                      currentCategory === "global"
                         ? "text-common"
                         : "text-text-muted hover:text-foreground hover:bg-background/40"
                     }`}
@@ -514,34 +505,50 @@ export function Navigation() {
                     }`}
                   >
                     <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1">
-                      {navLinks.slice(12).map((link) => {
-                        const Icon = link.icon;
-                        return (
-                          <Link
-                            key={link.name}
-                            href={link.href}
-                            onClick={handleLinkClick}
-                            className={`flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-bold transition-all ${
-                              pathname === link.href
-                                ? "bg-common/10 text-common"
-                                : "hover:bg-secondary/50 text-text-muted hover:text-foreground"
-                            }`}
-                          >
-                            <div className="w-8 h-8 rounded-lg bg-common/10 flex items-center justify-center shrink-0">
-                              <Icon className="w-4 h-4 text-common" />
-                            </div>
-                            <div className="flex flex-col overflow-hidden">
-                              <span className="truncate">{link.name}</span>
-                              <span className="text-[10px] opacity-40 font-medium truncate mt-0.5">
-                                {link.desc}
-                              </span>
-                            </div>
-                          </Link>
-                        );
-                      })}
+                      {navLinks
+                        .filter((l) => l.category === "global")
+                        .map((link) => {
+                          const Icon = link.icon;
+                          return (
+                            <Link
+                              key={link.name}
+                              href={link.href}
+                              onClick={handleLinkClick}
+                              className={`flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-bold transition-all ${
+                                pathname === link.href
+                                  ? "bg-common/10 text-common"
+                                  : "hover:bg-secondary/50 text-text-muted hover:text-foreground"
+                              }`}
+                            >
+                              <div className="w-8 h-8 rounded-lg bg-common/10 flex items-center justify-center shrink-0">
+                                <Icon className="w-4 h-4 text-common" />
+                              </div>
+                              <div className="flex flex-col overflow-hidden">
+                                <span className="truncate">{link.name}</span>
+                                <span className="text-[10px] opacity-40 font-medium truncate mt-0.5">
+                                  {link.desc}
+                                </span>
+                              </div>
+                            </Link>
+                          );
+                        })}
                     </div>
                   </div>
                 </div>
+
+                {/* 5. 휴장 */}
+                <Link
+                  href="/market-holidays"
+                  onClick={handleLinkClick}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${
+                    pathname === "/market-holidays"
+                      ? "text-accent"
+                      : "text-text-muted hover:text-foreground hover:bg-background/40"
+                  }`}
+                >
+                  <Coffee className="w-4 h-4" />
+                  <span>휴장일정</span>
+                </Link>
               </div>
               <div className="hidden xl:block w-px h-6 bg-border-subtle/50" />
               <div className="hidden lg:block">
@@ -633,13 +640,13 @@ export function Navigation() {
             },
             { name: "홈", href: "/", icon: Home, cat: "main" },
             {
-              name: "글로벌",
+              name: "한미공통",
               href: "/currency-desk",
               icon: Globe,
               cat: "global",
             },
             {
-              name: "일정",
+              name: "휴장일정",
               href: "/market-holidays",
               icon: Coffee,
               cat: "earnings",
@@ -770,54 +777,60 @@ export function Navigation() {
               Main Dashboard
             </h3>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(0, 3).map((link, index) => {
-                const Icon = link.icon;
-                return (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    onClick={handleLinkClick}
-                    className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-500 ${
-                      pathname === link.href
-                        ? "bg-accent text-white border-accent shadow-lg shadow-accent/25"
-                        : "bg-secondary/30 border-border-subtle/50"
-                    } ${
-                      isOpen
-                        ? "translate-x-0 opacity-100"
-                        : "translate-x-8 opacity-0"
-                    }`}
-                    style={{
-                      transitionDelay: isOpen ? `${index * 30}ms` : "0ms",
-                    }}
-                  >
-                    <div
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                        pathname === link.href ? "bg-white/20" : "bg-accent/10"
+              {navLinks
+                .filter((l) => l.category === "main")
+                .map((link, index) => {
+                  const Icon = link.icon;
+                  return (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      onClick={handleLinkClick}
+                      className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-500 ${
+                        pathname === link.href
+                          ? "bg-accent text-white border-accent shadow-lg shadow-accent/25"
+                          : "bg-secondary/30 border-border-subtle/50"
+                      } ${
+                        isOpen
+                          ? "translate-x-0 opacity-100"
+                          : "translate-x-8 opacity-0"
                       }`}
+                      style={{
+                        transitionDelay: isOpen ? `${index * 30}ms` : "0ms",
+                      }}
                     >
-                      <Icon
-                        className={`w-5 h-5 ${
-                          pathname === link.href ? "text-white" : "text-accent"
-                        }`}
-                      />
-                    </div>
-                    <div className="flex flex-col overflow-hidden">
-                      <span className="text-sm font-black tracking-tight truncate">
-                        {link.name}
-                      </span>
-                      <span
-                        className={`text-[10px] font-bold mt-0.5 truncate ${
+                      <div
+                        className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
                           pathname === link.href
-                            ? "text-white/60"
-                            : "text-foreground/40"
+                            ? "bg-white/20"
+                            : "bg-accent/10"
                         }`}
                       >
-                        {link.desc}
-                      </span>
-                    </div>
-                  </Link>
-                );
-              })}
+                        <Icon
+                          className={`w-5 h-5 ${
+                            pathname === link.href
+                              ? "text-white"
+                              : "text-accent"
+                          }`}
+                        />
+                      </div>
+                      <div className="flex flex-col overflow-hidden">
+                        <span className="text-sm font-black tracking-tight truncate">
+                          {link.name}
+                        </span>
+                        <span
+                          className={`text-[10px] font-bold mt-0.5 truncate ${
+                            pathname === link.href
+                              ? "text-white/60"
+                              : "text-foreground/40"
+                          }`}
+                        >
+                          {link.desc}
+                        </span>
+                      </div>
+                    </Link>
+                  );
+                })}
             </div>
           </div>
 
@@ -830,58 +843,62 @@ export function Navigation() {
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(3, 7).map((link, index) => {
-                const Icon = link.icon;
-                return (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    onClick={handleLinkClick}
-                    className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-500 ${
-                      pathname === link.href
-                        ? "bg-domestic text-white border-domestic shadow-lg shadow-domestic/25"
-                        : "bg-secondary/30 border-border-subtle/50"
-                    } ${
-                      isOpen
-                        ? "translate-x-0 opacity-100"
-                        : "translate-x-8 opacity-0"
-                    }`}
-                    style={{
-                      transitionDelay: isOpen ? `${(index + 3) * 30}ms` : "0ms",
-                    }}
-                  >
-                    <div
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+              {navLinks
+                .filter((l) => l.category === "domestic")
+                .map((link, index) => {
+                  const Icon = link.icon;
+                  return (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      onClick={handleLinkClick}
+                      className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-500 ${
                         pathname === link.href
-                          ? "bg-white/20"
-                          : "bg-domestic/10"
+                          ? "bg-domestic text-white border-domestic shadow-lg shadow-domestic/25"
+                          : "bg-secondary/30 border-border-subtle/50"
+                      } ${
+                        isOpen
+                          ? "translate-x-0 opacity-100"
+                          : "translate-x-8 opacity-0"
                       }`}
+                      style={{
+                        transitionDelay: isOpen
+                          ? `${(index + 3) * 30}ms`
+                          : "0ms",
+                      }}
                     >
-                      <Icon
-                        className={`w-5 h-5 ${
+                      <div
+                        className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
                           pathname === link.href
-                            ? "text-white"
-                            : "text-domestic"
-                        }`}
-                      />
-                    </div>
-                    <div className="flex flex-col overflow-hidden">
-                      <span className="text-sm font-black tracking-tight truncate">
-                        {link.name}
-                      </span>
-                      <span
-                        className={`text-[10px] font-bold mt-0.5 truncate ${
-                          pathname === link.href
-                            ? "text-white/60"
-                            : "text-foreground/40"
+                            ? "bg-white/20"
+                            : "bg-domestic/10"
                         }`}
                       >
-                        {link.desc}
-                      </span>
-                    </div>
-                  </Link>
-                );
-              })}
+                        <Icon
+                          className={`w-5 h-5 ${
+                            pathname === link.href
+                              ? "text-white"
+                              : "text-domestic"
+                          }`}
+                        />
+                      </div>
+                      <div className="flex flex-col overflow-hidden">
+                        <span className="text-sm font-black tracking-tight truncate">
+                          {link.name}
+                        </span>
+                        <span
+                          className={`text-[10px] font-bold mt-0.5 truncate ${
+                            pathname === link.href
+                              ? "text-white/60"
+                              : "text-foreground/40"
+                          }`}
+                        >
+                          {link.desc}
+                        </span>
+                      </div>
+                    </Link>
+                  );
+                })}
             </div>
           </div>
 
@@ -894,54 +911,58 @@ export function Navigation() {
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(7, 12).map((link, index) => {
-                const Icon = link.icon;
-                return (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    onClick={handleLinkClick}
-                    className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-500 ${
-                      pathname === link.href
-                        ? "bg-us text-white border-us shadow-lg shadow-us/25"
-                        : "bg-secondary/30 border-border-subtle/50"
-                    } ${
-                      isOpen
-                        ? "translate-x-0 opacity-100"
-                        : "translate-x-8 opacity-0"
-                    }`}
-                    style={{
-                      transitionDelay: isOpen ? `${(index + 8) * 30}ms` : "0ms",
-                    }}
-                  >
-                    <div
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                        pathname === link.href ? "bg-white/20" : "bg-us/10"
+              {navLinks
+                .filter((l) => l.category === "us")
+                .map((link, index) => {
+                  const Icon = link.icon;
+                  return (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      onClick={handleLinkClick}
+                      className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-500 ${
+                        pathname === link.href
+                          ? "bg-us text-white border-us shadow-lg shadow-us/25"
+                          : "bg-secondary/30 border-border-subtle/50"
+                      } ${
+                        isOpen
+                          ? "translate-x-0 opacity-100"
+                          : "translate-x-8 opacity-0"
                       }`}
+                      style={{
+                        transitionDelay: isOpen
+                          ? `${(index + 8) * 30}ms`
+                          : "0ms",
+                      }}
                     >
-                      <Icon
-                        className={`w-5 h-5 ${
-                          pathname === link.href ? "text-white" : "text-us"
-                        }`}
-                      />
-                    </div>
-                    <div className="flex flex-col overflow-hidden">
-                      <span className="text-sm font-black tracking-tight truncate">
-                        {link.name}
-                      </span>
-                      <span
-                        className={`text-[10px] font-bold mt-0.5 truncate ${
-                          pathname === link.href
-                            ? "text-white/60"
-                            : "text-foreground/40"
+                      <div
+                        className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                          pathname === link.href ? "bg-white/20" : "bg-us/10"
                         }`}
                       >
-                        {link.desc}
-                      </span>
-                    </div>
-                  </Link>
-                );
-              })}
+                        <Icon
+                          className={`w-5 h-5 ${
+                            pathname === link.href ? "text-white" : "text-us"
+                          }`}
+                        />
+                      </div>
+                      <div className="flex flex-col overflow-hidden">
+                        <span className="text-sm font-black tracking-tight truncate">
+                          {link.name}
+                        </span>
+                        <span
+                          className={`text-[10px] font-bold mt-0.5 truncate ${
+                            pathname === link.href
+                              ? "text-white/60"
+                              : "text-foreground/40"
+                          }`}
+                        >
+                          {link.desc}
+                        </span>
+                      </div>
+                    </Link>
+                  );
+                })}
             </div>
           </div>
 
@@ -954,56 +975,130 @@ export function Navigation() {
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {navLinks.slice(11).map((link, index) => {
-                const Icon = link.icon;
-                return (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    onClick={handleLinkClick}
-                    className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-500 ${
-                      pathname === link.href
-                        ? "bg-common text-white border-common shadow-lg shadow-common/25"
-                        : "bg-secondary/30 border-border-subtle/50"
-                    } ${
-                      isOpen
-                        ? "translate-x-0 opacity-100"
-                        : "translate-x-8 opacity-0"
-                    }`}
-                    style={{
-                      transitionDelay: isOpen
-                        ? `${(index + 12) * 30}ms`
-                        : "0ms",
-                    }}
-                  >
-                    <div
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                        pathname === link.href ? "bg-white/20" : "bg-common/10"
+              {navLinks
+                .filter((l) => l.category === "global")
+                .map((link, index) => {
+                  const Icon = link.icon;
+                  return (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      onClick={handleLinkClick}
+                      className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-500 ${
+                        pathname === link.href
+                          ? "bg-common text-white border-common shadow-lg shadow-common/25"
+                          : "bg-secondary/30 border-border-subtle/50"
+                      } ${
+                        isOpen
+                          ? "translate-x-0 opacity-100"
+                          : "translate-x-8 opacity-0"
                       }`}
+                      style={{
+                        transitionDelay: isOpen
+                          ? `${(index + 13) * 30}ms`
+                          : "0ms",
+                      }}
                     >
-                      <Icon
-                        className={`w-5 h-5 ${
-                          pathname === link.href ? "text-white" : "text-common"
-                        }`}
-                      />
-                    </div>
-                    <div className="flex flex-col overflow-hidden">
-                      <span className="text-sm font-black tracking-tight truncate">
-                        {link.name}
-                      </span>
-                      <span
-                        className={`text-[10px] font-bold mt-0.5 truncate ${
+                      <div
+                        className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
                           pathname === link.href
-                            ? "text-white/60"
-                            : "text-foreground/40"
+                            ? "bg-white/20"
+                            : "bg-common/10"
                         }`}
                       >
-                        {link.desc}
-                      </span>
-                    </div>
-                  </Link>
-                );
-              })}
+                        <Icon
+                          className={`w-5 h-5 ${
+                            pathname === link.href
+                              ? "text-white"
+                              : "text-common"
+                          }`}
+                        />
+                      </div>
+                      <div className="flex flex-col overflow-hidden">
+                        <span className="text-sm font-black tracking-tight truncate">
+                          {link.name}
+                        </span>
+                        <span
+                          className={`text-[10px] font-bold mt-0.5 truncate ${
+                            pathname === link.href
+                              ? "text-white/60"
+                              : "text-foreground/40"
+                          }`}
+                        >
+                          {link.desc}
+                        </span>
+                      </div>
+                    </Link>
+                  );
+                })}
+            </div>
+          </div>
+
+          {/* 카테고리 5: 휴장 */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 ml-1">
+              <Coffee className="w-3 h-3 text-accent/50" />
+              <h3 className="text-[13px] font-black text-text-muted/40 uppercase tracking-widest">
+                휴장
+              </h3>
+            </div>
+            <div className="grid grid-cols-1 gap-2">
+              {navLinks
+                .filter((l) => l.category === "earnings")
+                .map((link, index) => {
+                  const Icon = link.icon;
+                  return (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      onClick={handleLinkClick}
+                      className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-500 ${
+                        pathname === link.href
+                          ? "bg-accent text-white border-accent shadow-lg shadow-accent/25"
+                          : "bg-secondary/30 border-border-subtle/50"
+                      } ${
+                        isOpen
+                          ? "translate-x-0 opacity-100"
+                          : "translate-x-8 opacity-0"
+                      }`}
+                      style={{
+                        transitionDelay: isOpen
+                          ? `${(index + 17) * 30}ms`
+                          : "0ms",
+                      }}
+                    >
+                      <div
+                        className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                          pathname === link.href
+                            ? "bg-white/20"
+                            : "bg-accent/10"
+                        }`}
+                      >
+                        <Icon
+                          className={`w-5 h-5 ${
+                            pathname === link.href
+                              ? "text-white"
+                              : "text-accent"
+                          }`}
+                        />
+                      </div>
+                      <div className="flex flex-col overflow-hidden">
+                        <span className="text-sm font-black tracking-tight truncate">
+                          {link.name}
+                        </span>
+                        <span
+                          className={`text-[10px] font-bold mt-0.5 truncate ${
+                            pathname === link.href
+                              ? "text-white/60"
+                              : "text-foreground/40"
+                          }`}
+                        >
+                          {link.desc}
+                        </span>
+                      </div>
+                    </Link>
+                  );
+                })}
             </div>
           </div>
         </div>
