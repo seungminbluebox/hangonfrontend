@@ -68,14 +68,14 @@ self.addEventListener("push", (event) => {
     body: data.body || "새로운 소식이 도착했습니다!",
     icon: iconUrl,
     badge: badgeUrl,
-    tag: "hangon-push-notification", // Consistent tag to overwrite older notifications
+    // tag를 제거하거나 유니크한 값을 주어 알림이 쌓이도록 수정
+    // tag: "hangon-push-notification",
     renotify: true, // Vibrate/ring even if tag is same
     data: {
       url: data.url || "/",
     },
     vibrate: [100, 50, 100],
     requireInteraction: true,
-    // Android spec: Badge must be a transparent alpha-mask icon
   };
 
   event.waitUntil(
