@@ -1,6 +1,7 @@
 // Service Worker for PWA
-const CACHE_NAME = "hangon-cache-v3";
+const CACHE_NAME = "hangon-cache-v4";
 const ASSETS_TO_CACHE = [
+  "/",
   "/icon-192.png",
   "/icon-512.png",
   "/badge-72x72.png",
@@ -61,17 +62,20 @@ self.addEventListener("push", (event) => {
     }
   }
 
-  const iconUrl = new URL("/icon-192.png", self.location.origin).href;
-  const badgeUrl = new URL("/badge-72x72.png", self.location.origin).href;
+  const iconUrl = "/icon-192.png";
+  const badgeUrl = "/badge-72x72.png";
 
   const options = {
     body: data.body || "새로운 소식이 도착했습니다!",
     icon: iconUrl,
     badge: badgeUrl,
+    image: data.image || undefined, // 알림 내 대형 이미지 지원 (있을 경우)
     data: {
       url: data.url || "/",
     },
-    vibrate: [100, 50, 100],
+    vibrate: [200, 100, 200],
+    tag: data.tag || `hangon-notification-${Date.now()}`, // 알림 스태킹 보장
+    renotify: true, // 태그가 같더라도 다시 알림 (필요 시)
     requireInteraction: true,
   };
 
