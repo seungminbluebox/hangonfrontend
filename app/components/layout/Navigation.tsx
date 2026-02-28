@@ -288,7 +288,69 @@ export function Navigation() {
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-4 xl:gap-8">
               <div className="flex items-center gap-1.5 bg-secondary/30 p-1 rounded-2xl border border-border-subtle/50">
-                {/* 1. 국내 */}
+                {/* 1. 홈 */}
+                <div
+                  className="relative group h-full"
+                  onMouseEnter={() => setActiveDropdown("news")}
+                  onMouseLeave={() => setActiveDropdown(null)}
+                >
+                  <button
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
+                      currentCategory === "main"
+                        ? "text-accent"
+                        : "text-text-muted hover:text-foreground hover:bg-background/40"
+                    }`}
+                  >
+                    <Home className="w-4 h-4" />
+                    <span>홈</span>
+                    <ChevronDown
+                      className={`w-3.5 h-3.5 transition-transform duration-300 ${
+                        activeDropdown === "news" ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  <div
+                    className={`absolute top-full left-0 pt-2 w-64 transition-all duration-300 z-50 ${
+                      activeDropdown === "news"
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 translate-y-2 pointer-events-none"
+                    }`}
+                  >
+                    <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1 overflow-hidden">
+                      {navLinks
+                        .filter((l) => l.category === "main")
+                        .map((link) => {
+                          const Icon = link.icon;
+                          return (
+                            <Link
+                              key={link.name}
+                              href={link.href}
+                              onClick={handleLinkClick}
+                              className={`flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-bold transition-all ${
+                                pathname === link.href
+                                  ? "bg-accent/10 text-accent"
+                                  : "hover:bg-secondary/50 text-text-muted hover:text-foreground"
+                              }`}
+                            >
+                              <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
+                                <Icon className="w-4 h-4 text-accent" />
+                              </div>
+                              <div className="flex flex-col overflow-hidden">
+                                <span className="truncate">{link.name}</span>
+                                <span className="text-[10px] opacity-40 font-medium truncate mt-0.5">
+                                  {link.desc}
+                                </span>
+                              </div>
+                            </Link>
+                          );
+                        })}
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. 국내 */}
                 <div
                   className="relative group h-full"
                   onMouseEnter={() => setActiveDropdown("domestic")}
@@ -312,7 +374,7 @@ export function Navigation() {
 
                   {/* Dropdown Menu */}
                   <div
-                    className={`absolute top-full left-0 pt-2 w-56 transition-all duration-300 z-50 ${
+                    className={`absolute top-full left-1/2 -translate-x-1/2 pt-2 w-56 transition-all duration-300 z-50 ${
                       activeDropdown === "domestic"
                         ? "opacity-100 translate-y-0"
                         : "opacity-0 translate-y-2 pointer-events-none"
@@ -350,7 +412,7 @@ export function Navigation() {
                   </div>
                 </div>
 
-                {/* 2. 미국 */}
+                {/* 3. 미국 */}
                 <div
                   className="relative group h-full"
                   onMouseEnter={() => setActiveDropdown("us")}
@@ -374,7 +436,7 @@ export function Navigation() {
 
                   {/* Dropdown Menu */}
                   <div
-                    className={`absolute top-full left-0 pt-2 w-64 transition-all duration-300 z-50 ${
+                    className={`absolute top-full left-1/2 -translate-x-1/2 pt-2 w-64 transition-all duration-300 z-50 ${
                       activeDropdown === "us"
                         ? "opacity-100 translate-y-0"
                         : "opacity-0 translate-y-2 pointer-events-none"
@@ -398,68 +460,6 @@ export function Navigation() {
                             >
                               <div className="w-8 h-8 rounded-lg bg-us/10 flex items-center justify-center shrink-0">
                                 <Icon className="w-4 h-4 text-us" />
-                              </div>
-                              <div className="flex flex-col overflow-hidden">
-                                <span className="truncate">{link.name}</span>
-                                <span className="text-[10px] opacity-40 font-medium truncate mt-0.5">
-                                  {link.desc}
-                                </span>
-                              </div>
-                            </Link>
-                          );
-                        })}
-                    </div>
-                  </div>
-                </div>
-
-                {/* 3. 홈 */}
-                <div
-                  className="relative group h-full"
-                  onMouseEnter={() => setActiveDropdown("news")}
-                  onMouseLeave={() => setActiveDropdown(null)}
-                >
-                  <button
-                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
-                      currentCategory === "main"
-                        ? "text-accent"
-                        : "text-text-muted hover:text-foreground hover:bg-background/40"
-                    }`}
-                  >
-                    <Home className="w-4 h-4" />
-                    <span>홈</span>
-                    <ChevronDown
-                      className={`w-3.5 h-3.5 transition-transform duration-300 ${
-                        activeDropdown === "news" ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
-
-                  {/* Dropdown Menu */}
-                  <div
-                    className={`absolute top-full left-1/2 -translate-x-1/2 pt-2 w-64 transition-all duration-300 z-50 ${
-                      activeDropdown === "news"
-                        ? "opacity-100 translate-y-0"
-                        : "opacity-0 translate-y-2 pointer-events-none"
-                    }`}
-                  >
-                    <div className="bg-background/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl p-2 flex flex-col gap-1 overflow-hidden">
-                      {navLinks
-                        .filter((l) => l.category === "main")
-                        .map((link) => {
-                          const Icon = link.icon;
-                          return (
-                            <Link
-                              key={link.name}
-                              href={link.href}
-                              onClick={handleLinkClick}
-                              className={`flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-bold transition-all ${
-                                pathname === link.href
-                                  ? "bg-accent/10 text-accent"
-                                  : "hover:bg-secondary/50 text-text-muted hover:text-foreground"
-                              }`}
-                            >
-                              <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
-                                <Icon className="w-4 h-4 text-accent" />
                               </div>
                               <div className="flex flex-col overflow-hidden">
                                 <span className="truncate">{link.name}</span>
