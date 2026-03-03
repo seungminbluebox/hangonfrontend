@@ -44,11 +44,11 @@ export async function getKospiNightFuturesData(): Promise<MarketData | null> {
         minimumFractionDigits: 1,
       }),
       change:
-        (change > 0 ? "+" : "") +
+        (diff > 0 ? "+" : "") +
         change.toLocaleString(undefined, { minimumFractionDigits: 1 }),
       changePercent: (diff > 0 ? "+" : "") + diff.toFixed(2) + "%",
-      isUp: change > 0,
-      isDown: change < 0,
+      isUp: diff > 0,
+      isDown: diff < 0,
       history: history,
     };
   } catch (error) {
