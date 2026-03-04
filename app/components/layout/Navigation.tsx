@@ -327,6 +327,7 @@ export function Navigation() {
                             <Link
                               key={link.name}
                               href={link.href}
+                              prefetch={false}
                               onClick={handleLinkClick}
                               className={`flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-bold transition-all ${
                                 pathname === link.href
@@ -389,6 +390,7 @@ export function Navigation() {
                             <Link
                               key={link.name}
                               href={link.href}
+                              prefetch={false}
                               onClick={handleLinkClick}
                               className={`flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-bold transition-all ${
                                 pathname === link.href
@@ -451,6 +453,7 @@ export function Navigation() {
                             <Link
                               key={link.name}
                               href={link.href}
+                              prefetch={false}
                               onClick={handleLinkClick}
                               className={`flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-bold transition-all ${
                                 pathname === link.href
@@ -513,6 +516,7 @@ export function Navigation() {
                             <Link
                               key={link.name}
                               href={link.href}
+                              prefetch={false}
                               onClick={handleLinkClick}
                               className={`flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-bold transition-all ${
                                 pathname === link.href
@@ -539,6 +543,7 @@ export function Navigation() {
                 {/* 5. 휴장 */}
                 <Link
                   href="/market-holidays"
+                  prefetch={false}
                   onClick={handleLinkClick}
                   className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${
                     pathname === "/market-holidays"
@@ -602,6 +607,7 @@ export function Navigation() {
                 <Link
                   key={link.href}
                   href={link.href}
+                  prefetch={false}
                   onClick={handleLinkClick}
                   className={`flex items-center gap-2 px-3.5 py-2 rounded-xl whitespace-nowrap text-[11px] font-black transition-all duration-300 ${
                     isActive
@@ -668,6 +674,7 @@ export function Navigation() {
                   </div>
                   <Link
                     href={item.href}
+                    prefetch={false}
                     onClick={handleLinkClick}
                     className={`relative z-10 flex flex-col items-center gap-1 transition-all active:scale-90 ${
                       isActive ? "text-accent" : "text-text-muted"
@@ -699,6 +706,7 @@ export function Navigation() {
               <Link
                 key={item.name}
                 href={item.href}
+                prefetch={false}
                 onClick={handleLinkClick}
                 className={`flex flex-col items-center gap-1 transition-all active:scale-95 ${
                   isActive
@@ -785,6 +793,7 @@ export function Navigation() {
                     <Link
                       key={link.name}
                       href={link.href}
+                      prefetch={false}
                       onClick={handleLinkClick}
                       className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-500 ${
                         pathname === link.href
@@ -851,6 +860,7 @@ export function Navigation() {
                     <Link
                       key={link.name}
                       href={link.href}
+                      prefetch={false}
                       onClick={handleLinkClick}
                       className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-500 ${
                         pathname === link.href
@@ -919,6 +929,7 @@ export function Navigation() {
                     <Link
                       key={link.name}
                       href={link.href}
+                      prefetch={false}
                       onClick={handleLinkClick}
                       className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-500 ${
                         pathname === link.href
@@ -983,6 +994,7 @@ export function Navigation() {
                     <Link
                       key={link.name}
                       href={link.href}
+                      prefetch={false}
                       onClick={handleLinkClick}
                       className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-500 ${
                         pathname === link.href
@@ -1051,6 +1063,7 @@ export function Navigation() {
                     <Link
                       key={link.name}
                       href={link.href}
+                      prefetch={false}
                       onClick={handleLinkClick}
                       className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-500 ${
                         pathname === link.href
