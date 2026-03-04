@@ -8,7 +8,7 @@ import { TrendingUp, Globe, Calendar, Mail, Library } from "lucide-react";
 import { Metadata } from "next"; // 상단 import 추가
 import Link from "next/link";
 
-export const revalidate = 3600;
+export const revalidate = 3600; // 기존 1시간 최적화로 복구
 
 type Props = {
   searchParams: Promise<{ date?: string }>;

@@ -1,5 +1,5 @@
 // Service Worker for PWA
-const CACHE_NAME = "hangon-cache-v4";
+const CACHE_NAME = "hangon-cache-v6";
 const ASSETS_TO_CACHE = [
   "/",
   "/icon-192.png",

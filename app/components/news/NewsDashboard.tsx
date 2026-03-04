@@ -185,18 +185,22 @@ export function NewsDashboard({
                   <div className="flex items-center gap-1.5 ml-1 px-1.5 py-0.5 rounded-full bg-foreground/5 dark:bg-white/5 border border-border-subtle/30">
                     <Users className="w-2.5 h-2.5 text-text-muted" />
                     <span className="text-[9px] font-bold text-text-muted tabular-nums flex items-center">
-                      <RollingNumber
-                        value={getTotalFakeCount(
-                          item.id,
-                          item.keyword,
-                          item.summary,
-                          item.created_at,
-                          realReactionCounts[item.id]?.good || 0,
-                          realReactionCounts[item.id]?.bad || 0,
-                          realReactionCounts[item.id]?.neutral || 0,
-                          lastTick,
-                        )}
-                      />
+                      {isMounted ? (
+                        <RollingNumber
+                          value={getTotalFakeCount(
+                            item.id,
+                            item.keyword,
+                            item.summary,
+                            item.created_at,
+                            realReactionCounts[item.id]?.good || 0,
+                            realReactionCounts[item.id]?.bad || 0,
+                            realReactionCounts[item.id]?.neutral || 0,
+                            lastTick,
+                          )}
+                        />
+                      ) : (
+                        <span>--</span>
+                      )}
                       <span className="ml-0.5">명 참여</span>
                     </span>
                   </div>
