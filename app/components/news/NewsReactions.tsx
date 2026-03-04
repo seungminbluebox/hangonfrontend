@@ -20,7 +20,7 @@ interface NewsReactionsProps {
 
 type ReactionType = "good" | "bad" | "neutral";
 
-// 감정 분석 (키워드 기반)
+// 감정 분석 (키워드 기반 + 특수 도메인 로직)
 const detectSentiment = (keyword: string, summary: string): ReactionType => {
   const goodWords = [
     "상승",
@@ -58,6 +58,26 @@ const detectSentiment = (keyword: string, summary: string): ReactionType => {
   ];
 
   const text = (keyword + summary).toLowerCase();
+
+  // 1. 환율 관련 소식은 항상 '중립' 우선 처리
+  if (
+    text.includes("환율") ||
+    text.includes("원/달러") ||
+    text.includes("달러 인덱스")
+  ) {
+    return "neutral";
+  }
+
+  // 2. 안전자산(금, 국채 등) 쏠림/급등은 시장 불안(악재)으로 판단
+  const safeHavenWords = ["금값", "골드", "안전자산", "국채 금리"];
+  const fearWords = ["쏠림", "심화", "돌파", "폭등", "최고치"];
+
+  const hasSafeHaven = safeHavenWords.some((word) => text.includes(word));
+  const hasFear = fearWords.some((word) => text.includes(word));
+
+  if (hasSafeHaven && hasFear) {
+    return "bad";
+  }
 
   let goodCount = 0;
   let badCount = 0;
@@ -138,7 +158,14 @@ export const getFakeCount = (
       baseFakeCount = 92 + (baseRandom % 194);
     }
   } else {
-    baseFakeCount = 143 + (baseRandom % 378);
+    // 중립(Neutral)이거나 환율 소식 등
+    if (type === "neutral") {
+      baseFakeCount = isExtreme
+        ? 1200 + (baseRandom % 800)
+        : 400 + (baseRandom % 400);
+    } else {
+      baseFakeCount = 50 + (baseRandom % 150);
+    }
   }
 
   // 4. 시간에 따른 선형 증가 적용

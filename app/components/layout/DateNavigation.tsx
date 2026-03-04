@@ -8,13 +8,18 @@ import {
   Calendar,
   Loader2,
 } from "lucide-react";
-import { useRef, useTransition } from "react";
+import { useRef, useTransition, useState, useEffect } from "react";
 
 export function DateNavigation({ currentDate }: { currentDate: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dateInputRef = useRef<HTMLInputElement>(null);
   const [isPending, startTransition] = useTransition();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const setDate = (newDate: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -39,8 +44,13 @@ export function DateNavigation({ currentDate }: { currentDate: string }) {
     });
   };
 
-  const isToday =
-    new Date(currentDate).toDateString() === new Date().toDateString();
+  // 클라이언트에서만 오늘 날짜를 기준으로 판단하여 하이드레이션 오류 방지
+  const todayStr = isMounted
+    ? new Date().toISOString().split("T")[0]
+    : currentDate;
+  const isToday = isMounted
+    ? new Date(currentDate).toDateString() === new Date().toDateString()
+    : true;
 
   const displayDate = new Date(currentDate).toLocaleDateString("ko-KR", {
     month: "long",
@@ -83,7 +93,7 @@ export function DateNavigation({ currentDate }: { currentDate: string }) {
             className="absolute opacity-0 pointer-events-none"
             onChange={(e) => setDate(e.target.value)}
             value={currentDate}
-            max={new Date().toISOString().split("T")[0]}
+            max={todayStr}
           />
         </div>
 

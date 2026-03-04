@@ -56,6 +56,7 @@ export default async function Home({
 }) {
   const { date: selectedDate } = await searchParams;
   const targetDate = selectedDate || new Date().toISOString().split("T")[0];
+  const now = Date.now(); // 서버 측 렌더링 시점의 고정된 시간값 생성
 
   // targetDate의 시작과 끝 범위를 설정 (UTC 기준)
   const startOfDay = `${targetDate}T00:00:00Z`;
@@ -201,7 +202,7 @@ export default async function Home({
 
       <div className="scroll-mt-24">
         {news && news.length > 0 ? (
-          <NewsDashboard news={news} serverTime={Date.now()} />
+          <NewsDashboard news={news} serverTime={now} />
         ) : (
           <div className="col-span-full py-32 text-center space-y-3">
             <div className="mx-auto w-12 h-12 rounded-2xl bg-card border border-border-subtle flex items-center justify-center">
@@ -245,7 +246,7 @@ export default async function Home({
           </div>
         </div>
         <p className="text-text-muted text-[10px] font-medium">
-          © {new Date().getFullYear()} Hang on! All rights reserved.
+          © 2026 Hang on! All rights reserved.
         </p>
       </footer>
       <script
