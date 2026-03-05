@@ -1,5 +1,5 @@
 // Service Worker for PWA
-const CACHE_NAME = "hangon-cache-v6";
+const CACHE_NAME = "hangon-cache-v7";
 const ASSETS_TO_CACHE = [
   "/",
   "/icon-192.png",
@@ -38,6 +38,16 @@ self.addEventListener("fetch", (event) => {
   // Pass through for non-GET requests
   if (event.request.method !== "GET") return;
 
+  // HTML 문서(페이지 방문) 요청은 무조건 네트워크 먼저 시도 (Network-First)
+  // 이렇게 해야 사용자가 / 접속 시 최신 버전의 페이지(서버 캐시 등)를 받아볼 수 있습니다.
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      fetch(event.request).catch(() => caches.match(event.request)),
+    );
+    return;
+  }
+
+  // 그 외 정적 파일(이미지 등)은 캐시 먼저 확인 (Cache-First)
   event.respondWith(
     caches.match(event.request).then((response) => {
       return response || fetch(event.request);

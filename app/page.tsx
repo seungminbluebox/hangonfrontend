@@ -64,6 +64,11 @@ export default async function Home({
   const targetDate = selectedDate || getKSTDateString();
   const now = Date.now(); // 서버 측 렌더링 시점의 고정된 시간값 생성
 
+  // [디버그 로그] 서버에서 컴포넌트 렌더링을 시작할 때 날짜/시간 확인
+  console.log(
+    `[PAGE RENDER] Server render started. selectedDate: ${selectedDate}, targetDate: ${targetDate}`,
+  );
+
   // targetDate는 KST 기준 YYYY-MM-DD (예: 2026-03-05)
   // 이를 KST 기준 00:00:00 ~ 23:59:59로 해석한 뒤 UTC로 변환하여 검색
   const startOfDayKST = new Date(`${targetDate}T00:00:00+09:00`);
@@ -71,6 +76,10 @@ export default async function Home({
 
   const startOfDay = startOfDayKST.toISOString();
   const endOfDay = endOfDayKST.toISOString();
+
+  console.log(
+    `[PAGE RENDER] Querying DB with startOfDay: ${startOfDay}, endOfDay: ${endOfDay}`,
+  );
 
   // 데이터 페칭 병렬화 및 필요한 마켓 데이터만 요청
   const [newsResponse, marketData, reportResponse] = await Promise.all([

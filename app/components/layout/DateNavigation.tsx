@@ -19,7 +19,9 @@ export function DateNavigation({ currentDate }: { currentDate: string }) {
 
   useEffect(() => {
     setIsMounted(true);
-  }, []);
+    // [디버그 로그] 클라이언트 마운트 후 현재 props로 전달받은 currentDate 확인
+    console.log(`[DateNavigation] Mounted with currentDate: ${currentDate}`);
+  }, [currentDate]);
 
   const setDate = (newDate: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -52,13 +54,22 @@ export function DateNavigation({ currentDate }: { currentDate: string }) {
   };
 
   // 클라이언트에서만 오늘 날짜를 기준으로 판단하여 하이드레이션 오류 방지
-  const getKSTDateString = (dateObj: Date = new Date()) =>
-    new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(
-      dateObj,
-    );
+  const getKSTDateString = (dateObj: Date = new Date()) => {
+    const kst = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Seoul",
+    }).format(dateObj);
+    return kst;
+  };
 
-  const todayStr = isMounted ? getKSTDateString() : currentDate;
-  const isToday = isMounted ? currentDate === getKSTDateString() : true;
+  const kstToday = getKSTDateString();
+  const todayStr = isMounted ? kstToday : currentDate;
+  const isToday = isMounted ? currentDate === kstToday : true;
+
+  if (isMounted) {
+    console.log(
+      `[DateNavigation] Render -> kstToday: ${kstToday}, currentDate: ${currentDate}, isToday: ${isToday}`,
+    );
+  }
 
   const displayDate = new Date(`${currentDate}T12:00:00Z`).toLocaleDateString(
     "ko-KR",
