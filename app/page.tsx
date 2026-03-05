@@ -4,7 +4,14 @@ import { NewsDashboard } from "./components/news/NewsDashboard";
 import { DailyReportBanner } from "./components/news/DailyReportBanner";
 import { MarketTicker } from "./components/layout/MarketTicker";
 import { getMarketData } from "./lib/market";
-import { TrendingUp, Globe, Calendar, Mail, Library } from "lucide-react";
+import {
+  TrendingUp,
+  Globe,
+  Calendar,
+  Mail,
+  Library,
+  Clock,
+} from "lucide-react";
 import { Metadata } from "next"; // 상단 import 추가
 import Link from "next/link";
 
@@ -170,7 +177,7 @@ export default async function Home({
 
   return (
     <main className="min-h-screen bg-background text-foreground max-w-6xl mx-auto px-4 sm:px-8 transition-colors duration-500">
-      <header className="pt-8 pb-4 sm:pt-20 sm:pb-10 flex flex-col items-center">
+      <header className="pt-8 pb-1 sm:pt-20 sm:pb-10 flex flex-col items-center">
         {/* 브랜딩 영역 - 중앙 정렬로 시각적 무게중심 확보 */}
         <div className="flex flex-col items-center mb-6 sm:mb-8">
           <div className="flex items-center justify-center gap-2 mb-2">
@@ -214,6 +221,14 @@ export default async function Home({
       </header>
 
       <div className="scroll-mt-24">
+        <div className="flex justify-start mb-1">
+          <div className="flex items-center gap-1.5 px-3 py-1 bg-secondary/5 rounded-full border border-border-subtle/10">
+            <Clock className="w-3 h-3 text-text-muted/40" />
+            <span className="text-[10px] font-medium text-text-muted/40 tracking-tight">
+              매일 오전 9시경 새로운 리포트가 업데이트됩니다.
+            </span>
+          </div>
+        </div>
         {news && news.length > 0 ? (
           <NewsDashboard news={news} serverTime={now} />
         ) : (
