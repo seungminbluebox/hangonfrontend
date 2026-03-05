@@ -270,7 +270,7 @@ export function NewsReactions({
         .from("news_reactions")
         .select("*")
         .eq("news_id", newsId)
-        .single();
+        .maybeSingle();
 
       const realCounts = {
         good: data?.good_count || 0,
@@ -334,7 +334,7 @@ export function NewsReactions({
         .from("news_reactions")
         .select("*")
         .eq("news_id", newsId)
-        .single();
+        .maybeSingle();
 
       const realCounts = {
         good: currentData?.good_count || 0,

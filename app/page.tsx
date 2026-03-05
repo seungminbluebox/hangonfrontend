@@ -14,12 +14,18 @@ type Props = {
   searchParams: Promise<{ date?: string }>;
 };
 
+// KST 기준 오늘 날짜 문자열 가져오기
+const getKSTDateString = () =>
+  new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(
+    new Date(),
+  );
+
 // 동적 메타데이터 생성 함수 (SEO 핵심)
 export async function generateMetadata({
   searchParams,
 }: Props): Promise<Metadata> {
   const { date } = await searchParams;
-  const targetDate = date || new Date().toISOString().split("T")[0];
+  const targetDate = date || getKSTDateString();
 
   return {
     title: `오늘의 경제 요약`,
@@ -55,12 +61,16 @@ export default async function Home({
   searchParams: Promise<{ date?: string }>;
 }) {
   const { date: selectedDate } = await searchParams;
-  const targetDate = selectedDate || new Date().toISOString().split("T")[0];
+  const targetDate = selectedDate || getKSTDateString();
   const now = Date.now(); // 서버 측 렌더링 시점의 고정된 시간값 생성
 
-  // targetDate의 시작과 끝 범위를 설정 (UTC 기준)
-  const startOfDay = `${targetDate}T00:00:00Z`;
-  const endOfDay = `${targetDate}T23:59:59Z`;
+  // targetDate는 KST 기준 YYYY-MM-DD (예: 2026-03-05)
+  // 이를 KST 기준 00:00:00 ~ 23:59:59로 해석한 뒤 UTC로 변환하여 검색
+  const startOfDayKST = new Date(`${targetDate}T00:00:00+09:00`);
+  const endOfDayKST = new Date(`${targetDate}T23:59:59+09:00`);
+
+  const startOfDay = startOfDayKST.toISOString();
+  const endOfDay = endOfDayKST.toISOString();
 
   // 데이터 페칭 병렬화 및 필요한 마켓 데이터만 요청
   const [newsResponse, marketData, reportResponse] = await Promise.all([
@@ -148,12 +158,16 @@ export default async function Home({
     );
   }
 
-  const displayDate = new Date(targetDate).toLocaleDateString("ko-KR", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    weekday: "long",
-  });
+  const displayDate = new Date(`${targetDate}T12:00:00Z`).toLocaleDateString(
+    "ko-KR",
+    {
+      timeZone: "Asia/Seoul",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      weekday: "long",
+    },
+  );
 
   return (
     <main className="min-h-screen bg-background text-foreground max-w-6xl mx-auto px-4 sm:px-8 transition-colors duration-500">

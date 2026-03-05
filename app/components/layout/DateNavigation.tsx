@@ -31,32 +31,44 @@ export function DateNavigation({ currentDate }: { currentDate: string }) {
   };
 
   const changeDate = (days: number) => {
-    const date = new Date(currentDate);
-    date.setDate(date.getDate() + days);
-    const dateStr = date.toISOString().split("T")[0];
+    const [year, month, day] = currentDate.split("-").map(Number);
+    const date = new Date(Date.UTC(year, month - 1, day));
+    date.setUTCDate(date.getUTCDate() + days);
+
+    const dateStr = [
+      date.getUTCFullYear(),
+      String(date.getUTCMonth() + 1).padStart(2, "0"),
+      String(date.getUTCDate()).padStart(2, "0"),
+    ].join("-");
     setDate(dateStr);
   };
 
   const resetDate = () => {
     startTransition(() => {
       router.push("/");
+      router.refresh();
       window.scrollTo({ top: 0, behavior: "instant" });
     });
   };
 
   // 클라이언트에서만 오늘 날짜를 기준으로 판단하여 하이드레이션 오류 방지
-  const todayStr = isMounted
-    ? new Date().toISOString().split("T")[0]
-    : currentDate;
-  const isToday = isMounted
-    ? new Date(currentDate).toDateString() === new Date().toDateString()
-    : true;
+  const getKSTDateString = (dateObj: Date = new Date()) =>
+    new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(
+      dateObj,
+    );
 
-  const displayDate = new Date(currentDate).toLocaleDateString("ko-KR", {
-    month: "long",
-    day: "numeric",
-    weekday: "short",
-  });
+  const todayStr = isMounted ? getKSTDateString() : currentDate;
+  const isToday = isMounted ? currentDate === getKSTDateString() : true;
+
+  const displayDate = new Date(`${currentDate}T12:00:00Z`).toLocaleDateString(
+    "ko-KR",
+    {
+      timeZone: "Asia/Seoul",
+      month: "long",
+      day: "numeric",
+      weekday: "short",
+    },
+  );
 
   return (
     <div
