@@ -14,18 +14,17 @@ type Props = {
   searchParams: Promise<{ date?: string }>;
 };
 
-// KST 기준 오늘 날짜 문자열 가져오기
-const getKSTDateString = () =>
-  new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(
-    new Date(),
-  );
+// 비즈니스 로직 기준 최신 날짜 가져오기 (한국 시간 오전 9시 뉴스 갱신 기준)
+// KST(UTC+9)에서 9시간 전을 기준으로 판단하는 것은 사실상 UTC 기준 날짜와 완벽히 동일합니다.
+// (예: KST 08:59 분은 UTC 기준 전날 23:59 이므로 전날 날짜를 반환, KST 09:00는 UTC 00:00 이므로 자정 갱신 효과)
+const getBusinessDateString = () => new Date().toISOString().split("T")[0];
 
 // 동적 메타데이터 생성 함수 (SEO 핵심)
 export async function generateMetadata({
   searchParams,
 }: Props): Promise<Metadata> {
   const { date } = await searchParams;
-  const targetDate = date || getKSTDateString();
+  const targetDate = date || getBusinessDateString();
 
   return {
     title: `오늘의 경제 요약`,
@@ -61,25 +60,16 @@ export default async function Home({
   searchParams: Promise<{ date?: string }>;
 }) {
   const { date: selectedDate } = await searchParams;
-  const targetDate = selectedDate || getKSTDateString();
+  const targetDate = selectedDate || getBusinessDateString();
   const now = Date.now(); // 서버 측 렌더링 시점의 고정된 시간값 생성
 
-  // [디버그 로그] 서버에서 컴포넌트 렌더링을 시작할 때 날짜/시간 확인
-  console.log(
-    `[PAGE RENDER] Server render started. selectedDate: ${selectedDate}, targetDate: ${targetDate}`,
-  );
-
-  // targetDate는 KST 기준 YYYY-MM-DD (예: 2026-03-05)
+  // targetDate는 비즈니스 로직(뉴스 생성일 KST 달력 기준) YYYY-MM-DD
   // 이를 KST 기준 00:00:00 ~ 23:59:59로 해석한 뒤 UTC로 변환하여 검색
   const startOfDayKST = new Date(`${targetDate}T00:00:00+09:00`);
   const endOfDayKST = new Date(`${targetDate}T23:59:59+09:00`);
 
   const startOfDay = startOfDayKST.toISOString();
   const endOfDay = endOfDayKST.toISOString();
-
-  console.log(
-    `[PAGE RENDER] Querying DB with startOfDay: ${startOfDay}, endOfDay: ${endOfDay}`,
-  );
 
   // 데이터 페칭 병렬화 및 필요한 마켓 데이터만 요청
   const [newsResponse, marketData, reportResponse] = await Promise.all([

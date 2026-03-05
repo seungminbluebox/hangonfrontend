@@ -54,22 +54,15 @@ export function DateNavigation({ currentDate }: { currentDate: string }) {
   };
 
   // 클라이언트에서만 오늘 날짜를 기준으로 판단하여 하이드레이션 오류 방지
-  const getKSTDateString = (dateObj: Date = new Date()) => {
-    const kst = new Intl.DateTimeFormat("en-CA", {
-      timeZone: "Asia/Seoul",
-    }).format(dateObj);
-    return kst;
+  // 오전 9시에 갱신되는 비즈니스 기준 최신 날짜 반환 (UTC 기준 날짜를 활용하면 KST 9시 분기점과 완벽히 일치)
+  const getBusinessDateString = (dateObj: Date = new Date()) => {
+    return dateObj.toISOString().split("T")[0];
   };
 
-  const kstToday = getKSTDateString();
-  const todayStr = isMounted ? kstToday : currentDate;
-  const isToday = isMounted ? currentDate === kstToday : true;
-
-  if (isMounted) {
-    console.log(
-      `[DateNavigation] Render -> kstToday: ${kstToday}, currentDate: ${currentDate}, isToday: ${isToday}`,
-    );
-  }
+  const businessToday = getBusinessDateString();
+  const todayStr = isMounted ? businessToday : currentDate;
+  // 미래 날짜로 가는 것도 방지하기 위해 '>=' 연산자 사용 (currentDate가 오늘 이후면 막음)
+  const isTodayOrFuture = isMounted ? currentDate >= businessToday : true;
 
   const displayDate = new Date(`${currentDate}T12:00:00Z`).toLocaleDateString(
     "ko-KR",
@@ -123,7 +116,7 @@ export function DateNavigation({ currentDate }: { currentDate: string }) {
         {/* Next Day Button */}
         <button
           onClick={() => changeDate(1)}
-          disabled={isToday}
+          disabled={isTodayOrFuture}
           className="p-2 rounded-full hover:bg-card hover:text-accent transition-all active:scale-95 disabled:opacity-20 disabled:cursor-not-allowed"
           aria-label="Next Day"
         >
@@ -132,7 +125,7 @@ export function DateNavigation({ currentDate }: { currentDate: string }) {
       </div>
 
       {/* Reset Button (Outside to keep the < Date > layout clean) */}
-      {!isToday && (
+      {!isTodayOrFuture && (
         <button
           onClick={resetDate}
           className="p-2.5 rounded-full border border-border-subtle bg-card/30 hover:bg-card text-accent transition-all shadow-sm active:rotate-[-45deg]"
