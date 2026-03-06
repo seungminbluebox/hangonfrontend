@@ -4,9 +4,17 @@ import { BackButton } from "../components/layout/BackButton";
 import { Clock } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "공포와 탐욕 지수 분석",
+  title: "공포 탐욕 지수 (Fear & Greed Index) | 시장 심리 실시간 분석",
   description:
-    "CNN Fear & Greed Index를 바탕으로 한 시장 심리 분석 리포트입니다.",
+    "CNN Fear & Greed Index와 국내 시장 심리를 바탕으로 한 실시간 시장 탐욕 및 공포 지수를 분석합니다. 투자 결정을 위한 핵심 심리 지표를 확인하세요.",
+  keywords: [
+    "공포탐욕지수",
+    "CNN Fear and Greed Index",
+    "시장심리",
+    "VIX",
+    "투자심리",
+    "행온",
+  ],
 };
 
 export const revalidate = 3600;

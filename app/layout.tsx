@@ -26,11 +26,28 @@ const notoSansKR = Noto_Sans_KR({
 export const metadata: Metadata = {
   metadataBase: new URL("https://hangon.co.kr"),
   title: {
-    default: "Hang on! | 글로벌 경제 1분 요약",
-    template: "%s | Hang on!", // 하위 페이지에서 제목을 동적으로 바꿀 때 사용
+    default: "Hang on! (행온) | 글로벌 경제 1분 요약 & 실시간 증시 대시보드",
+    template: "%s | Hang on!",
   },
+  keywords: [
+    "경제 뉴스 요약",
+    "미국 증시",
+    "국내 증시",
+    "공포 탐욕 지수",
+    "달러 인덱스",
+    "실시간 나스닥 선물",
+    "코스피 야간 선물",
+    "환율 정보",
+    "실적 발표 일정",
+    "신용잔고",
+    "금리 현황",
+    "시장 상관관계",
+    "풋콜 옵션 비율",
+    "Hang on",
+    "행온",
+  ],
   description:
-    "매일 아침, 한국, 미국, 글로벌 핵심 경제 뉴스를 5줄로 요약해 드립니다. 바쁜 당신을 위한 데일리 경제 브리핑.",
+    "매일 아침 한국, 미국, 글로벌 핵심 경제 뉴스를 1분 요약해 드립니다. 공포 탐욕 지수, 실시간 나스닥 선물, 달러 인덱스 등 필수 시장 지표를 한눈에 확인하세요.",
   // 검색 엔진 로봇 설정
   robots: {
     index: true,
