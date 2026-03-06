@@ -14,6 +14,7 @@ export const metadata: Metadata = {
     "VIX",
     "투자심리",
     "행온",
+    "공탐지수",
   ],
 };
 
