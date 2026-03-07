@@ -34,7 +34,7 @@ export async function generateMetadata({
   const targetDate = date || getBusinessDateString();
 
   return {
-    title: `오늘의 경제 요약`,
+    title: `Hang On! 행온, 오늘의 거시경제`,
     description: `한국, 미국, 글로벌 주요 경제 뉴스 핵심 요약 모음입니다.`,
     openGraph: {
       title: `${targetDate} 경제를 붙잡다, Hang on!`,

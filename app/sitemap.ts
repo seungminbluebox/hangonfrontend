@@ -21,7 +21,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/money-flow/safe",
     "/market-correlation",
     "/market-holidays",
-    "/money-flow",
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
